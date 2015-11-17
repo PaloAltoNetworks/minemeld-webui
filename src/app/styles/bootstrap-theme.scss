@@ -1,0 +1,59 @@
+.no-padding {
+    padding: 0px !important;
+}
+
+.navbar-fixed-top {
+    border-width: 0 !important;
+}
+
+body {
+    min-width: 768px !important;
+    width: auto !important;
+    width: 768px;
+}
+
+div.main-container {
+    padding: 80px 0px 0px 0px;
+}
+
+.m-b-xs {
+    margin-bottom: 5px;
+}
+
+.m-t-xs {
+    margin-top: 5px;
+}
+
+.albert_stripe {
+    float: left;
+    height: 3px;
+    width: 25%;
+}
+
+.albert_stripe_first {
+    background-color: $minemeld-system;
+}
+
+.albert_stripe_second {
+    background-color: $minemeld-processor;
+}
+
+.albert_stripe_third {
+    background-color: $minemeld-miner;
+}
+
+.albert_stripe_fourth {
+    background-color: $minemeld-output;
+}
+
+.nvtooltip {
+    border-radius: 0px !important;
+    border-color: $minemeld-system;
+    border-width: 1px;
+}
+
+.nvtooltip strong, td {
+    font-family: $font-family-sans-serif;
+    font-size: 10px;
+    font-weight: 500 !important;
+}

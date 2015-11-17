@@ -1,0 +1,153 @@
+.dashboard-label {
+    height: 150px;
+    padding: 0 !important;
+    width: 26px;
+    float: left;
+}
+
+.dashboard-label-text {
+    width: 100%;
+    transform: rotate(90deg) translateX(50%);
+    transform-origin: center center 0;
+    float: right;
+    color: #fff;
+}
+
+.dashboard-row {
+    padding-bottom: 20px;
+}
+
+.dashboard-piechart {
+    padding-top: 20px;
+    text-align: center;
+    line-height: 110px;
+}
+
+.dashboard-piechart > canvas {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.dashboard-piechart-value {
+    width: 110px;
+    margin: 0 auto;
+    text-align: center;
+    font-weight: 500;
+    font-size: 200%;
+    color: $gray-light;
+}
+
+.dashboard-main-statistic {
+    padding-top: 30px;
+    height: 150px;
+}
+
+.dashboard-main-statistic > h1 {
+    font-weight: 700;
+    color: $minemeld-system;
+}
+
+.dashboard-main-statistic > small {
+    color: $gray-light;
+}
+
+.dashboard-3-statistic {
+    padding-top: 30px;
+}
+
+.dashboard-3-statistic > h3 {
+    font-weight: 700;
+}
+
+.dashboard-3-statistic > small {
+    color: $gray-light;
+}
+
+.dashboard-added > h3 {
+    color: $color-added;
+    font-weight: 700;
+}
+
+.dashboard-added > small {
+    color: $gray-light;
+}
+
+.dashboard-removed > h3 {
+    color: $color-removed;
+    font-weight: 700;
+}
+
+.dashboard-removed > small {
+    color: $gray-light;
+}
+
+.dashboard-row-system {
+    background-color: #fff;
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    border-top: 2px solid $minemeld-system !important;
+}
+
+.dashboard-label-system {
+    background-color: $minemeld-system;
+}
+
+.dashboard-row-miner {
+    background-color: #fff;
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    border-top: 2px solid $minemeld-miner !important;    
+}
+
+.dashboard-label-miner {
+    background-color: $minemeld-miner;
+}
+
+.dashboard-miner {
+    color: $minemeld-miner;
+}
+
+.dashboard-row-processor {
+    background-color: #fff;
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    border-top: 2px solid $minemeld-processor !important;    
+}
+
+.dashboard-label-processor {
+    background-color: $minemeld-processor;
+}
+
+.dashboard-processor {
+    color: $minemeld-processor;
+}
+
+.dashboard-row-output {
+    background-color: #fff;
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    border-top: 2px solid $minemeld-output !important;    
+}
+
+.dashboard-label-output {
+    background-color: $minemeld-output;
+}
+
+.dashboard-output {
+    color: $minemeld-output;
+}
+
+.dashboard-chart-placeholder {
+    height: 128px;
+    text-align: center;
+    padding-top: 50px;
+}
+
+.dashboard-chart-column {
+    padding-left: 5px;
+    padding-right: 5px;
+}

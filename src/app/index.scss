@@ -1,0 +1,91 @@
+/* open-sans-300 - latin_latin-ext */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Open Sans Light'), local('OpenSans-Light'),
+       url('../assets/fonts/open-sans-v13-latin_latin-ext-300.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* open-sans-regular - latin_latin-ext */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'),
+       url('../assets/fonts/open-sans-v13-latin_latin-ext-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* open-sans-600 - latin_latin-ext */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Open Sans Semibold'), local('OpenSans-Semibold'),
+       url('../assets/fonts/open-sans-v13-latin_latin-ext-600.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* open-sans-700 - latin_latin-ext */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Open Sans Bold'), local('OpenSans-Bold'),
+       url('../assets/fonts/open-sans-v13-latin_latin-ext-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* open-sans-condensed-300 - latin_latin-ext */
+@font-face {
+  font-family: 'Open Sans Condensed';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Open Sans Cond Light'), local('OpenSans-CondensedLight'),
+       url('../assets/fonts/open-sans-condensed-v10-latin_latin-ext-300.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* open-sans-condensed-700 - latin_latin-ext */
+@font-face {
+  font-family: 'Open Sans Condensed';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Open Sans Condensed Bold'), local('OpenSans-CondensedBold'),
+       url('../assets/fonts/open-sans-condensed-v10-latin_latin-ext-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/**
+ *  If you want to override some bootstrap variables, you have to change values here.
+ *  The list of variables are listed here bower_components/bootstrap-sass/assets/stylesheets/bootstrap/_variables.scss
+ */
+$panw-blue: #316989;
+$panw-green: #B5D553;
+
+$minemeld-system: #535e72;
+$minemeld-miner: #1EA896;
+$minemeld-processor: #BA6A5D;
+$minemeld-output: #F1C40F;
+
+$color-added: #586994;
+$color-removed: #977390;
+
+$body-bg: lighten(#EFEFEB, 4%); // rgb(245, 247, 250);
+
+$navbar-default-color:             #fff;
+$navbar-default-bg:                $panw-blue;
+$navbar-default-border:            $panw-blue;
+
+$navbar-default-link-color: #fff;
+$navbar-default-link-hover-color: $panw-green;
+$navbar-default-brand-hover-color: $panw-green;
+
+$font-family-sans-serif:  "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+
+$icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap/";
+
+/**
+ *  Do not remove the comments below. It's the markers used by wiredep to inject
+ *  sass dependencies when defined in the bower.json of your dependencies
+ */
+// bower:scss
+// endbower
+
+/**
+ *  Do not remove the comments below. It's the markers used by gulp-inject to inject
+ *  all your sass files automatically
+ */
+// injector
+// endinjector
