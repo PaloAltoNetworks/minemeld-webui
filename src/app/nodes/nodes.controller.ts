@@ -3,18 +3,6 @@
 import { IMinemeldStatus } from  '../../app/services/status';
 import { IMinemeldMetrics } from '../../app/services/metrics';
 
-var NODE_STATES: string[] = [
-    'READY',
-    'CONNECTED',
-    'REBUILDING',
-    'RESET',
-    'INIT',
-    'STARTED',
-    'CHECKPOINT',
-    'IDLE',
-    'STOPPED'
-];
-
 export class NodesController {
     mmstatus: IMinemeldStatus;
     mmmetrics: IMinemeldMetrics;
@@ -35,6 +23,18 @@ export class NodesController {
 
     updateNodesTablePromise: angular.IPromise<any>;
     updateNodesTableInterval: number = 5 * 60 * 1000;
+
+    NODE_STATES: string[] = [
+        'READY',
+        'CONNECTED',
+        'REBUILDING',
+        'RESET',
+        'INIT',
+        'STARTED',
+        'CHECKPOINT',
+        'IDLE',
+        'STOPPED'
+    ];
 
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
@@ -145,7 +145,7 @@ export class NodesController {
                 return '<span class="label ' + c + '">' + v + '</span>';
             }),
             this.DTColumnBuilder.newColumn('state').withTitle('STATE').renderWith(function(data: any, type: any, full: any) {
-                var m: string = NODE_STATES[data];
+                var m: string = vm.NODE_STATES[data];
                 var c: string;
 
                 c = 'label-primary';
@@ -234,6 +234,8 @@ export class NodesController {
     }
 
     private destroy() {
-        ;
+        if (this.updateNodesTablePromise) {
+            this.$interval.cancel(this.updateNodesTablePromise);
+        }
     }
 }
