@@ -91,3 +91,8 @@ $icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap/"
  */
 // injector
 // endinjector
+
+#loading-bar .bar {
+  background-color: $panw-green;
+  height: 4px;
+}

@@ -25,6 +25,7 @@ module minemeldWebui {
     'ui.router',
     'ui.bootstrap',
     'toastr',
+    'angular-loading-bar',
     'datatables',
     'datatables.bootstrap',
     'easypiechart',
