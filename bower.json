@@ -17,7 +17,8 @@
     "moment": "~2.10.6",
     "animate.css": "~3.4.0",
     "angular": "~1.4.2",
-    "angular-nvd3": "~1.0.3"
+    "angular-nvd3": "~1.0.3",
+    "angular-datatables": "~0.5.1"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.2"
