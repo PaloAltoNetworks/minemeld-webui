@@ -105,7 +105,7 @@ export class DashboardController {
     minemeldMetrics: IMetricsDictionary;
     minemeldMetricsUpdatePromise: angular.IPromise<any>;
 
-    chartRange: string = '1d';
+    chartRange: string = '24h';
     chartDT: number = 86400;
     chartDR: number = 1800;
 
@@ -429,7 +429,7 @@ export class DashboardController {
     private chartRangeChanged() {
         if (this.chartRange === '1h') {
             this.chartDT = 3600;
-            this.chartDR = 300;
+            this.chartDR = 1;
         } else if (this.chartRange === '7d') {
             this.chartDT = 24 * 3600 * 7;
             this.chartDR = 6 * 3600;
