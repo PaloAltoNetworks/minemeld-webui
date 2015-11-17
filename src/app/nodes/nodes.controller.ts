@@ -11,6 +11,7 @@ export class NodesController {
     $interval: angular.IIntervalService;
     $scope: angular.IScope;
     $compile: angular.ICompileService;
+    $state: angular.ui.IStateService;
     DTColumnBuilder: any;
     DTOptionsBuilder: any;
 
@@ -41,7 +42,7 @@ export class NodesController {
     constructor(toastr: any, $interval: angular.IIntervalService,
         MinemeldStatus: IMinemeldStatus, MinemeldMetrics: IMinemeldMetrics,
         moment: moment.MomentStatic, $scope: angular.IScope, DTOptionsBuilder: any,
-        DTColumnBuilder: any, $compile: angular.ICompileService) {
+        DTColumnBuilder: any, $compile: angular.ICompileService, $state: angular.ui.IStateService) {
         this.toastr = toastr;
         this.mmstatus = MinemeldStatus;
         this.mmmetrics = MinemeldMetrics;
@@ -51,6 +52,7 @@ export class NodesController {
         this.DTColumnBuilder = DTColumnBuilder;
         this.DTOptionsBuilder = DTOptionsBuilder;
         this.$compile = $compile;
+        this.$state = $state;
 
         this.setupNodesTable();
         console.log(this.dtNodes);
@@ -61,6 +63,10 @@ export class NodesController {
         );
 
         this.$scope.$on('$destroy', this.destroy.bind(this));
+    }
+
+    public go(newstate: string) {
+        this.$state.go('nodedetail', { nodename: newstate });
     }
 
     private updateNodesTable() {
@@ -99,6 +105,7 @@ export class NodesController {
         .withOption('createdRow', function(row: HTMLScriptElement, data: any) {
             var c: string;
             var fc: HTMLElement;
+            var j: number;
 
             row.className += ' nodes-table-row';
 
@@ -113,8 +120,12 @@ export class NodesController {
             fc = <HTMLElement>(row.childNodes[0]);
             fc.className += ' '+c;
 
-            // $compile(angular.element(row))($scope);
-            ;
+            for (var j = 0; j < row.childNodes.length; j++) {
+                fc = <HTMLElement>(row.childNodes[j]);
+                fc.setAttribute('ng-click', 'nodes.go("' + data.name + '")');
+            }
+
+            vm.$compile(angular.element(row).contents())(vm.$scope);
         })
         .withLanguage({
             'oPaginate': {

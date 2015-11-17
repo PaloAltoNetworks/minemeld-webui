@@ -8,10 +8,16 @@ export function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterPro
       controllerAs: 'dashboard'
     })
     .state('nodes', {
-        url: '/nodes',
-        templateUrl: 'app/nodes/view.html',
-        controller: 'NodesController',
-        controllerAs: 'nodes'
+      url: '/nodes',
+      templateUrl: 'app/nodes/view.html',
+      controller: 'NodesController',
+      controllerAs: 'nodes'
+    })
+    .state('nodedetail', {
+      url: '/nodes/:nodename',
+      templateUrl: 'app/nodedetail/view.html',
+      controller: 'NodeDetailController',
+      controllerAs: 'nodedetail'
     })
     ;
 
