@@ -1,7 +1,5 @@
 /// <reference path="../../../.tmp/typings/tsd.d.ts" />
 
-// xXXX: how to report errors in toastr
-
 import { IMinemeldStatus } from  '../../app/services/status';
 import { IMinemeldMetrics } from '../../app/services/metrics';
 
@@ -86,7 +84,7 @@ export class DashboardController {
     numIndicators: number = 0;
 
     minemeld: any;
-    minemeldUpdateInterval: number = 30000;
+    minemeldUpdateInterval: number = 30 * 1000;
     minemeldUpdatePromise: angular.IPromise<any>;
 
     numMiners: number = 0;
@@ -128,7 +126,7 @@ export class DashboardController {
         this.updateNTOutputsMetrics();
         this.updateMinemeldMetrics();
 
-        this.$scope.$on('$destroy', this.destroy);
+        this.$scope.$on('$destroy', this.destroy.bind(this));
     }
 
     private destroy() {
