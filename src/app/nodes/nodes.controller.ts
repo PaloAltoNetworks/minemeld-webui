@@ -10,6 +10,7 @@ export class NodesController {
     toastr: any;
     $interval: angular.IIntervalService;
     $scope: angular.IScope;
+    $compile: angular.ICompileService;
     DTColumnBuilder: any;
     DTOptionsBuilder: any;
 
@@ -40,7 +41,7 @@ export class NodesController {
     constructor(toastr: any, $interval: angular.IIntervalService,
         MinemeldStatus: IMinemeldStatus, MinemeldMetrics: IMinemeldMetrics,
         moment: moment.MomentStatic, $scope: angular.IScope, DTOptionsBuilder: any,
-        DTColumnBuilder: any) {
+        DTColumnBuilder: any, $compile: angular.ICompileService) {
         this.toastr = toastr;
         this.mmstatus = MinemeldStatus;
         this.mmmetrics = MinemeldMetrics;
@@ -49,6 +50,7 @@ export class NodesController {
         this.$scope = $scope;
         this.DTColumnBuilder = DTColumnBuilder;
         this.DTOptionsBuilder = DTOptionsBuilder;
+        this.$compile = $compile;
 
         this.setupNodesTable();
         console.log(this.dtNodes);
@@ -97,6 +99,8 @@ export class NodesController {
         .withOption('createdRow', function(row: HTMLScriptElement, data: any) {
             var c: string;
             var fc: HTMLElement;
+
+            row.className += ' nodes-table-row';
 
             if (data.inputs.length === 0) {
                 c = 'nodes-dt-header-miner';
@@ -229,7 +233,10 @@ export class NodesController {
                 stats.push('</ul>');
 
                 return stats.join('');
-            })
+            }),
+            this.DTColumnBuilder.newColumn(null).withTitle('').notSortable().renderWith(function(data: any, type, full) {
+                return '<span class="nodes-table-chevron glyphicon glyphicon-chevron-right"></span>';
+            }).withOption('width', '30px')
         ];
     }
 

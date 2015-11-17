@@ -3,9 +3,21 @@
     font-size: 12px;
 }
 
-#nodesTable td {
+.nodes-table-row > td {
     font-weight: 500;
     font-size: 12px;
+    background-color: #FFF;
+}
+
+.nodes-table-row:hover > td {
+    background-color: darken($body-bg, 10%);
+    cursor: pointer;
+}
+
+.nodes-table-chevron {
+    color: #FFF;
+    font-size: 30px;
+    margin-top: 20px;
 }
 
 #nodesTable ul {
@@ -36,15 +48,15 @@
 }
 
 .nodes-dt-header-miner {
-    background-color: $minemeld-miner;
+    background-color: $minemeld-miner !important;
 }
 
 .nodes-dt-header-output {
-    background-color: $minemeld-output;
+    background-color: $minemeld-output !important;
 }
 
 .nodes-dt-header-processor {
-    background-color: $minemeld-processor;
+    background-color: $minemeld-processor !important;
 }
 
 .nodes-label-miner {
