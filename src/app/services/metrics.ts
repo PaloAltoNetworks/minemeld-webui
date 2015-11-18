@@ -1,8 +1,9 @@
 /// <reference path="../../../.tmp/typings/tsd.d.ts" />
 
 export interface IMinemeldMetrics {
-    getNodeType(nodetype: string, cf?: string, dt?: number, r?: number): angular.IPromise<any>;
-    getMinemeld(cf?: string, dt?: number, r?: number): angular.IPromise<any>;
+    getNodeType(nodetype: string, options?: IMetricsParams): angular.IPromise<any>;
+    getMinemeld(options?: IMetricsParams): angular.IPromise<any>;
+    getNode(nodename: string, options?: IMetricsParams);
 }
 
 interface IMetricsParams {
@@ -15,21 +16,24 @@ interface INTMetricsParams extends IMetricsParams {
     nodetype: string;
 }
 
+interface INodeMetricsParams extends IMetricsParams {
+    nodename: string;
+}
+
 export class MinemeldMetrics implements IMinemeldMetrics {
     static $inject = ['$resource'];
 
     metricsNodeType: angular.resource.IResourceClass<angular.resource.IResource<any>>;
     metricsMinemeld: angular.resource.IResourceClass<angular.resource.IResource<any>>;
+    metricsNode: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
     constructor($resource: angular.resource.IResourceService) {
         this.metricsNodeType = $resource('/metrics/minemeld/:nodetype');
-
         this.metricsMinemeld = $resource('/metrics/minemeld');
+        this.metricsNode = $resource('/metrics/:nodename');
     }
 
     public getNodeType(nodetype: string, options?: IMetricsParams) {
-        console.log('getNodeType:', nodetype);
-
         var params = <INTMetricsParams>{
             nodetype: nodetype
         };
@@ -45,9 +49,34 @@ export class MinemeldMetrics implements IMinemeldMetrics {
                 params.r = options.r;
             }
         }
-        console.log('params:', params);
 
         return this.metricsNodeType.get(params).$promise.then(function(result: any) {
+            if ('result' in result) {
+                return result.result;
+            }
+
+            return [];
+        });
+    }
+
+    public getNode(nodename: string, options?: IMetricsParams) {
+        var params: INodeMetricsParams = <INodeMetricsParams>{
+            nodename: nodename
+        };
+
+        if (options) {
+            if (options.cf) {
+                params.cf = options.cf;
+            }
+            if (options.dt) {
+                params.dt = options.dt;
+            }
+            if (options.r) {
+                params.r = options.r;
+            }
+        }
+
+        return this.metricsNode.get(params).$promise.then(function(result: any) {
             if ('result' in result) {
                 return result.result;
             }

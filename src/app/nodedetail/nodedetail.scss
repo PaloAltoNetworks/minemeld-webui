@@ -1,0 +1,71 @@
+*:focus {
+  outline: 0;
+}
+
+.nodedetail-tabs-col {
+  padding-right: 0 !important;
+  width: 60px;
+}
+
+.nodedetails-content-col {
+  border-top: 1px solid $nav-tabs-active-link-hover-border-color;
+}
+
+.nodedetail-tabs-col .nav-tabs {
+  border-bottom-color: transparent !important;
+  border-right-color: 1px solid $nav-tabs-active-link-hover-border-color !important;
+  > li {
+    width: 100%;
+    float: left;
+    // Make the list-items overlay the bottom border
+    margin-bottom: -1px;
+    text-align: center;
+
+    // Actual tabs (as links)
+    > a {
+      margin-right: 0px;
+      border: 1px solid transparent;
+      border-right-color: $nav-tabs-active-link-hover-border-color !important;
+      border-radius: $border-radius-base 0 0 $border-radius-base !important;
+      color: $panw-blue;
+    }
+
+    // Active state, and its :hover to override normal :hover
+    &.active > a {
+      &,
+      &:hover,
+      &:focus {
+        border-color: $nav-tabs-active-link-hover-border-color !important;
+        cursor: default;
+        border-right-color: transparent !important;
+      }
+    }
+  }
+  &::after {
+    content: "\0000a0";
+    line-height: 60px;
+    width: 100%;
+    border-right: 1px solid $nav-tabs-active-link-hover-border-color;
+  }
+}
+
+.nodedetails-stats-table {
+  margin-top: 15px;
+  background-color: lighten($body-bg, 2%);
+  font-size: 12px;
+}
+
+.nodedetails-stats-table > thead {
+  margin-top: 15px;
+  background-color: $body-bg;
+}
+
+.nodedetails-stats-table > thead th {
+  font-size: 12px;
+  font-weight: 400 !important;  
+}
+
+.nodedetails-stats-table > tbody {
+  border-top: 2px solid $table-border-color;
+  border-bottom: 1px solid $table-border-color;
+}

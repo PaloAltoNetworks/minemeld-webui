@@ -19,6 +19,12 @@ export function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterPro
       controller: 'NodeDetailController',
       controllerAs: 'nodedetail'
     })
+    .state('nodedetail.stats', {
+      url: '/stats',
+      templateUrl: 'app/nodedetail/view.stats.html',
+      controller: 'NodeDetailsStatsController',
+      controllerAs: 'nodedetailstats'
+    })
     ;
 
   $urlRouterProvider.otherwise('/dashboard');

@@ -19,7 +19,8 @@
     "angular": "~1.4.2",
     "angular-nvd3": "~1.0.3",
     "angular-datatables": "~0.5.1",
-    "angular-loading-bar": "~0.8.0"
+    "angular-loading-bar": "~0.8.0",
+    "components-font-awesome": "~4.4.0"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.2"

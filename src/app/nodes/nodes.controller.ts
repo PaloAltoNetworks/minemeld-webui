@@ -19,24 +19,8 @@ export class NodesController {
     dtColumns: any[];
     dtOptions: any;
 
-    chartRange: string = '1d';
-    chartDT: number = 86400;
-    chartDR: number = 1800;
-
     updateNodesTablePromise: angular.IPromise<any>;
     updateNodesTableInterval: number = 5 * 60 * 1000;
-
-    NODE_STATES: string[] = [
-        'READY',
-        'CONNECTED',
-        'REBUILDING',
-        'RESET',
-        'INIT',
-        'STARTED',
-        'CHECKPOINT',
-        'IDLE',
-        'STOPPED'
-    ];
 
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
@@ -59,14 +43,15 @@ export class NodesController {
 
         this.updateNodesTablePromise = this.$interval(
             this.updateNodesTable.bind(this),
-            this.updateNodesTableInterval
+            this.updateNodesTableInterval,
+            1
         );
 
         this.$scope.$on('$destroy', this.destroy.bind(this));
     }
 
     public go(newstate: string) {
-        this.$state.go('nodedetail', { nodename: newstate });
+        this.$state.go('nodedetail.stats', { nodename: newstate });
     }
 
     private updateNodesTable() {
@@ -77,7 +62,8 @@ export class NodesController {
                 function() {
                     vm.updateNodesTablePromise = vm.$interval(
                         vm.updateNodesTable.bind(vm),
-                        vm.updateNodesTableInterval
+                        vm.updateNodesTableInterval,
+                        1
                     );
                 },
                 true
@@ -160,7 +146,7 @@ export class NodesController {
                 return '<span class="label ' + c + '">' + v + '</span>';
             }),
             this.DTColumnBuilder.newColumn('state').withTitle('STATE').renderWith(function(data: any, type: any, full: any) {
-                var m: string = vm.NODE_STATES[data];
+                var m: string = vm.mmstatus.NODE_STATES[data];
                 var c: string;
 
                 c = 'label-primary';
