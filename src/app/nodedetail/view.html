@@ -8,14 +8,9 @@
 <div class="row">
     <div class="col-xs-1 nodedetail-tabs-col">
         <tabset vertical="true">
-            <tab>
-                <tab-heading tooltip="STATS">
-                    <span class="fa fa-area-chart"></span>
-                </tab-heading>
-            </tab>
-            <tab>
-                <tab-heading tooltip="GRAPH">
-                    <span class="fa fa-asterisk"></span>
+            <tab ng-repeat="tab in nodedetail.tabs" active="tab.active" select="nodedetail.select(tab.state)">
+                <tab-heading tooltip="{{ tab.tooltip }}">
+                    <span class="{{ tab.icon }}"></span>
                 </tab-heading>
             </tab>
         </tabset>

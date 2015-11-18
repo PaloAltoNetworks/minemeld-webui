@@ -46,7 +46,7 @@
     height: 150px;
 }
 
-.dashboard-main-statistic > h1 {
+.dashboard-main-statistic > h2 {
     font-weight: 700;
     color: $minemeld-system;
 }
@@ -67,7 +67,8 @@
     color: $gray-light;
 }
 
-.dashboard-added > h3 {
+.dashboard-added > h4 {
+    padding-top: 15px;
     color: $color-added;
     font-weight: 700;
 }
@@ -76,7 +77,8 @@
     color: $gray-light;
 }
 
-.dashboard-removed > h3 {
+.dashboard-removed > h4 {
+    padding-top: 15px;
     color: $color-removed;
     font-weight: 700;
 }

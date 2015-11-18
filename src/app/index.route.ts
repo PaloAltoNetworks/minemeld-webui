@@ -17,7 +17,8 @@ export function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterPro
       url: '/nodes/:nodename',
       templateUrl: 'app/nodedetail/view.html',
       controller: 'NodeDetailController',
-      controllerAs: 'nodedetail'
+      controllerAs: 'nodedetail',
+      abstract: true
     })
     .state('nodedetail.stats', {
       url: '/stats',

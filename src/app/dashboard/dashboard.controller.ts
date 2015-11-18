@@ -90,7 +90,7 @@ export class DashboardController {
     numIndicators: number = 0;
 
     minemeld: any;
-    minemeldUpdateInterval: number = 30 * 1000;
+    minemeldUpdateInterval: number = 60 * 1000;
     minemeldUpdatePromise: angular.IPromise<any>;
 
     numMiners: number = 0;
