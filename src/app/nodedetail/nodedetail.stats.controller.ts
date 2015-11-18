@@ -36,7 +36,7 @@ export class NodeDetailsStatsController {
 
     chartOptions: any = {
         chart: {
-            type: 'discreteBarChart',
+            type: 'lineChart',
             margin : {
                 top: 0,
                 right: 0,
@@ -51,11 +51,17 @@ export class NodeDetailsStatsController {
             transition: 0,
             useInteractiveGuideline: true,
             showXAxis: false,
-            tooltip: {
-                keyFormatter: function(d: any) { return this.moment.unix(d).fromNow().toUpperCase(); }
+            interactiveLayer: {
+                tooltip: {
+                    headerFormatter: function(d: any) { return this.moment.unix(d).fromNow().toUpperCase(); }
+                }
             },
             showYAxis: false,
-            showLegend: false
+            yAxis: {
+                tickFormat: (d, i) => { return Math.ceil(d); }
+            },
+            showLegend: false,
+            interpolate: 'step'
         }
     };
     chartApi: any = {};
@@ -122,7 +128,7 @@ export class NodeDetailsStatsController {
                 }
                 cm = <IMetric> {
                     area: true,
-                    color: '#91B7C7',
+                    color: '#ff7f0e',
                     values: result[j].values.map(function(e: number[]) {
                         return { x: e[0], y: e[1] };
                     })

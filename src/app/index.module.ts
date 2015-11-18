@@ -9,6 +9,7 @@ import { NodeDetailsStatsController } from './nodedetail/nodedetail.stats.contro
 import { appNavbar } from '../app/components/navbar/navbar.directive';
 import { MinemeldStatus } from './services/status';
 import { MinemeldMetrics } from './services/metrics';
+import { megaNumber } from './filters/megaNumber';
 import { minemeldOptions } from '../app/components/options/options.directive';
 
 declare var malarkey: any;
@@ -44,5 +45,6 @@ module minemeldWebui {
   .directive('appNavbar', appNavbar)
   .service('MinemeldStatus', MinemeldStatus)
   .service('MinemeldMetrics', MinemeldMetrics)
+  .filter('megaNumber', megaNumber)
   ;
 }

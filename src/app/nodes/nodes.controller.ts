@@ -39,7 +39,6 @@ export class NodesController {
         this.$state = $state;
 
         this.setupNodesTable();
-        console.log(this.dtNodes);
 
         this.updateNodesTablePromise = this.$interval(
             this.updateNodesTable.bind(this),
