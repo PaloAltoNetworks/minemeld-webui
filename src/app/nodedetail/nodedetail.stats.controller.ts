@@ -51,17 +51,15 @@ export class NodeDetailsStatsController {
             transition: 0,
             useInteractiveGuideline: true,
             showXAxis: false,
-            interactiveLayer: {
-                tooltip: {
-                    headerFormatter: function(d: any) { return this.moment.unix(d).fromNow().toUpperCase(); }
-                }
-            },
             showYAxis: false,
             yAxis: {
-                tickFormat: (d, i) => { return Math.ceil(d); }
+                tickFormat: (d: any, i: any) => { return Math.ceil(d); }
+            },
+            xAxis: {
+                tickFormat: (d: any, i: any) => { return this.moment.unix(d).fromNow().toUpperCase(); }
             },
             showLegend: false,
-            interpolate: 'step'
+            interpolate: 'monotone'
         }
     };
     chartApi: any = {};
@@ -81,7 +79,7 @@ export class NodeDetailsStatsController {
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
         MinemeldStatus: IMinemeldStatus, MinemeldMetrics: IMinemeldMetrics,
-        moment: moment.MomentStatic, $scope: angular.IScope, 
+        moment: moment.MomentStatic, $scope: angular.IScope,
         $compile: angular.ICompileService, $state: angular.ui.IStateService,
         $stateParams: angular.ui.IStateParamsService) {
         this.toastr = toastr;
@@ -95,12 +93,6 @@ export class NodeDetailsStatsController {
         this.$stateParams = $stateParams;
 
         this.nodename = $scope.$parent['nodedetail']['nodename'];
-
-        this.updateNodeMetricsPromise = this.$interval(
-            this.updateNodeMetrics.bind(this),
-            this.updateNodeMetricsInterval,
-            1
-        );
 
         this.updateMinemeldStatus();
         this.updateNodeMetrics();
@@ -123,7 +115,7 @@ export class NodeDetailsStatsController {
 
             for (j = 0; j < result.length; j++) {
                 m = result[j].metric;
-                if (m == 'length') {
+                if (m === 'length') {
                     m = 'indicators';
                 }
                 cm = <IMetric> {
@@ -143,12 +135,12 @@ export class NodeDetailsStatsController {
                 }
             }
         }, function(error: any) {
-            vm.toastr.error('ERROR RETRIEVING MINEMELD STATUS: ' + error.status);
+            vm.toastr.error('ERROR RETRIEVING MINEMELD METRICS: ' + error.status);
         })
         .finally(function() {
-            vm.updateMinemeldStatusPromise = vm.$interval(
-                vm.updateMinemeldStatus.bind(vm),
-                vm.updateMinemeldStatusInterval,
+            vm.updateNodeMetricsPromise = vm.$interval(
+                vm.updateNodeMetrics.bind(vm),
+                vm.updateNodeMetricsInterval,
                 1
             );
         })
@@ -162,7 +154,7 @@ export class NodeDetailsStatsController {
         .then(function(result: any) {
             var ns: IMinemeldStatusNode;
 
-            ns = <IMinemeldStatusNode>(result.filter(function(x: any) { return x.name == vm.nodename; })[0]);
+            ns = <IMinemeldStatusNode>(result.filter(function(x: any) { return x.name === vm.nodename; })[0]);
             vm.nodeState = ns;
             vm.nodeState.indicators = ns.length;
         }, function(error: any) {
@@ -176,7 +168,7 @@ export class NodeDetailsStatsController {
             );
         })
         ;
-    }   
+    }
 
     private destroy() {
         if (this.updateNodeMetricsPromise) {

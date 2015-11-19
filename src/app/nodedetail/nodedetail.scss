@@ -70,3 +70,33 @@
   border-top: 2px solid $table-border-color;
   border-bottom: 1px solid $table-border-color;
 }
+
+.nodedetails-info-table {
+  margin-top: 15px;
+  background-color: lighten($body-bg, 2%);
+  font-size: 12px;
+}
+
+.nodedetails-info-table > thead {
+  margin-top: 15px;
+  background-color: $body-bg;
+}
+
+.nodedetails-info-table > thead th {
+  font-size: 12px;
+  font-weight: 400 !important;  
+}
+
+.nodedetails-info-table > tbody {
+  border-top: 2px solid $table-border-color;
+  border-bottom: 1px solid $table-border-color;
+}
+
+.nodetails-info-inputs {
+  padding: 0;
+  margin-bottom: 0;
+}
+
+.nodetails-info-inputs > li {
+    list-style-type: none;
+}

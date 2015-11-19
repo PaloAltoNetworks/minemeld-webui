@@ -46,11 +46,13 @@ export class DashboardController {
             useInteractiveGuideline: true,
             showXAxis: false,
             tooltip: {
-                keyFormatter: function(d: any) { return this.moment.unix(d).fromNow().toUpperCase(); }
+                keyFormatter: function(d: any) { return this.moment.unix(d).fromNow().toUpperCase(); },
+                valueFormatter: function(d: any) { return Math.ceil(d); }
             },
             showYAxis: false,
+            forceY: [],
             yAxis: {
-                tickFormat: (d, i) => { return Math.ceil(d); }
+                tickFormat: (d, i) => { console.log(d); return Math.ceil(d); }
             },
             showLegend: false,
             color: ['#91B7C7']
@@ -80,7 +82,7 @@ export class DashboardController {
                 tickFormat: (d, i) => { return Math.ceil(d); }
             },
             showLegend: false,
-            interpolate: 'step'
+            interpolate: 'monotone'
         }
     };
 

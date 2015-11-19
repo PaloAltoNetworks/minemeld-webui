@@ -17,14 +17,17 @@ export function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterPro
       url: '/nodes/:nodename',
       templateUrl: 'app/nodedetail/view.html',
       controller: 'NodeDetailController',
-      controllerAs: 'nodedetail',
-      abstract: true
+      controllerAs: 'nodedetail'
     })
     .state('nodedetail.stats', {
-      url: '/stats',
       templateUrl: 'app/nodedetail/view.stats.html',
       controller: 'NodeDetailsStatsController',
       controllerAs: 'nodedetailstats'
+    })
+    .state('nodedetail.info', {
+      templateUrl: 'app/nodedetail/view.info.html',
+      controller: 'NodeDetailsInfoController',
+      controllerAs: 'nodedetailinfo'
     })
     ;
 

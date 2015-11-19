@@ -50,7 +50,8 @@ function webpackWrapper(watch, test, callback) {
 
   var sources = [ 
     path.join(conf.paths.src, '/app/**/*.js'),
-    path.join(conf.paths.src, '/app/index.module.ts')
+    path.join(conf.paths.src, '/app/index.module.ts'),
+    path.join(conf.paths.src, '/app/nodedetail/redisset.controller.ts')
   ];
   if (test) {
     sources.push(path.join(conf.paths.src, '/app/**/*.spec.ts'));

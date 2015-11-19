@@ -50,7 +50,7 @@ export class NodesController {
     }
 
     public go(newstate: string) {
-        this.$state.go('nodedetail.stats', { nodename: newstate });
+        this.$state.transitionTo('nodedetail', { nodename: newstate });
     }
 
     private updateNodesTable() {
@@ -74,7 +74,6 @@ export class NodesController {
         var vm: any = this;
 
         this.dtOptions = this.DTOptionsBuilder.fromFnPromise(function() {
-            console.log('fn promise called');
             var $p: any = vm.mmstatus.getMinemeld()
                 .catch(function(error: any) {
                     this.toastr.error('ERROR RETRIEVING MINEMELD STATUS:' + error.status);
@@ -128,8 +127,6 @@ export class NodesController {
             this.DTColumnBuilder.newColumn(null).withTitle('TYPE').renderWith(function(data: any, type: any, full: any) {
                 var c: string;
                 var v: string;
-
-                console.log(data);
     
                 if (full.inputs.length === 0) {
                     c = 'nodes-label-miner';
