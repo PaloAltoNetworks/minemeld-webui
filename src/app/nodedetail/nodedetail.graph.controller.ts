@@ -2,12 +2,7 @@
 
 import { IMinemeldStatus, IMinemeldStatusNode } from  '../../app/services/status';
 
-interface INGMinemeldStatusNode extends IMinemeldStatusNode {
-    indicators: number;
-    stateAsString: string;
-}
-
-export class NodeDetailInfoController {
+export class NodeDetailGraphController {
     mmstatus: IMinemeldStatus;
     moment: moment.MomentStatic;
     toastr: any;
@@ -19,7 +14,7 @@ export class NodeDetailInfoController {
 
     nodename: string;
 
-    nodeState: INGMinemeldStatusNode;
+    nodes: IMinemeldStatusNode[];
 
     updateMinemeldStatusPromise: angular.IPromise<any>;
     updateMinemeldStatusInterval: number = 5 * 60 * 1000;
@@ -46,21 +41,22 @@ export class NodeDetailInfoController {
         this.$scope.$on('$destroy', this.destroy.bind(this));
     }
 
-    public renderState(vm: any, ns: IMinemeldStatusNode) {
-        vm.nodeState = ns;
-        vm.nodeState.indicators = ns.length;
-        vm.nodeState.stateAsString = vm.mmstatus.NODE_STATES[ns.state];
-    }
-
     private updateMinemeldStatus() {
         var vm: any = this;
 
         vm.mmstatus.getMinemeld()
-        .then(function(result: any) {
-            var ns: IMinemeldStatusNode;
+        .then((result: any) => {
+            var nodes: IMinemeldStatusNode[] = [];
+            var members: string[] = [];
+            var clength: number;
 
-            ns = <IMinemeldStatusNode>(result.filter(function(x: any) { return x.name === vm.nodename; })[0]);
-            vm.renderState(vm, ns);
+/*            do {
+                clength = members.length;
+
+
+            } while (clength != members.length);*/
+
+            vm.nodes = result;
         }, function(error: any) {
             vm.toastr.error('ERROR RETRIEVING MINEMELD STATUS: ' + error.status);
         })

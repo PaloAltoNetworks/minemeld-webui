@@ -19,7 +19,7 @@ interface IMetricsDictionary {
     [index: string]: IMetric[];
 }
 
-export class NodeDetailsStatsController {
+export class NodeDetailStatsController {
     mmstatus: IMinemeldStatus;
     mmmetrics: IMinemeldMetrics;
     moment: moment.MomentStatic;

@@ -5,8 +5,9 @@ import { routerConfig } from './index.route';
 import { DashboardController } from './dashboard/dashboard.controller';
 import { NodesController } from './nodes/nodes.controller';
 import { NodeDetailController } from './nodedetail/nodedetail.controller';
-import { NodeDetailsStatsController } from './nodedetail/nodedetail.stats.controller';
-import { NodeDetailsInfoController } from './nodedetail/nodedetail.info.controller';
+import { NodeDetailStatsController } from './nodedetail/nodedetail.stats.controller';
+import { NodeDetailInfoController } from './nodedetail/nodedetail.info.controller';
+import { NodeDetailGraphController } from './nodedetail/nodedetail.graph.controller';
 import { appNavbar } from '../app/components/navbar/navbar.directive';
 import { MinemeldStatus } from './services/status';
 import { MinemeldMetrics } from './services/metrics';
@@ -34,7 +35,8 @@ module minemeldWebui {
     'datatables',
     'datatables.bootstrap',
     'easypiechart',
-    'nvd3'
+    'nvd3',
+    'mmSankey'
   ])
   .constant('moment', moment)
   .config(config)
@@ -43,8 +45,9 @@ module minemeldWebui {
   .controller('DashboardController', DashboardController)
   .controller('NodesController', NodesController)
   .controller('NodeDetailController', NodeDetailController)
-  .controller('NodeDetailsStatsController', NodeDetailsStatsController)
-  .controller('NodeDetailsInfoController', NodeDetailsInfoController)
+  .controller('NodeDetailStatsController', NodeDetailStatsController)
+  .controller('NodeDetailInfoController', NodeDetailInfoController)
+  .controller('NodeDetailGraphController', NodeDetailGraphController)
   .directive('appNavbar', appNavbar)
   .service('MinemeldStatus', MinemeldStatus)
   .service('MinemeldMetrics', MinemeldMetrics)

@@ -2,9 +2,9 @@
 
 import { INodeDetailResolverService } from '../../app/services/nodedetailresolver';
 import { IMinemeldStatusNode } from '../../app/services/status';
-import { NodeDetailsInfoController } from './nodedetail.info.controller';
+import { NodeDetailInfoController } from './nodedetail.info.controller';
 
-class NodeDetailRedisSetInfoController extends NodeDetailsInfoController{
+class NodeDetailRedisSetInfoController extends NodeDetailInfoController{
     public renderState(vm: any, ns: IMinemeldStatusNode) {
         vm.nodeState = ns;
         vm.nodeState.indicators = ns.length;

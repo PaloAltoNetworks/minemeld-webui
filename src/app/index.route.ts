@@ -21,13 +21,18 @@ export function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterPro
     })
     .state('nodedetail.stats', {
       templateUrl: 'app/nodedetail/view.stats.html',
-      controller: 'NodeDetailsStatsController',
+      controller: 'NodeDetailStatsController',
       controllerAs: 'nodedetailstats'
     })
     .state('nodedetail.info', {
       templateUrl: 'app/nodedetail/view.info.html',
-      controller: 'NodeDetailsInfoController',
+      controller: 'NodeDetailInfoController',
       controllerAs: 'nodedetailinfo'
+    })
+    .state('nodedetail.graph', {
+      templateUrl: 'app/nodedetail/view.graph.html',
+      controller: 'NodeDetailGraphController',
+      controllerAs: 'vm'
     })
     ;
 
