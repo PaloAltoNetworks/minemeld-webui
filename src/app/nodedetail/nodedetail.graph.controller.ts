@@ -46,17 +46,50 @@ export class NodeDetailGraphController {
 
         vm.mmstatus.getMinemeld()
         .then((result: any) => {
+            var cnode: IMinemeldStatusNode;
+            var j: number;
+            var k: number;
+            var i: any;
             var nodes: IMinemeldStatusNode[] = [];
             var members: string[] = [];
+            var tobeadded: string[] = [this.nodename];
             var clength: number;
 
-/*            do {
+            do {
                 clength = members.length;
 
+                for (var j = 0; j < result.length; j++) {
+                    cnode = <IMinemeldStatusNode>result[j];
 
-            } while (clength != members.length);*/
+                    if (members.indexOf(cnode.name) > -1) {
+                        continue;
+                    }
 
-            vm.nodes = result;
+                    k = tobeadded.indexOf(cnode.name);
+                    if (k > -1) {
+                        nodes.push(cnode);
+                        members.push(cnode.name);
+                        tobeadded.splice(k, 1);
+
+                        for (i in cnode.inputs) {
+                            if ((tobeadded.indexOf(cnode.inputs[i]) <= -1) &&
+                                (members.indexOf(cnode.inputs[i]) <= -1)) {
+                                tobeadded.push(cnode.inputs[i]);
+                            }
+                        }
+                    } else {
+                        for (i in cnode.inputs) {
+                            if (members.indexOf(cnode.inputs[i]) > -1) {
+                                if (tobeadded.indexOf(cnode.name) <= -1) {
+                                    tobeadded.push(cnode.name);
+                                }
+                            }
+                        }
+                    }
+                }
+            } while ((clength != members.length) || (tobeadded.length != 0));
+
+            vm.nodes = nodes;
         }, function(error: any) {
             vm.toastr.error('ERROR RETRIEVING MINEMELD STATUS: ' + error.status);
         })

@@ -13,9 +13,124 @@
             width: 100%;
             height: 100%;
             z-index: 9999;
-            background: url(assets/images/loader.gif) 50% 50%/128px no-repeat #fff;
+            background-color: #fff;
+            text-align: center;
+            padding-top: 250px;
+        }
+
+        #loader > svg {
+            width: 128px;
+            height: auto;
+        }
+
+        #loader .miner {
+            fill: #1EA896;
+        }
+
+        #loader .output {
+            fill: #F1C40F;
+        }
+
+        #loader .processor {
+            fill: #BA6A5D;
+        }
+
+        @keyframes loader-light-miner1 {
+            12% { fill: #51DBC9; }
+            20% { fill: #1EA896; }
+            28% { fill: #1EA896; }
+            36% { fill: #1EA896; }
+            44% { fill: #1EA896; }
+            52% { fill: #1EA896; }
+            60% { fill: #1EA896; }
+            68% { fill: #1EA896; }
+            76% { fill: #1EA896; }
+            84% { fill: #1EA896; }
+            92% { fill: #1EA896; }
+            100% { fill: #1EA896; }
+        }
+
+        @keyframes loader-light-miner2 {
+            12% { fill: #1EA896; }
+            20% { fill: #1EA896; }
+            28% { fill: #1EA896; }
+            36% { fill: #1EA896; }
+            44% { fill: #51DBC9; }
+            52% { fill: #1EA896; }
+            60% { fill: #1EA896; }
+            68% { fill: #1EA896; }
+            76% { fill: #1EA896; }
+            84% { fill: #1EA896; }
+            92% { fill: #1EA896; }
+            100% { fill: #1EA896; }
+        }
+
+        @keyframes loader-light-miner3 {
+            12% { fill: #1EA896; }
+            20% { fill: #1EA896; }
+            28% { fill: #1EA896; }
+            36% { fill: #1EA896; }
+            44% { fill: #1EA896; }
+            52% { fill: #1EA896; }
+            60% { fill: #1EA896; }
+            68% { fill: #1EA896; }
+            76% { fill: #51DBC9; }
+            84% { fill: #1EA896; }
+            92% { fill: #1EA896; }
+            100% { fill: #1EA896; }
+        }
+
+        @keyframes loader-light-processor {
+            12% { fill: #BA6A5D; }
+            20% { fill: #ED9D90; }
+            28% { fill: #BA6A5D; }
+            36% { fill: #BA6A5D; }
+            44% { fill: #BA6A5D; }
+            52% { fill: #ED9D90; }
+            60% { fill: #BA6A5D; }
+            68% { fill: #BA6A5D; }
+            76% { fill: #BA6A5D; }
+            84% { fill: #ED9D90; }
+            92% { fill: #BA6A5D; }
+            100% { fill: #BA6A5D; }
+        }
+
+        @keyframes loader-light-output {
+            12% { fill: #F1C40F; }
+            20% { fill: #F1C40F; }
+            28% { fill: #FFF742; }
+            36% { fill: #F1C40F; }
+            44% { fill: #F1C40F; }
+            52% { fill: #F1C40F; }
+            60% { fill: #FFF742; }
+            68% { fill: #F1C40F; }
+            76% { fill: #F1C40F; }
+            84% { fill: #F1C40F; }
+            92% { fill: #FFF742; }
+            100% { fill: #F1C40F; }
+        }
+
+        #loader #m1 {
+            animation: loader-light-miner1 6s 0s ease infinite;
+        }
+
+        #loader #m2 {
+            animation: loader-light-miner2 6s 0s ease infinite;
+        }
+
+        #loader #m3 {
+            animation: loader-light-miner3 6s 0s ease infinite;
+        }
+
+        #loader .p1 {
+            animation: loader-light-processor 6s 0s ease infinite;
+        }
+
+        #loader .o1 {
+            animation: loader-light-output 6s 0s ease infinite;
         }
     </style>
+    <link rel="icon" href="favicon.ico?v=2">
 
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
@@ -35,8 +150,22 @@
     <!--[if lt IE 10]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-    <div id="loader"></div>
-
+    <div id="loader">
+        <svg version="1.1" viewBox="110 70 296 302" xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.        1/" xmlns:xl="http://www.w3.org/1999/xlink">
+            <defs/>
+            <g fill="none" fill-opacity="1" stroke="none" stroke-dasharray="none" stroke-opacity="1">
+                <g>
+                    <path id="m1" d="M 201.25984 119.05512 L 229.6063 70.86614 L 286.29921 70.86614 L 314.64567 119.05512 L 286.29921 167.2441 L 229.6063 167.2441 Z" class="miner"/>
+                    <path id="o1" d="M 201.25984 323.1496 L 229.6063 274.96063 L 286.29921 274.96063 L 314.64567 323.1496 L 286.29921 371.33858 L 229.6063 371.33858 Z" class="output o1"/>
+                    <path id="p1" d="M 201.25984 221.10236 L 229.6063 172.91338 L 286.29921 172.91338 L 314.64567 221.10236 L 286.29921 269.29134 L 229.6063 269.29134 Z" class="processor p1 p2"/>
+                    <path id="m2" d="M 110.55118 170.07874 L 138.89764 121.88976 L 195.59055 121.88976 L 223.937 170.07874 L 195.59055 218.26772 L 138.89764 218.26772 Z" class="miner"/>
+                    <path id="m3" d="M 110.55118 272.12598 L 138.89764 223.937 L 195.59055 223.937 L 223.937 272.12598 L 195.59055 320.31496 L 138.89764 320.31496 Z" class="miner"/>
+                    <path id="o2" d="M 291.9685 170.07874 L 320.31496 121.88976 L 377.00787 121.88976 L 405.35433 170.07874 L 377.00787 218.26772 L 320.31496 218.26772 Z" class="output o1"/>
+                    <path id="o3" d="M 291.9685 272.12598 L 320.31496 223.937 L 377.00787 223.937 L 405.35433 272.12598 L 377.00787 320.31496 L 320.31496 320.31496 Z" class="output o1"/>
+                </g>
+            </g>
+        </svg>
+    </div>
     <div>
         <app-navbar></app-navbar>
     </div>
@@ -60,7 +189,5 @@
     <!-- angular templates will be automatically converted in js and inserted here -->
     <!-- endinject -->
     <!-- endbuild -->
-
-    <link rel="icon" href="favicon.ico?v=2">
   </body>
 </html>
