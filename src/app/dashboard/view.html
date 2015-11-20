@@ -71,7 +71,7 @@
       <div class="col-xs-12 dashboard-chart-column">
         <div class="dashboard-chart-title small m-t-xs"># OF INDICATORS ({{dashboard.chartRange}})</div>
         <nvd3 ng-if="dashboard.minersMetrics.length" options="dashboard.indicatorsOptions"
-          api="dashboard.minersMetricsLengthAPI" data="dashboard.minersMetrics.length">
+          api="dashboard.minersMetricsLengthAPI" data="dashboard.minersMetrics.length"></nvd3>
         <div ng-if="!dashboard.minersMetrics.length" class="dashboard-chart-placeholder">NO STATS YET</div>
       </div>
     </div>

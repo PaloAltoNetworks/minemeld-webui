@@ -53,5 +53,8 @@ module minemeldWebui {
   .service('MinemeldMetrics', MinemeldMetrics)
   .service('NodeDetailResolver', NodeDetailResolver)
   .filter('megaNumber', megaNumber)
+  .run(function() {
+    document.getElementById('loader').style.display = 'none';
+  })
   ;
 }

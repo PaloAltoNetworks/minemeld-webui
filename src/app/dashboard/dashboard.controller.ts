@@ -52,7 +52,7 @@ export class DashboardController {
             showYAxis: false,
             forceY: [],
             yAxis: {
-                tickFormat: (d, i) => { console.log(d); return Math.ceil(d); }
+                tickFormat: (d, i) => { return Math.ceil(d); }
             },
             showLegend: false,
             color: ['#91B7C7']
@@ -70,6 +70,7 @@ export class DashboardController {
             height: 128,
             x: function(d: any) { return d.x; },
             y: function(d: any) { return d.y; },
+            getSize: function(d: any) { console.log(d); return 0.1; },
             useInteractiveGuideline: true,
             showXAxis: false,
             interactiveLayer: {
@@ -81,6 +82,7 @@ export class DashboardController {
             yAxis: {
                 tickFormat: (d, i) => { return Math.ceil(d); }
             },
+            forceY: [0, 1],
             showLegend: false,
             interpolate: 'monotone'
         }

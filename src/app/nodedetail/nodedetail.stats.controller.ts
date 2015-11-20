@@ -58,6 +58,7 @@ export class NodeDetailStatsController {
             xAxis: {
                 tickFormat: (d: any, i: any) => { return this.moment.unix(d).fromNow().toUpperCase(); }
             },
+            forceY: [0, 1],
             showLegend: false,
             interpolate: 'monotone'
         }
