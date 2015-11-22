@@ -122,7 +122,13 @@ export class DashboardController {
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
                 MinemeldStatus: IMinemeldStatus, MinemeldMetrics: IMinemeldMetrics,
-                moment: moment.MomentStatic, $scope: angular.IScope) {
+                moment: moment.MomentStatic, $scope: angular.IScope, $state: angular.ui.IStateService) {
+        if (!MinemeldStatus.authorizationSet) {
+            $state.go('login');
+
+            return;
+        }
+
         this.toastr = toastr;
         this.mmstatus = MinemeldStatus;
         this.mmmetrics = MinemeldMetrics;

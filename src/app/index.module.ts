@@ -9,6 +9,7 @@ import { NodeDetailStatsController } from './nodedetail/nodedetail.stats.control
 import { NodeDetailInfoController } from './nodedetail/nodedetail.info.controller';
 import { NodeDetailGraphController } from './nodedetail/nodedetail.graph.controller';
 import { appNavbar } from '../app/components/navbar/navbar.directive';
+import { LoginController } from './login/login.controller';
 import { MinemeldStatus } from './services/status';
 import { MinemeldMetrics } from './services/metrics';
 import { NodeDetailResolver } from './services/nodedetailresolver';
@@ -48,6 +49,7 @@ module minemeldWebui {
   .controller('NodeDetailStatsController', NodeDetailStatsController)
   .controller('NodeDetailInfoController', NodeDetailInfoController)
   .controller('NodeDetailGraphController', NodeDetailGraphController)
+  .controller('LoginController', LoginController)
   .directive('appNavbar', appNavbar)
   .service('MinemeldStatus', MinemeldStatus)
   .service('MinemeldMetrics', MinemeldMetrics)

@@ -4,6 +4,7 @@ export interface IMinemeldMetrics {
     getNodeType(nodetype: string, options?: IMetricsParams): angular.IPromise<any>;
     getMinemeld(options?: IMetricsParams): angular.IPromise<any>;
     getNode(nodename: string, options?: IMetricsParams);
+    setAuthorization(username: string, password: string): void;
 }
 
 interface IMetricsParams {
@@ -21,16 +22,52 @@ interface INodeMetricsParams extends IMetricsParams {
 }
 
 export class MinemeldMetrics implements IMinemeldMetrics {
-    static $inject = ['$resource'];
+    static $inject = ['$resource', '$state'];
 
     metricsNodeType: angular.resource.IResourceClass<angular.resource.IResource<any>>;
     metricsMinemeld: angular.resource.IResourceClass<angular.resource.IResource<any>>;
     metricsNode: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
-    constructor($resource: angular.resource.IResourceService) {
+    $resource: angular.resource.IResourceService;
+    $state: angular.ui.IStateService;
+
+    constructor($resource: angular.resource.IResourceService,
+                $state: angular.ui.IStateService) {
         this.metricsNodeType = $resource('/metrics/minemeld/:nodetype');
         this.metricsMinemeld = $resource('/metrics/minemeld');
         this.metricsNode = $resource('/metrics/:nodename');
+
+        this.$resource = $resource;
+        this.$state = $state;
+    }
+
+    public setAuthorization(username: string, password: string) {
+        this.metricsNodeType = this.$resource('/metrics/minemeld/:nodetype', {}, {
+            get: {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Basic ' + window.btoa(username + ':' + password)
+                }
+            }
+        });
+
+        this.metricsMinemeld = this.$resource('/metrics/minemeld', {}, {
+            get: {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Basic ' + window.btoa(username + ':' + password)
+                }
+            }
+        });
+
+        this.metricsNode = this.$resource('/metrics/:nodename', {}, {
+            get: {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Basic ' + window.btoa(username + ':' + password)
+                }
+            }
+        });
     }
 
     public getNodeType(nodetype: string, options?: IMetricsParams) {
@@ -50,12 +87,18 @@ export class MinemeldMetrics implements IMinemeldMetrics {
             }
         }
 
-        return this.metricsNodeType.get(params).$promise.then(function(result: any) {
+        return this.metricsNodeType.get(params).$promise.then((result: any) => {
             if ('result' in result) {
                 return result.result;
             }
 
             return [];
+        }, (error: any) => {
+            if (error.status === 401) {
+                this.$state.go('login');
+            }
+
+            return error;
         });
     }
 
@@ -76,12 +119,18 @@ export class MinemeldMetrics implements IMinemeldMetrics {
             }
         }
 
-        return this.metricsNode.get(params).$promise.then(function(result: any) {
+        return this.metricsNode.get(params).$promise.then((result: any) => {
             if ('result' in result) {
                 return result.result;
             }
 
             return [];
+        }, (error: any) => {
+            if (error.status === 401) {
+                this.$state.go('login');
+            }
+
+            return error;
         });
     }
 
@@ -100,12 +149,18 @@ export class MinemeldMetrics implements IMinemeldMetrics {
             }
         }
 
-        return this.metricsMinemeld.get(params).$promise.then(function(result: any) {
+        return this.metricsMinemeld.get(params).$promise.then((result: any) => {
             if ('result' in result) {
                 return result.result;
             }
 
             return [];
+        }, (error: any) => {
+            if (error.status === 401) {
+                this.$state.go('login');
+            }
+
+            return error;
         });
     }
 }

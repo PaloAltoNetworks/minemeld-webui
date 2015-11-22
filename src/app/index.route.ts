@@ -1,6 +1,12 @@
 /** @ngInject */
 export function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider) {
   $stateProvider
+    .state('login', {
+      url:'/login',
+      templateUrl: 'app/login/view.html',
+      controller: 'LoginController',
+      controllerAs: 'login'
+    })
     .state('dashboard', {
       url: '/dashboard',
       templateUrl: 'app/dashboard/view.html',
