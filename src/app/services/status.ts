@@ -4,8 +4,8 @@ export interface IMinemeldStatus {
     NODE_STATES: string[];
     getSystem(): angular.IPromise<any>;
     getMinemeld(): angular.IPromise<any>;
-    setAuthorization(username: string, password: string): void;
-    authorizationSet: boolean;
+    getConfig(): angular.IPromise<any>;
+    setAuthorizationHeaders(headers: any): void;
 }
 
 export interface IMinemeldStatusNode {
@@ -24,9 +24,12 @@ export class MinemeldStatus implements IMinemeldStatus {
     static $inject = ['$resource', '$state'];
 
     authorizationSet: boolean = false;
+    authorizationString: string;
 
     system: angular.resource.IResourceClass<angular.resource.IResource<any>>;
     minemeld: angular.resource.IResourceClass<angular.resource.IResource<any>>;
+    config: angular.resource.IResourceClass<angular.resource.IResource<any>>;
+
     $resource: angular.resource.IResourceService;
     $state: angular.ui.IStateService;
 
@@ -44,28 +47,31 @@ export class MinemeldStatus implements IMinemeldStatus {
 
     constructor($resource: angular.resource.IResourceService,
                 $state: angular.ui.IStateService) {
-        this.system = $resource('/status/system');
-        this.minemeld = $resource('/status/minemeld');
+        console.log('MinemeldStatus');
+
         this.$resource = $resource;
         this.$state = $state;
     }
 
-    public setAuthorization(username: string, password: string) {
+    public setAuthorizationHeaders(headers: any) {
         this.system = this.$resource('/status/system', {}, {
             get: {
                 method: 'GET',
-                headers: {
-                    'Authorization': 'Basic ' + window.btoa(username + ':' + password)
-                }
+                headers: headers
             }
         });
 
         this.minemeld = this.$resource('/status/minemeld', {}, {
             get: {
                 method: 'GET',
-                headers: {
-                    'Authorization': 'Basic ' + window.btoa(username + ':' + password)
-                }
+                headers: headers
+            }
+        });
+
+        this.config = this.$resource('/status/config', {}, {
+            get: {
+                method: 'GET',
+                headers: headers
             }
         });
 
@@ -73,6 +79,11 @@ export class MinemeldStatus implements IMinemeldStatus {
     }
 
     public getSystem(): angular.IPromise<any> {
+        if (!this.system) {
+            this.$state.go('login');
+            return;
+        }
+
         return this.system.get().$promise.then((result: any) => {
             if ('result' in result) {
                 return result.result;
@@ -89,7 +100,33 @@ export class MinemeldStatus implements IMinemeldStatus {
     }
 
     public getMinemeld(): angular.IPromise<any> {
+        if (!this.minemeld) {
+            this.$state.go('login');
+            return;
+        }
+
         return this.minemeld.get().$promise.then((result: any) => {
+            if ('result' in result) {
+                return result.result;
+            }
+
+            return new Array();
+        }, (error: any) => {
+            if (error.status === 401) {
+                this.$state.go('login');
+            }
+
+            return error;
+        });
+    }
+
+    public getConfig(): angular.IPromise<any> {
+        if (!this.config) {
+            this.$state.go('login');
+            return;
+        }
+
+        return this.config.get().$promise.then((result: any) => {
             if ('result' in result) {
                 return result.result;
             }

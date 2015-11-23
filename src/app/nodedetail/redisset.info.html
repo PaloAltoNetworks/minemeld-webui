@@ -5,7 +5,7 @@
 </div>
 <div class="row">
     <div class="col-sm-6 col-md-6">
-        <table class="table table-condensed nodedetails-info-table">
+        <table class="table table-condensed nodedetail-info-table">
               <colgroup>
                 <col style="width: 30%">
                 <col>
@@ -34,7 +34,7 @@
         </table>
     </div>
     <div class="col-sm-6 col-md-6">
-        <table class="table table-condensed nodedetails-info-table">
+        <table class="table table-condensed nodedetail-info-table">
               <colgroup>
                 <col style="width: 15%">
                 <col style="width: 85%">
@@ -60,8 +60,9 @@
         </table>
     </div>
 </div>
-<div class="row">
+<div class="row" ng-if="vm.nodeConfig.config">
     <div class="col-sm-12 col-md-12">
-        <h5 class="m-b-xs">CONFIG (TBD)</h5>
+        <h5 class="m-b-xs">CONFIG</h5>
+        <node-config class="nodedetail-info-config" config="vm.nodeConfig.config"></node-config>
     </div>
 </div>

@@ -1,5 +1,4 @@
-import { IMinemeldStatus } from  '../../app/services/status';
-import { IMinemeldMetrics } from  '../../app/services/metrics';
+import { IMinemeldAuth } from  '../../app/services/auth';
 
 /** @ngInject */
 export class LoginController {
@@ -11,17 +10,18 @@ export class LoginController {
     $resource: angular.resource.IResourceService;
     toastr: any;
     $state: angular.ui.IStateService;
-    MinemeldStatus: IMinemeldStatus;
-    MinemeldMetrics: IMinemeldMetrics;
+    MinemeldAuth: IMinemeldAuth;
+    $cookies: angular.cookies.ICookiesService;
 
     constructor($state: angular.ui.IStateService,
-                MinemeldStatus: IMinemeldStatus, MinemeldMetrics: IMinemeldMetrics,
-                toastr: any, $resource: angular.resource.IResourceService) {
+                MinemeldAuth: IMinemeldAuth,
+                toastr: any, $resource: angular.resource.IResourceService,
+                $cookies: angular.cookies.ICookiesService) {
         this.$resource = $resource;
         this.toastr = toastr;
         this.$state = $state;
-        this.MinemeldStatus = MinemeldStatus;
-        this.MinemeldMetrics = MinemeldMetrics;
+        this.MinemeldAuth = MinemeldAuth;
+        this.$cookies = $cookies;
     }
 
     public submit() {
@@ -38,8 +38,8 @@ export class LoginController {
         });
         r.get().$promise
             .then((result: any) => {
-                this.MinemeldStatus.setAuthorization(this.username, this.password);
-                this.MinemeldMetrics.setAuthorization(this.username, this.password);
+                this.$cookies.put('mmar', btoa(this.username + ':' + this.password));
+                this.MinemeldAuth.setAuthorization(this.username, this.password);
                 this.checking = false;
                 this.$state.go('dashboard');
             }, (error: any) => {

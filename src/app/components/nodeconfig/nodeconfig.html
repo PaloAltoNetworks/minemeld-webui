@@ -1,0 +1,82 @@
+<table class="table table-condensed">
+    <colgroup>
+        <col style="width: 15%">
+        <col>
+    </colgroup>
+    <tbody>
+        <tr ng-if="vm.config.infilters">
+            <td>infilters</td>
+            <td>
+                <table class="table table-condensed">
+                    <thead>
+                        <th>NAME</th>
+                        <th>CONDITIONS</th>
+                        <th>ACTIONS</th>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="filter in vm.config.infilters">
+                            <td>
+                                {{ filter.name }}
+                            </td>
+                            <td>
+                                <ul>
+                                    <li ng-repeat="condition in filter.conditions">{{ condition }}</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li ng-repeat="action in filter.actions">{{ action }}</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr ng-if="vm.config.outfilters">
+            <td>outfilters</td>
+            <td>
+                <table class="table table-condensed">
+                    <thead>
+                        <th>NAME</th>
+                        <th>CONDITIONS</th>
+                        <th>ACTIONS</th>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="filter in vm.config.outfilters">
+                            <td>
+                                {{ filter.name }}
+                            </td>
+                            <td>
+                                <ul>
+                                    <li ng-repeat="condition in filter.conditions">{{ condition }}</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li ng-repeat="action in filter.actions">{{ action }}</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr ng-repeat="(name, value) in vm.config" ng-if="name != 'infilters' && name != 'outfilters'">
+            <td>{{ name }}</td>
+            <td ng-switch="vm.typeOf(value)">
+                <ul ng-switch-when="object" ng-repeat="(a, v) in value">
+                    <li ng-if="v !== null">{{ a }}: {{ v }}</li>
+                    <li ng-if="v === null">{{ a }}: <em>null</em></li>
+                </ul>
+                <ul ng-switch-when="list" ng-repeat="a in value track by $index">
+                    <li>{{ a }}</li>
+                </ul>
+                <span ng-switch-when="boolean" ng-if="!value" class="label label-default"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></span>
+                <span ng-switch-when="boolean" ng-if="value" class="label label-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></span>
+                <span ng-switch-when="null"><em>Null</em></span>
+                <span ng-switch-default>{{ value }}</span>
+            </td>
+        </tr>
+    </tbody>
+</table>

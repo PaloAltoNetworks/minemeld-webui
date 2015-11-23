@@ -123,12 +123,6 @@ export class DashboardController {
     constructor(toastr: any, $interval: angular.IIntervalService,
                 MinemeldStatus: IMinemeldStatus, MinemeldMetrics: IMinemeldMetrics,
                 moment: moment.MomentStatic, $scope: angular.IScope, $state: angular.ui.IStateService) {
-        if (!MinemeldStatus.authorizationSet) {
-            $state.go('login');
-
-            return;
-        }
-
         this.toastr = toastr;
         this.mmstatus = MinemeldStatus;
         this.mmmetrics = MinemeldMetrics;
@@ -198,9 +192,9 @@ export class DashboardController {
             }
         )
         .finally(function() {
-            vm.systemUpdatePromise = vm.$interval(
+            vm.minemeldUpdatePromise = vm.$interval(
                 vm.updateMinemeld.bind(vm),
-                vm.systemUpdateInterval,
+                vm.minemeldUpdateInterval,
                 1
             );
         });

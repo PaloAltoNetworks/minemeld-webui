@@ -4,7 +4,7 @@ export interface IMinemeldMetrics {
     getNodeType(nodetype: string, options?: IMetricsParams): angular.IPromise<any>;
     getMinemeld(options?: IMetricsParams): angular.IPromise<any>;
     getNode(nodename: string, options?: IMetricsParams);
-    setAuthorization(username: string, password: string): void;
+    setAuthorizationHeaders(headers: any): void;
 }
 
 interface IMetricsParams {
@@ -33,39 +33,29 @@ export class MinemeldMetrics implements IMinemeldMetrics {
 
     constructor($resource: angular.resource.IResourceService,
                 $state: angular.ui.IStateService) {
-        this.metricsNodeType = $resource('/metrics/minemeld/:nodetype');
-        this.metricsMinemeld = $resource('/metrics/minemeld');
-        this.metricsNode = $resource('/metrics/:nodename');
-
         this.$resource = $resource;
         this.$state = $state;
     }
 
-    public setAuthorization(username: string, password: string) {
+    public setAuthorizationHeaders(headers: any) {
         this.metricsNodeType = this.$resource('/metrics/minemeld/:nodetype', {}, {
             get: {
                 method: 'GET',
-                headers: {
-                    'Authorization': 'Basic ' + window.btoa(username + ':' + password)
-                }
+                headers: headers
             }
         });
 
         this.metricsMinemeld = this.$resource('/metrics/minemeld', {}, {
             get: {
                 method: 'GET',
-                headers: {
-                    'Authorization': 'Basic ' + window.btoa(username + ':' + password)
-                }
+                headers: headers
             }
         });
 
         this.metricsNode = this.$resource('/metrics/:nodename', {}, {
             get: {
                 method: 'GET',
-                headers: {
-                    'Authorization': 'Basic ' + window.btoa(username + ':' + password)
-                }
+                headers: headers
             }
         });
     }
@@ -74,6 +64,11 @@ export class MinemeldMetrics implements IMinemeldMetrics {
         var params = <INTMetricsParams>{
             nodetype: nodetype
         };
+
+        if (!this.metricsNodeType) {
+            this.$state.go('login');
+            return;
+        }
 
         if (options) {
             if (options.cf) {
@@ -107,6 +102,11 @@ export class MinemeldMetrics implements IMinemeldMetrics {
             nodename: nodename
         };
 
+        if (!this.metricsNode) {
+            this.$state.go('login');
+            return;
+        }
+
         if (options) {
             if (options.cf) {
                 params.cf = options.cf;
@@ -136,6 +136,11 @@ export class MinemeldMetrics implements IMinemeldMetrics {
 
     public getMinemeld(options?: IMetricsParams) {
         var params = <IMetricsParams>{};
+        
+        if (!this.metricsMinemeld) {
+            this.$state.go('login');
+            return;
+        }
 
         if (options) {
             if (options.cf) {

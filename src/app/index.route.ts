@@ -40,6 +40,12 @@ export function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterPro
       controller: 'NodeDetailGraphController',
       controllerAs: 'vm'
     })
+    .state('prototypedetail', {
+      url: '/prototypes/:libraryName/:prototypeName',
+      templateUrl: 'app/prototypedetail/view.html',
+      controller: 'PrototypedetailController',
+      controllerAs: 'vm'
+    })
     ;
 
   $urlRouterProvider.otherwise('/dashboard');

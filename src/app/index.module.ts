@@ -2,19 +2,24 @@
 
 import { config } from './index.config';
 import { routerConfig } from './index.route';
+import { minemeldInit } from './index.init';
 import { DashboardController } from './dashboard/dashboard.controller';
 import { NodesController } from './nodes/nodes.controller';
 import { NodeDetailController } from './nodedetail/nodedetail.controller';
 import { NodeDetailStatsController } from './nodedetail/nodedetail.stats.controller';
 import { NodeDetailInfoController } from './nodedetail/nodedetail.info.controller';
 import { NodeDetailGraphController } from './nodedetail/nodedetail.graph.controller';
+import { PrototypedetailController } from './prototypedetail/prototypedetail.controller';
 import { appNavbar } from '../app/components/navbar/navbar.directive';
 import { LoginController } from './login/login.controller';
 import { MinemeldStatus } from './services/status';
 import { MinemeldMetrics } from './services/metrics';
+import { MinemeldAuth } from './services/auth';
+import { MinemeldPrototype } from './services/prototype';
 import { NodeDetailResolver } from './services/nodedetailresolver';
 import { megaNumber } from './filters/megaNumber';
 import { minemeldOptions } from '../app/components/options/options.directive';
+import { nodeConfig } from '../app/components/nodeconfig/nodeconfig.directive';
 
 declare var malarkey: any;
 declare var moment: moment.MomentStatic;
@@ -43,6 +48,7 @@ module minemeldWebui {
   .config(config)
   .config(routerConfig)
   .directive('minemeldOptions', minemeldOptions)
+  .directive('nodeConfig', nodeConfig)
   .controller('DashboardController', DashboardController)
   .controller('NodesController', NodesController)
   .controller('NodeDetailController', NodeDetailController)
@@ -50,13 +56,14 @@ module minemeldWebui {
   .controller('NodeDetailInfoController', NodeDetailInfoController)
   .controller('NodeDetailGraphController', NodeDetailGraphController)
   .controller('LoginController', LoginController)
+  .controller('PrototypedetailController', PrototypedetailController)
   .directive('appNavbar', appNavbar)
   .service('MinemeldStatus', MinemeldStatus)
   .service('MinemeldMetrics', MinemeldMetrics)
   .service('NodeDetailResolver', NodeDetailResolver)
+  .service('MinemeldAuth', MinemeldAuth)
+  .service('MinemeldPrototype', MinemeldPrototype)
   .filter('megaNumber', megaNumber)
-  .run(function() {
-    document.getElementById('loader').style.display = 'none';
-  })
+  .run(minemeldInit)
   ;
 }

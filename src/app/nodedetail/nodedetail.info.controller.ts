@@ -20,9 +20,13 @@ export class NodeDetailInfoController {
     nodename: string;
 
     nodeState: INGMinemeldStatusNode;
+    nodeConfig: any;
 
     updateMinemeldStatusPromise: angular.IPromise<any>;
     updateMinemeldStatusInterval: number = 5 * 60 * 1000;
+
+    updateMinemeldConfigPromise: angular.IPromise<any>;
+    updateMinemeldConfigInterval: number = 5 * 60 * 1000;
 
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
@@ -42,6 +46,7 @@ export class NodeDetailInfoController {
         this.nodename = $scope.$parent['nodedetail']['nodename'];
 
         this.updateMinemeldStatus();
+        this.updateMinemeldConfig();
 
         this.$scope.$on('$destroy', this.destroy.bind(this));
     }
@@ -74,9 +79,31 @@ export class NodeDetailInfoController {
         ;
     }
 
+    private updateMinemeldConfig() {
+        var vm: any = this;
+
+        vm.mmstatus.getConfig()
+        .then(function(result: any) {
+            vm.nodeConfig = result.nodes[vm.nodename];
+        }, function(error: any) {
+            vm.toastr.error('ERROR RETRIEVING MINEMELD CONFIG: ' + error.status);
+        })
+        .finally(function() {
+            vm.updateMinemeldConfigPromise = vm.$interval(
+                vm.updateMinemeldConfig.bind(vm),
+                vm.updateMinemeldConfigInterval,
+                1
+            );
+        })
+        ;        
+    }
+
     private destroy() {
         if (this.updateMinemeldStatusPromise) {
             this.$interval.cancel(this.updateMinemeldStatusPromise);
+        }
+        if (this.updateMinemeldConfigPromise) {
+            this.$interval.cancel(this.updateMinemeldConfigPromise);
         }
     }
 }

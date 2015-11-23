@@ -71,23 +71,23 @@
   border-bottom: 1px solid $table-border-color;
 }
 
-.nodedetails-info-table {
+.nodedetail-info-table {
   margin-top: 15px;
   background-color: lighten($body-bg, 2%);
   font-size: 12px;
 }
 
-.nodedetails-info-table > thead {
+.nodedetail-info-table > thead {
   margin-top: 15px;
   background-color: $body-bg;
 }
 
-.nodedetails-info-table > thead th {
+.nodedetail-info-table > thead th {
   font-size: 12px;
   font-weight: 400 !important;  
 }
 
-.nodedetails-info-table > tbody {
+.nodedetail-info-table > tbody {
   border-top: 2px solid $table-border-color;
   border-bottom: 1px solid $table-border-color;
 }
@@ -99,4 +99,35 @@
 
 .nodetails-info-inputs > li {
     list-style-type: none;
+}
+
+.nodedetail-info-config > table {
+  margin-top: 15px;
+  background-color: lighten($body-bg, 2%);
+  font-size: 12px;
+}
+
+.nodedetail-info-config > table > tbody {
+  border-top: 2px solid $table-border-color;
+  border-bottom: 1px solid $table-border-color;
+}
+
+.nodedetail-info-config > table > tbody ul {
+  padding-left: 0 !important;
+}
+
+.nodedetail-info-config > table > tbody li {
+    list-style-type: none;
+}
+
+.nodedetail-info-config > table table {
+  margin-top: 0;
+  background-color: lighten($body-bg, 2%) !important;
+  font-size: 12px;  
+}
+
+.nodedetail-info-config > table table > thead th {
+  background-color: darken($body-bg, 5%);
+  font-size: 12px;
+  font-weight: 400 !important;  
 }
