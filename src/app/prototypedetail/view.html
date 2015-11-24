@@ -1,12 +1,12 @@
 <div class="row">
     <div class="col-sm-12 col-md-12">
         <h3 class="m-t-xs prototypedetail-title">
-            {{ vm.libraryName }}.{{ vm.prototypeName }}
+            {{ vm.libraryName }}.{{ vm.prototypeName }} <span class="prototypedetail-description">PROTOTYPE</span>
         </h3>
     </div>
 </div>
 <div class="row" ng-if="vm.library.description||vm.library.url">
-    <div class="col-sm-12 col-md-12">
+    <div class="col-sm-12 col-md-12 prototypedetail-section">
         <h4>
             ABOUT {{ vm.libraryName }}
         </h4>
@@ -19,7 +19,7 @@
     </div>
 </div>
 <div class="row" ng-if="vm.prototype.description">
-    <div class="col-sm-12 col-md-12">
+    <div class="col-sm-12 col-md-12 prototypedetail-section">
         <h4>
             ABOUT {{ vm.libraryName }}.{{ vm.prototypeName }}
         </h4>
@@ -29,13 +29,13 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-sm-12 col-md-12">
+    <div class="col-sm-12 col-md-12 prototypedetail-section">
         <h4>CLASS</h4>
         <div>{{ vm.prototype.class }}</div>
     </div>
 </div>
 <div class="row" ng-if="vm.prototype.config">
-    <div class="col-sm-12 col-md-12">
+    <div class="col-sm-12 col-md-12 prototypedetail-section">
         <h4 class="m-b-xs">CONFIG</h4>
         <node-config class="prototypedetail-config" config="vm.prototype.config"></node-config>
     </div>

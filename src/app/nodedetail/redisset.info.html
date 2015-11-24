@@ -15,6 +15,13 @@
                     <td>CLASS</td>
                     <td>{{ vm.nodeState.class }}</td>
                 </tr>
+                <tr ng-if="vm.nodeConfig.prototype">
+                    <td>PROTOTYPE</td>
+                    <td><a tooltip-template="'tooltip.prototype.html'" ui-sref="prototypedetail({ prototypeName: vm.nodeConfig.prototype.split('.')[1], libraryName: vm.nodeConfig.prototype.split('.')[0] })">{{ vm.nodeConfig.prototype }}</a></td>
+                    <script type="text/ng-template" id="tooltip.prototype.html">
+                        <prototype-tooltip name="vm.nodeConfig.prototype"></prototype-tooltip>
+                    </script>
+                </tr>
                 <tr>
                     <td>STATE</td>
                     <td ng-switch on="vm.nodeState.state">

@@ -126,20 +126,21 @@ div.main-container {
 .d3-tip {
   line-height: 1;
   padding: 12px;
+  padding-bottom: 0px;
   background: rgba(255, 255, 255, 0.9);
-  color: $gray-light;
-  border-radius: 2px;
+  color: $gray;
+  border-radius: 0px;
   pointer-events: none;
-  box-shadow: 0 1px 5px rgba(0,0,0,0.4);
-  border: 1px solid rgba(200,200,200,0.85);
+  border: 1px solid rgba(100,100,100,0.85);
+  font-size: 12px;
 }
 
-.d3-tip .strong {
+/* .d3-tip .strong {
     color: black;
-}
+} */
 
 /* Creates a small triangle extender for the tooltip */
-.d3-tip:after {
+/* .d3-tip:after {
   box-sizing: border-box;
   display: inline;
   font-size: 10px;
@@ -148,13 +149,13 @@ div.main-container {
   color: rgba(255, 255, 255, 0.9);
   position: absolute;
   pointer-events: none;
-}
+} */
 
 /* Northward tooltips */
-.d3-tip.n:after {
+/* .d3-tip.n:after {
   content: "\25BC";
   margin: -1px 0 0 0;
   top: 100%;
   left: 0;
   text-align: center;
-}
+} */

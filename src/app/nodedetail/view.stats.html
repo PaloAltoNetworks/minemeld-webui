@@ -20,9 +20,9 @@
                             data="nodedetailstats.metrics.indicators"></nvd3>
                     </td>
                 </tr>
-                <tr ng-repeat="(name, value) in nodedetailstats.nodeState.statistics">
+                <tr ng-repeat="(name, value) in nodedetailstats.metrics">
                     <td>{{ name | uppercase }}</td>
-                    <td>{{ value }}</td>
+                    <td>{{ nodedetailstats.nodeState.statistics[name] || 0 }}</td>
                     <td>
                         <nvd3 api="nodedetailstats.chartApi[name]" options="nodedetailstats.chartOptions"
                             data="nodedetailstats.metrics[name]"></nvd3>

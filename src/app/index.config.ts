@@ -7,7 +7,7 @@ export function config($logProvider: ng.ILogProvider, toastrConfig: any, cfpLoad
   toastrConfig.allowHtml = true;
   toastrConfig.timeOut = 3000;
   toastrConfig.positionClass = 'toast-top-right';
-  toastrConfig.preventDuplicates = true;
+  toastrConfig.preventDuplicates = false;
   toastrConfig.progressBar = true;
 
   // set options for loading-bar

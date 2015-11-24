@@ -130,6 +130,8 @@ export class NodeDetailStatsController {
             }
             vm.metrics = nmetrics;
 
+            vm.$scope.$digest();
+
             for (var p in vm.chartApi) {
                 if (nmetrics.hasOwnProperty(p)) {
                     vm.chartApi[p].updateWithData(nmetrics[p]);

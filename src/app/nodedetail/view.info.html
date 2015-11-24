@@ -17,7 +17,10 @@
                 </tr>
                 <tr ng-if="nodedetailinfo.nodeConfig.prototype">
                     <td>PROTOTYPE</td>
-                    <td><a ui-sref="prototypedetail({ prototypeName: nodedetailinfo.nodeConfig.prototype.split('.')[1], libraryName: nodedetailinfo.nodeConfig.prototype.split('.')[0] })">{{ nodedetailinfo.nodeConfig.prototype }}</a></td>
+                    <td><a tooltip-template="'tooltip.prototype.html'" ui-sref="prototypedetail({ prototypeName: nodedetailinfo.nodeConfig.prototype.split('.')[1], libraryName: nodedetailinfo.nodeConfig.prototype.split('.')[0] })">{{ nodedetailinfo.nodeConfig.prototype }}</a></td>
+                    <script type="text/ng-template" id="tooltip.prototype.html">
+                        <prototype-tooltip name="nodedetailinfo.nodeConfig.prototype"></prototype-tooltip>
+                    </script>
                 </tr>
                 <tr>
                     <td>STATE</td>

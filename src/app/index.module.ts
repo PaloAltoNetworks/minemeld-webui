@@ -20,6 +20,7 @@ import { NodeDetailResolver } from './services/nodedetailresolver';
 import { megaNumber } from './filters/megaNumber';
 import { minemeldOptions } from '../app/components/options/options.directive';
 import { nodeConfig } from '../app/components/nodeconfig/nodeconfig.directive';
+import { prototypeTooltip } from'../app/components/prototypetooltip/prototypetooltip.directive';
 
 declare var malarkey: any;
 declare var moment: moment.MomentStatic;
@@ -47,8 +48,6 @@ module minemeldWebui {
   .constant('moment', moment)
   .config(config)
   .config(routerConfig)
-  .directive('minemeldOptions', minemeldOptions)
-  .directive('nodeConfig', nodeConfig)
   .controller('DashboardController', DashboardController)
   .controller('NodesController', NodesController)
   .controller('NodeDetailController', NodeDetailController)
@@ -57,7 +56,10 @@ module minemeldWebui {
   .controller('NodeDetailGraphController', NodeDetailGraphController)
   .controller('LoginController', LoginController)
   .controller('PrototypedetailController', PrototypedetailController)
+  .directive('minemeldOptions', minemeldOptions)
+  .directive('nodeConfig', nodeConfig)
   .directive('appNavbar', appNavbar)
+  .directive('prototypeTooltip', prototypeTooltip)
   .service('MinemeldStatus', MinemeldStatus)
   .service('MinemeldMetrics', MinemeldMetrics)
   .service('NodeDetailResolver', NodeDetailResolver)

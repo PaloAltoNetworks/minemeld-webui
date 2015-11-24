@@ -1,3 +1,13 @@
+.prototypedetail-description {
+  color: darken($body-bg, 30%);
+  font-size: 14px;
+}
+
+.prototypedetail-section > h4 {
+  padding-bottom: 2px;
+  border-bottom: 3px solid darken($body-bg, 20%);
+}
+
 .prototypedetail-config > table {
   margin-top: 15px;
   background-color: lighten($body-bg, 2%);
