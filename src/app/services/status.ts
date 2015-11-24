@@ -1,11 +1,12 @@
 /// <reference path="../../../.tmp/typings/tsd.d.ts" />
 
+import { IMinemeldAuth } from './auth';
+
 export interface IMinemeldStatus {
     NODE_STATES: string[];
     getSystem(): angular.IPromise<any>;
     getMinemeld(): angular.IPromise<any>;
     getConfig(): angular.IPromise<any>;
-    setAuthorizationHeaders(headers: any): void;
 }
 
 export interface IMinemeldStatusNode {
@@ -21,17 +22,14 @@ export interface IMinemeldStatusNode {
 }
 
 export class MinemeldStatus implements IMinemeldStatus {
-    static $inject = ['$resource', '$state'];
+    static $inject = ['$resource', '$state', 'MinemeldAuth'];
 
     authorizationSet: boolean = false;
     authorizationString: string;
 
-    system: angular.resource.IResourceClass<angular.resource.IResource<any>>;
-    minemeld: angular.resource.IResourceClass<angular.resource.IResource<any>>;
-    config: angular.resource.IResourceClass<angular.resource.IResource<any>>;
-
     $resource: angular.resource.IResourceService;
     $state: angular.ui.IStateService;
+    MinemeldAuth: IMinemeldAuth;
 
     NODE_STATES: string[] = [
         'READY',
@@ -46,45 +44,31 @@ export class MinemeldStatus implements IMinemeldStatus {
     ];
 
     constructor($resource: angular.resource.IResourceService,
-                $state: angular.ui.IStateService) {
+                $state: angular.ui.IStateService,
+                MinemeldAuth: IMinemeldAuth) {
         console.log('MinemeldStatus');
 
         this.$resource = $resource;
         this.$state = $state;
-    }
-
-    public setAuthorizationHeaders(headers: any) {
-        this.system = this.$resource('/status/system', {}, {
-            get: {
-                method: 'GET',
-                headers: headers
-            }
-        });
-
-        this.minemeld = this.$resource('/status/minemeld', {}, {
-            get: {
-                method: 'GET',
-                headers: headers
-            }
-        });
-
-        this.config = this.$resource('/status/config', {}, {
-            get: {
-                method: 'GET',
-                headers: headers
-            }
-        });
-
-        this.authorizationSet = true;
+        this.MinemeldAuth = MinemeldAuth;
     }
 
     public getSystem(): angular.IPromise<any> {
-        if (!this.system) {
+        var system: angular.resource.IResourceClass<angular.resource.IResource<any>>;
+
+        if (!this.MinemeldAuth.authorizationSet) {
             this.$state.go('login');
             return;
         }
 
-        return this.system.get().$promise.then((result: any) => {
+        system = this.$resource('/status/system', {}, {
+            get: {
+                method: 'GET',
+                headers: this.MinemeldAuth.getAuthorizationHeaders()
+            }
+        });
+
+        return system.get().$promise.then((result: any) => {
             if ('result' in result) {
                 return result.result;
             }
@@ -100,12 +84,21 @@ export class MinemeldStatus implements IMinemeldStatus {
     }
 
     public getMinemeld(): angular.IPromise<any> {
-        if (!this.minemeld) {
+        var minemeld: angular.resource.IResourceClass<angular.resource.IResource<any>>;
+
+        if (!this.MinemeldAuth.authorizationSet) {
             this.$state.go('login');
             return;
         }
 
-        return this.minemeld.get().$promise.then((result: any) => {
+        minemeld = this.$resource('/status/minemeld', {}, {
+            get: {
+                method: 'GET',
+                headers: this.MinemeldAuth.getAuthorizationHeaders()
+            }
+        });
+
+        return minemeld.get().$promise.then((result: any) => {
             if ('result' in result) {
                 return result.result;
             }
@@ -121,12 +114,21 @@ export class MinemeldStatus implements IMinemeldStatus {
     }
 
     public getConfig(): angular.IPromise<any> {
-        if (!this.config) {
+        var config: angular.resource.IResourceClass<angular.resource.IResource<any>>;
+
+        if (!this.MinemeldAuth.authorizationSet) {
             this.$state.go('login');
             return;
         }
 
-        return this.config.get().$promise.then((result: any) => {
+        config = this.$resource('/status/config', {}, {
+            get: {
+                method: 'GET',
+                headers: this.MinemeldAuth.getAuthorizationHeaders()
+            }
+        });
+
+        return config.get().$promise.then((result: any) => {
             if ('result' in result) {
                 return result.result;
             }

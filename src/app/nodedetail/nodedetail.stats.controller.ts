@@ -70,6 +70,7 @@ export class NodeDetailStatsController {
     chartDR: number = 1800;
 
     metrics: IMetricsDictionary = <IMetricsDictionary>{};
+    metrics_names: string[];
 
     updateNodeMetricsPromise: angular.IPromise<any>;
     updateNodeMetricsInterval: number = 5 * 60 * 1000;
@@ -129,8 +130,11 @@ export class NodeDetailStatsController {
                 nmetrics[m] = [cm];
             }
             vm.metrics = nmetrics;
+            vm.metrics_names = Object.keys(nmetrics);
 
-            vm.$scope.$digest();
+            if (!vm.$scope.$$phase) {
+                vm.$scope.$digest();
+            }
 
             for (var p in vm.chartApi) {
                 if (nmetrics.hasOwnProperty(p)) {

@@ -1,2 +1,10 @@
-<div ng-if="vm.libraryDescription"><strong>{{ vm.libraryName }}</strong> {{ vm.libraryDescription}}</div>
-<div ng-if="vm.prototypeDescription"><strong>{{ vm.name }}</strong> {{ vm.prototypeDescription }}</div>
+<table class="table table-condensed prototypetooltip-table">
+    <tr ng-if="vm.libraryDescription">
+        <td><strong>{{ vm.libraryName }}</strong></td>
+        <td style="text-align: left;">{{ vm.libraryDescription}}</td>
+    </tr>
+    <tr ng-if="vm.prototypeDescription">
+        <td><strong>{{ vm.name }}</strong></td>
+        <td>{{ vm.prototypeDescription }}</td>
+    </tr>
+</table>

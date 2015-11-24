@@ -1,10 +1,11 @@
 /// <reference path="../../../.tmp/typings/tsd.d.ts" />
 
+import { IMinemeldAuth } from './auth';
+
 export interface IMinemeldMetrics {
     getNodeType(nodetype: string, options?: IMetricsParams): angular.IPromise<any>;
     getMinemeld(options?: IMetricsParams): angular.IPromise<any>;
     getNode(nodename: string, options?: IMetricsParams);
-    setAuthorizationHeaders(headers: any): void;
 }
 
 interface IMetricsParams {
@@ -22,50 +23,27 @@ interface INodeMetricsParams extends IMetricsParams {
 }
 
 export class MinemeldMetrics implements IMinemeldMetrics {
-    static $inject = ['$resource', '$state'];
-
-    metricsNodeType: angular.resource.IResourceClass<angular.resource.IResource<any>>;
-    metricsMinemeld: angular.resource.IResourceClass<angular.resource.IResource<any>>;
-    metricsNode: angular.resource.IResourceClass<angular.resource.IResource<any>>;
+    static $inject = ['$resource', '$state', 'MinemeldAuth'];
 
     $resource: angular.resource.IResourceService;
     $state: angular.ui.IStateService;
+    MinemeldAuth: IMinemeldAuth;
 
     constructor($resource: angular.resource.IResourceService,
-                $state: angular.ui.IStateService) {
+                $state: angular.ui.IStateService,
+                MinemeldAuth: IMinemeldAuth) {
         this.$resource = $resource;
         this.$state = $state;
-    }
-
-    public setAuthorizationHeaders(headers: any) {
-        this.metricsNodeType = this.$resource('/metrics/minemeld/:nodetype', {}, {
-            get: {
-                method: 'GET',
-                headers: headers
-            }
-        });
-
-        this.metricsMinemeld = this.$resource('/metrics/minemeld', {}, {
-            get: {
-                method: 'GET',
-                headers: headers
-            }
-        });
-
-        this.metricsNode = this.$resource('/metrics/:nodename', {}, {
-            get: {
-                method: 'GET',
-                headers: headers
-            }
-        });
+        this.MinemeldAuth = MinemeldAuth;
     }
 
     public getNodeType(nodetype: string, options?: IMetricsParams) {
         var params = <INTMetricsParams>{
             nodetype: nodetype
         };
+        var metricsNodeType: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
-        if (!this.metricsNodeType) {
+        if (!this.MinemeldAuth.authorizationSet) {
             this.$state.go('login');
             return;
         }
@@ -82,7 +60,14 @@ export class MinemeldMetrics implements IMinemeldMetrics {
             }
         }
 
-        return this.metricsNodeType.get(params).$promise.then((result: any) => {
+        metricsNodeType = this.$resource('/metrics/minemeld/:nodetype', {}, {
+            get: {
+                method: 'GET',
+                headers: this.MinemeldAuth.getAuthorizationHeaders()
+            }
+        });
+
+        return metricsNodeType.get(params).$promise.then((result: any) => {
             if ('result' in result) {
                 return result.result;
             }
@@ -101,8 +86,9 @@ export class MinemeldMetrics implements IMinemeldMetrics {
         var params: INodeMetricsParams = <INodeMetricsParams>{
             nodename: nodename
         };
+        var metricsNode: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
-        if (!this.metricsNode) {
+        if (!this.MinemeldAuth.authorizationSet) {
             this.$state.go('login');
             return;
         }
@@ -119,7 +105,14 @@ export class MinemeldMetrics implements IMinemeldMetrics {
             }
         }
 
-        return this.metricsNode.get(params).$promise.then((result: any) => {
+        metricsNode = this.$resource('/metrics/:nodename', {}, {
+            get: {
+                method: 'GET',
+                headers: this.MinemeldAuth.getAuthorizationHeaders()
+            }
+        });
+
+        return metricsNode.get(params).$promise.then((result: any) => {
             if ('result' in result) {
                 return result.result;
             }
@@ -136,8 +129,9 @@ export class MinemeldMetrics implements IMinemeldMetrics {
 
     public getMinemeld(options?: IMetricsParams) {
         var params = <IMetricsParams>{};
-        
-        if (!this.metricsMinemeld) {
+        var metricsMinemeld: angular.resource.IResourceClass<angular.resource.IResource<any>>;
+
+        if (!this.MinemeldAuth.authorizationSet) {
             this.$state.go('login');
             return;
         }
@@ -154,7 +148,14 @@ export class MinemeldMetrics implements IMinemeldMetrics {
             }
         }
 
-        return this.metricsMinemeld.get(params).$promise.then((result: any) => {
+        metricsMinemeld = this.$resource('/metrics/minemeld', {}, {
+            get: {
+                method: 'GET',
+                headers: this.MinemeldAuth.getAuthorizationHeaders()
+            }
+        });
+
+        return metricsMinemeld.get(params).$promise.then((result: any) => {
             if ('result' in result) {
                 return result.result;
             }

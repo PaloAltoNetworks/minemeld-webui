@@ -1,5 +1,7 @@
 /// <reference path="../../../.tmp/typings/tsd.d.ts" />
 
+import { IMinemeldAuth } from './auth';
+
 export interface IMinemeldPrototypeLibrary {
     description?: string;
     url?: string;
@@ -22,35 +24,26 @@ export interface IMinemeldPrototypeService {
     getPrototypeLibraries(): angular.IPromise<any>;
     getPrototypeLibrary(library: string): angular.IPromise<any>;
     getPrototype(protofqdn: string): angular.IPromise<any>;
-    setAuthorizationHeaders(headers: any): void;
 }
 
 export class MinemeldPrototype implements IMinemeldPrototypeService {
-    static $inject = ['$resource', '$state', '$q'];
+    static $inject = ['$resource', '$state', '$q', 'MinemeldAuth'];
 
     $resource: angular.resource.IResourceService;
     $state: angular.ui.IStateService;
     $q: angular.IQService;
+    MinemeldAuth: IMinemeldAuth;
 
     prototypesDict: IMinemeldPrototypeLibraryDictionary;
 
-    prototypes: angular.resource.IResourceClass<angular.resource.IResource<any>>;
-
     constructor($resource: angular.resource.IResourceService,
                 $state: angular.ui.IStateService,
-                $q: angular.IQService) {
+                $q: angular.IQService,
+                MinemeldAuth: IMinemeldAuth) {
         this.$resource = $resource;
         this.$state = $state;
         this.$q = $q;
-    }
-
-    public setAuthorizationHeaders(headers: any) {
-        this.prototypes = this.$resource('/prototype', {}, {
-            get: {
-                method: 'GET',
-                headers: headers
-            }
-        });
+        this.MinemeldAuth = MinemeldAuth;
     }
 
     public getPrototypeLibraries(): angular.IPromise<any> {
@@ -109,12 +102,21 @@ export class MinemeldPrototype implements IMinemeldPrototypeService {
     }
 
     private getPrototypes() {
-        if (!this.prototypes) {
+        var prototypes: angular.resource.IResourceClass<angular.resource.IResource<any>>;
+
+        if (!this.MinemeldAuth.authorizationSet) {
             this.$state.go('login');
             return;
         }
 
-        return this.prototypes.get().$promise
+        prototypes = this.$resource('/prototype', {}, {
+            get: {
+                method: 'GET',
+                headers: this.MinemeldAuth.getAuthorizationHeaders()
+            }
+        });
+
+        return prototypes.get().$promise
             .then((result: any) => {
                 this.prototypesDict = result.result;
 

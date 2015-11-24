@@ -1,7 +1,7 @@
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" ui-sref="app.about">
+      <a class="navbar-brand" ui-sref="about">
         MINEMELD
       </a>
     </div>
@@ -13,6 +13,9 @@
         </li>
         <li>
           <a ui-sref="nodes"><span class="glyphicon glyphicon-asterisk"></span> NODES</a>
+        </li>
+        <li>
+          <a title="logout" href="#" ng-click="vm.logout()"><span class="glyphicon glyphicon-log-out"></span></a>
         </li>
       </ul>
     </div>
