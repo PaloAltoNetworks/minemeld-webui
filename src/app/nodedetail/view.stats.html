@@ -20,7 +20,7 @@
                             data="nodedetailstats.metrics.indicators"></nvd3>
                     </td>
                 </tr>
-                <tr ng-repeat="(name, value) in nodedetailstats.metrics">
+                <tr ng-repeat="(name, value) in nodedetailstats.metrics" ng-if="name != 'indicators'">
                     <td>{{ name | uppercase }}</td>
                     <td>{{ nodedetailstats.nodeState.statistics[name] || 0 }}</td>
                     <td>
