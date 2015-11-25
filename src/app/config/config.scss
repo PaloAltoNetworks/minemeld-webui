@@ -1,0 +1,30 @@
+.config-none {
+    font-style: italic;
+    color: $gray-light;
+}
+
+.config-table-icon {
+    color: darken($body-bg, 80%);
+}
+
+.config-action {
+    float: right;
+}
+
+.btn-config-action {
+  @include button-variant(darken($body-bg, 80%), $body-bg, $body-bg);
+}
+
+.config-table-row > td {
+    font-weight: 500;
+    font-size: 12px;
+    background-color: #FFF;
+}
+
+.config-table-row:hover > td {
+    background-color: darken($body-bg, 5%);
+}
+
+.config-table-clickable:hover {
+    background-color: darken($body-bg, 10%) !important;
+}

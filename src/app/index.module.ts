@@ -10,12 +10,14 @@ import { NodeDetailStatsController } from './nodedetail/nodedetail.stats.control
 import { NodeDetailInfoController } from './nodedetail/nodedetail.info.controller';
 import { NodeDetailGraphController } from './nodedetail/nodedetail.graph.controller';
 import { PrototypedetailController } from './prototypedetail/prototypedetail.controller';
+import { ConfigController } from './config/config.controller';
 import { appNavbar } from '../app/components/navbar/navbar.directive';
 import { LoginController } from './login/login.controller';
 import { MinemeldStatus } from './services/status';
 import { MinemeldMetrics } from './services/metrics';
 import { MinemeldAuth } from './services/auth';
 import { MinemeldPrototype } from './services/prototype';
+import { MinemeldConfig } from './services/config';
 import { NodeDetailResolver } from './services/nodedetailresolver';
 import { megaNumber } from './filters/megaNumber';
 import { minemeldOptions } from '../app/components/options/options.directive';
@@ -56,6 +58,7 @@ module minemeldWebui {
   .controller('NodeDetailGraphController', NodeDetailGraphController)
   .controller('LoginController', LoginController)
   .controller('PrototypedetailController', PrototypedetailController)
+  .controller('ConfigController', ConfigController)
   .directive('minemeldOptions', minemeldOptions)
   .directive('nodeConfig', nodeConfig)
   .directive('appNavbar', appNavbar)
@@ -65,6 +68,7 @@ module minemeldWebui {
   .service('NodeDetailResolver', NodeDetailResolver)
   .service('MinemeldAuth', MinemeldAuth)
   .service('MinemeldPrototype', MinemeldPrototype)
+  .service('MinemeldConfig', MinemeldConfig)
   .filter('megaNumber', megaNumber)
   .run(minemeldInit)
   ;

@@ -46,6 +46,12 @@ export function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterPro
       controller: 'PrototypedetailController',
       controllerAs: 'vm'
     })
+    .state('config', {
+      url: '/config',
+      templateUrl: 'app/config/view.html',
+      controller: 'ConfigController',
+      controllerAs: 'vm'
+    })
     ;
 
   $urlRouterProvider.otherwise('/dashboard');
