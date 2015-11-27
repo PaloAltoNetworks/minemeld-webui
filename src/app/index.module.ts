@@ -11,6 +11,7 @@ import { NodeDetailInfoController } from './nodedetail/nodedetail.info.controlle
 import { NodeDetailGraphController } from './nodedetail/nodedetail.graph.controller';
 import { PrototypedetailController } from './prototypedetail/prototypedetail.controller';
 import { ConfigController } from './config/config.controller';
+import { ConfigAddController } from './config/configadd.controller';
 import { appNavbar } from '../app/components/navbar/navbar.directive';
 import { LoginController } from './login/login.controller';
 import { MinemeldStatus } from './services/status';
@@ -19,6 +20,7 @@ import { MinemeldAuth } from './services/auth';
 import { MinemeldPrototype } from './services/prototype';
 import { MinemeldConfig } from './services/config';
 import { NodeDetailResolver } from './services/nodedetailresolver';
+import { ConfirmService } from './services/confirm';
 import { megaNumber } from './filters/megaNumber';
 import { minemeldOptions } from '../app/components/options/options.directive';
 import { nodeConfig } from '../app/components/nodeconfig/nodeconfig.directive';
@@ -45,7 +47,8 @@ module minemeldWebui {
     'datatables.bootstrap',
     'easypiechart',
     'nvd3',
-    'mmSankey'
+    'mmSankey',
+    'ui.select'
   ])
   .constant('moment', moment)
   .config(config)
@@ -59,6 +62,7 @@ module minemeldWebui {
   .controller('LoginController', LoginController)
   .controller('PrototypedetailController', PrototypedetailController)
   .controller('ConfigController', ConfigController)
+  .controller('ConfigAddController', ConfigAddController)
   .directive('minemeldOptions', minemeldOptions)
   .directive('nodeConfig', nodeConfig)
   .directive('appNavbar', appNavbar)
@@ -69,6 +73,7 @@ module minemeldWebui {
   .service('MinemeldAuth', MinemeldAuth)
   .service('MinemeldPrototype', MinemeldPrototype)
   .service('MinemeldConfig', MinemeldConfig)
+  .service('ConfirmService', ConfirmService)
   .filter('megaNumber', megaNumber)
   .run(minemeldInit)
   ;

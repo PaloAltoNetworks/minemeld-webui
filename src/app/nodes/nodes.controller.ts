@@ -124,7 +124,7 @@ export class NodesController {
                 return '';
             }).withOption('width', '5px'),
             this.DTColumnBuilder.newColumn('name').withTitle('NAME'),
-            this.DTColumnBuilder.newColumn(null).withTitle('TYPE').renderWith(function(data: any, type: any, full: any) {
+            this.DTColumnBuilder.newColumn(null).withTitle('POSITION').renderWith(function(data: any, type: any, full: any) {
                 var c: string;
                 var v: string;
     

@@ -1,0 +1,14 @@
+<div class="modal-header">
+    <h1 class="modal-title">{{ vm.title }}</h1>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-12">
+            {{ vm.msg }}
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary btn-sm" type="button" ng-click="vm.ok()">OK</button>
+    <button class="btn btn-warning btn-sm" type="button" ng-click="vm.cancel()">CANCEL</button>
+</div>

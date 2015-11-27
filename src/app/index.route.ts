@@ -52,6 +52,12 @@ export function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterPro
       controller: 'ConfigController',
       controllerAs: 'vm'
     })
+    .state('configadd', {
+      url: '/config/add',
+      templateUrl: 'app/config/configadd.view.html',
+      controller: 'ConfigAddController',
+      controllerAs: 'vm'
+    })
     ;
 
   $urlRouterProvider.otherwise('/dashboard');

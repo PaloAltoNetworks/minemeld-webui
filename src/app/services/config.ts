@@ -5,21 +5,35 @@ import { IMinemeldAuth } from './auth';
 export interface IMinemeldConfigInfo {
     fabric: boolean;
     mgmtbus: boolean;
-    num_nodes: number;
+    next_node_id: number;
     version: string;
+    changed: boolean;
 }
 
 export interface IMinemeldConfigNode {
     name: string;
     properties: any;
     version: string;
+    deleted?: boolean;
 }
 
 export interface IMinemeldConfigService {
     configInfo: IMinemeldConfigInfo;
     nodesConfig: IMinemeldConfigNode[];
+    changed: boolean;
+
     refresh(): angular.IPromise<any>;
     reload(): angular.IPromise<any>;
+    saveNodeConfig(noden: number): angular.IPromise<any>;
+    deleteNode(noden: number): angular.IPromise<any>;
+    commit(): angular.IPromise<any>;
+    addNode(name: string, properties: any): angular.IPromise<any>;
+}
+
+interface IMinemeldConfigResource extends angular.resource.IResourceClass<angular.resource.IResource<any>> {
+    put(params: any, nodeconfig: any);
+    del(params: any);
+    post(params: any, postdata: any);
 }
 
 export class MinemeldConfig implements IMinemeldConfigService {
@@ -27,6 +41,7 @@ export class MinemeldConfig implements IMinemeldConfigService {
 
     configInfo: IMinemeldConfigInfo;
     nodesConfig: IMinemeldConfigNode[];
+    changed: boolean;
 
     $resource: angular.resource.IResourceService;
     MinemeldAuth: IMinemeldAuth;
@@ -48,7 +63,7 @@ export class MinemeldConfig implements IMinemeldConfigService {
             var nps: angular.IPromise<any>[] = new Array();
             var j: number;
 
-            for (j = 0; j < this.configInfo.num_nodes; j++) {
+            for (j = 0; j < this.configInfo.next_node_id; j++) {
                 nps.push(this.getNodeConfig(j));
             }
 
@@ -79,6 +94,101 @@ export class MinemeldConfig implements IMinemeldConfigService {
         });        
     }
 
+    commit() {
+        var r: IMinemeldConfigResource;
+
+        if(!this.MinemeldAuth.authorizationSet) {
+            this.$state.go('login');
+            return;
+        }
+
+        r = <IMinemeldConfigResource>(this.$resource('/config/commit', {}, {
+            post: {
+                method: 'POST',
+                headers: this.MinemeldAuth.getAuthorizationHeaders()
+            }
+        }));
+
+        return r.post({}, JSON.stringify({ version: this.configInfo.version })).$promise;
+    }
+
+    saveNodeConfig(noden: number): angular.IPromise<any> {
+        var r: IMinemeldConfigResource;
+
+        if(!this.MinemeldAuth.authorizationSet) {
+            this.$state.go('login');
+            return;
+        }
+
+        r = <IMinemeldConfigResource>(this.$resource('/config/node/:noden', {
+            noden: noden
+        }, {
+            put: {
+                method: 'PUT',
+                headers: this.MinemeldAuth.getAuthorizationHeaders()
+            }
+        }));
+
+        return r.put({}, JSON.stringify(this.nodesConfig[noden])).$promise.then((result: any) => {
+            return result.result;
+        }).then((result: any) => {
+            this.nodesConfig[noden].version = result;
+            this.changed = true;
+        });
+    }
+
+    addNode(name: string, properties: any): angular.IPromise<any> {
+        var r: IMinemeldConfigResource;
+        var config: IMinemeldConfigNode;
+
+        if (!this.MinemeldAuth.authorizationSet) {
+            this.$state.go('login');
+             return;
+        }
+
+        config = {
+            name: name,
+            properties: properties,
+            version: this.configInfo.version
+        };
+
+        r = <IMinemeldConfigResource>(this.$resource('/config/node', {}, {
+            post: {
+                method: 'POST',
+                headers: this.MinemeldAuth.getAuthorizationHeaders()
+            }
+        }));
+
+        return r.post({}, JSON.stringify(config)).$promise.then((result: any) => {
+            return result.result;
+        });
+    }
+
+    deleteNode(noden: number): angular.IPromise<any> {
+        var r: IMinemeldConfigResource;
+
+        if(!this.MinemeldAuth.authorizationSet) {
+            this.$state.go('login');
+            return;
+        }
+
+        r = <IMinemeldConfigResource>(this.$resource('/config/node/:noden', {
+            noden: noden
+        }, {
+            del: {
+                method: 'DELETE',
+                headers: this.MinemeldAuth.getAuthorizationHeaders()
+            }
+        }));
+                
+        return r.del({ version: this.nodesConfig[noden].version }).$promise
+        .then((result: any) => {
+            return result.result;
+        }).then((result: any) => {
+            this.changed = true;
+        });        
+    }
+
     private getNodeConfig(noden: number): angular.IPromise<any> {
         var r: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
@@ -89,7 +199,7 @@ export class MinemeldConfig implements IMinemeldConfigService {
 
         r  = this.$resource('/config/node/:noden', {
                 noden: noden
-            }, {
+        }, {
             get: {
                 method: 'GET',
                 headers: this.MinemeldAuth.getAuthorizationHeaders()
@@ -98,7 +208,13 @@ export class MinemeldConfig implements IMinemeldConfigService {
 
         return r.get().$promise.then((result: any) => {
             return result.result;
-        });        
+        }, (error: any) => {
+            if (error.status === 404) {
+                return { 'name': '', 'properties': {}, 'deleted': true };
+            }
+
+            throw error;
+        });
     }
 
     private getConfigInfo(): angular.IPromise<any> {
@@ -118,8 +234,14 @@ export class MinemeldConfig implements IMinemeldConfigService {
 
         return r.get().$promise.then((result: any) => {
             this.configInfo = result.result;
+            this.changed = this.configInfo.changed;
         }, (error: any) => {
+            if (error.status == 500) {
+                return this.reload();
+            }
+
             this.configInfo = undefined;
+            this.changed = false;
 
             throw error;
         });

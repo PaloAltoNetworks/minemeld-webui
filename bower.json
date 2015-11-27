@@ -21,7 +21,8 @@
     "angular-datatables": "~0.5.1",
     "angular-loading-bar": "~0.8.0",
     "components-font-awesome": "~4.4.0",
-    "d3-tip": "~0.6.7"
+    "d3-tip": "~0.6.7",
+    "ui-select": "angular-ui-select#~0.13.2"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.2"

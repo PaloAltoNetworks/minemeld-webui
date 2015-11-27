@@ -1,9 +1,9 @@
 <div class="row">
   <div class="col-sm-12 col-md-12">
-    <button tooltip="commit config" type="button" class="btn btn-primary btn-sm" ng-disabled="true">
+    <button tooltip-popup-delay="500" tooltip="commit config" type="button" class="btn btn-primary btn-sm" ng-disabled="(vm.changed === false) || inCommit" ng-click="vm.commit()">
         <span class="glyphicon glyphicon-refresh"></span> COMMIT
     </button>
-    <button tooltip="reload running config" type="button" class="config-action btn btn-config-action btn-sm" ng-click="vm.reload()">
+    <button tooltip-popup-delay="500" tooltip="reload running config" type="button" class="config-action btn btn-config-action btn-sm" ng-click="vm.reload()">
         <span class="glyphicon glyphicon-refresh"></span> RELOAD
     </button>
   </div>
@@ -14,7 +14,7 @@
         dt-columns="vm.dtColumns" class="table table-condensed">
         <tfoot>
             <tr>
-                <td colspan="7" style="padding-right: 0;"><a style="float: right;" ui-sref="app.deviceadd"><button class="btn btn-primary" type="button"><span class="glyphicon glyphicon-edit"></span></button></a></td>
+                <td colspan="7" style="padding-right: 0;"><a tooltip-popup-delay="500" tooltip="add node" style="float: right;" ui-sref="app.deviceadd"><button class="btn btn-primary btn-sm" type="button" ng-click="vm.$state.go('configadd')"><span class="glyphicon glyphicon-plus"></span></button></a></td>
             </tr>
         </tfoot>
     </table>
