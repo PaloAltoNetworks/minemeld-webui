@@ -7,6 +7,7 @@ interface ITNodeIndicatorsStats {
     length: number;
     added: number;
     removed: number;
+    aged_out: number;
 }
 
 interface IMetric {
@@ -28,9 +29,6 @@ export class DashboardController {
     $interval: angular.IIntervalService;
     $scope: angular.IScope;
 
-    epOptions: any = {
-        barColor: '#977390'
-    };
     indicatorsOptions: any = {
         chart: {
             type: 'discreteBarChart',
@@ -88,9 +86,6 @@ export class DashboardController {
         }
     };
 
-    system: any;
-    systemUpdateInterval: number = 30000;
-    systemUpdatePromise: angular.IPromise<any>;
     numIndicators: number = 0;
 
     minemeld: any;
@@ -130,7 +125,6 @@ export class DashboardController {
         this.moment = moment;
         this.$scope = $scope;
 
-        this.updateSystem();
         this.updateMinemeld();
         this.updateNTMinersMetrics();
         this.updateNTOutputsMetrics();
@@ -140,9 +134,6 @@ export class DashboardController {
     }
 
     private destroy() {
-        if (this.systemUpdatePromise) {
-            this.$interval.cancel(this.systemUpdatePromise);
-        }
         if (this.minemeldUpdatePromise) {
             this.$interval.cancel(this.minemeldUpdatePromise);
         }
@@ -155,27 +146,6 @@ export class DashboardController {
         if (this.ntoutputsUpdatePromise) {
             this.$interval.cancel(this.ntoutputsUpdatePromise);
         }
-    }
-
-    private updateSystem(): void {
-        var vm: any = this;
-
-        vm.mmstatus.getSystem()
-        .then(
-            function(result: any) {
-                vm.system = result;
-            },
-            function(error: any) {
-                vm.toastr.error('ERROR RETRIEVING SYSTEM METRICS: '+error.status);
-            }
-        )
-        .finally(function() {
-            vm.systemUpdatePromise = vm.$interval(
-                vm.updateSystem.bind(vm),
-                vm.systemUpdateInterval,
-                1
-            );
-        });
     }
 
     private updateMinemeld(): void {
@@ -212,6 +182,7 @@ export class DashboardController {
         vm.minersStats.length = 0;
         vm.minersStats.added = 0;
         vm.minersStats.removed = 0;
+        vm.minersStats.aged_out = 0;
         vm.outputsStats.length = 0;
         vm.outputsStats.added = 0;
         vm.outputsStats.removed = 0;
@@ -230,6 +201,9 @@ export class DashboardController {
                 }
                 if (e.statistics && e.statistics.removed) {
                     vm.minersStats.removed += e.statistics.removed;
+                }
+                if (e.statistics && e.statistics.aged_out) {
+                    vm.minersStats.aged_out += e.statistics.aged_out;
                 }
             } else if (!e.output) {
                 vm.numOutputs++;
@@ -285,8 +259,8 @@ export class DashboardController {
                         metrics['ar'][0].values = result[p].values.map(function(e: number[]) {
                             return { x: e[0], y: e[1] };
                         });
-                    } else if (cmetric === 'removed') {
-                        metrics['ar'][1].key = 'REMOVED';
+                    } else if (cmetric === 'aged_out') {
+                        metrics['ar'][1].key = 'AGED_OUT';
                         metrics['ar'][1].area = true;
                         metrics['ar'][1].color = '#977390';
                         metrics['ar'][1].values = result[p].values.map(function(e: number[]) {

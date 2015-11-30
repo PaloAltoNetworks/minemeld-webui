@@ -155,7 +155,7 @@ export class NodesController {
                 return '<span class="label ' + c + '">' + m + '</span>';
             }),
             this.DTColumnBuilder.newColumn('length').withTitle('INDICATORS'),
-            this.DTColumnBuilder.newColumn('statistics').withTitle('ADD/REM').notSortable().renderWith(function(data: any, type, full) {
+            this.DTColumnBuilder.newColumn('statistics').withTitle('ADD/REM/AO').notSortable().renderWith(function(data: any, type, full) {
                 var stats: string[] = ['<ul>'];
                 var s: number;
 
@@ -165,11 +165,16 @@ export class NodesController {
                 }
                 stats.push('<li>ADDED: ' + s+ '</li>');
 
-                s = 0;
-                if(data.removed) {
-                    s = data.removed;
+                s  = 0;
+                if (data.aged_out) {
+                    s = data.aged_out;
+                    stats.push('<li>AGED OUT: ' + s + '</li>');
+                } else {
+                    if (data.removed) {
+                        s = data.removed;
+                    }
+                    stats.push('<li>REMOVED: ' + s + '</li>');
                 }
-                stats.push('<li>REMOVED: ' + s + '</li>');
 
                 stats.push('</ul>');
 

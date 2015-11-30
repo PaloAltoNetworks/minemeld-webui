@@ -4,6 +4,7 @@ import { config } from './index.config';
 import { routerConfig } from './index.route';
 import { minemeldInit } from './index.init';
 import { DashboardController } from './dashboard/dashboard.controller';
+import { SystemController } from './dashboard/system.controller';
 import { NodesController } from './nodes/nodes.controller';
 import { NodeDetailController } from './nodedetail/nodedetail.controller';
 import { NodeDetailStatsController } from './nodedetail/nodedetail.stats.controller';
@@ -20,6 +21,7 @@ import { MinemeldAuth } from './services/auth';
 import { MinemeldPrototype } from './services/prototype';
 import { MinemeldConfig } from './services/config';
 import { NodeDetailResolver } from './services/nodedetailresolver';
+import { MinemeldSupervisor } from './services/supervisor';
 import { ConfirmService } from './services/confirm';
 import { megaNumber } from './filters/megaNumber';
 import { minemeldOptions } from '../app/components/options/options.directive';
@@ -54,6 +56,7 @@ module minemeldWebui {
   .config(config)
   .config(routerConfig)
   .controller('DashboardController', DashboardController)
+  .controller('SystemController', SystemController)
   .controller('NodesController', NodesController)
   .controller('NodeDetailController', NodeDetailController)
   .controller('NodeDetailStatsController', NodeDetailStatsController)
@@ -74,6 +77,7 @@ module minemeldWebui {
   .service('MinemeldPrototype', MinemeldPrototype)
   .service('MinemeldConfig', MinemeldConfig)
   .service('ConfirmService', ConfirmService)
+  .service('MinemeldSupervisor', MinemeldSupervisor)
   .filter('megaNumber', megaNumber)
   .run(minemeldInit)
   ;

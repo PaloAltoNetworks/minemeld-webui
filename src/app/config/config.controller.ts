@@ -19,7 +19,7 @@ export class ConfigController {
     dtColumns: any[];
     dtOptions: any;
 
-    changed: boolean;
+    changed: boolean = false;
     inCommit: boolean = false;
 
     configInfo: IMinemeldConfigInfo;

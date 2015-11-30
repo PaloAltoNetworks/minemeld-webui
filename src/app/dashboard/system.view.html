@@ -1,0 +1,91 @@
+<!-- supervisor -->
+<div class="row dashboard-row">
+  <div class="col-sm-3 col-md-3">
+    <div class="row dashboard-row-system">
+      <div class="dashboard-label dashboard-label-system">
+        <div class="dashboard-label-text">SUPERVISOR</div>
+      </div>
+      <div class="col-xs-10 text-center dashboard-main-statistic">
+        <h3 class="m-b-xs" ng-switch="vm.supervisor.statename">
+          <span class="label label-success" ng-switch-when="RUNNING">{{ vm.supervisor.statename }}</span>
+          <span class="label label-danger" ng-switch-when="STOPPED">{{ vm.supervisor.statename }}</span>
+          <span class="label label-default" ng-switch-default>{{ vm.supervisor.statename }}</span>
+        </h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-6">
+    <div class="row dashboard-row-system">
+      <div class="dashboard-label dashboard-label-system">
+        <div class="dashboard-label-text">ENGINE</div>
+      </div>
+      <div class="col-xs-5 text-center dashboard-main-statistic">
+        <h3 class="m-b-xs" ng-switch="vm.supervisor.processes['minemeld-core']['statename']">
+          <span class="label label-success" ng-switch-when="RUNNING">{{ vm.supervisor.processes['minemeld-core']['statename'] }}</span>
+          <span class="label label-danger" ng-switch-when="STOPPED">{{ vm.supervisor.processes['minemeld-core']['statename'] }}</span>
+          <span class="label label-danger" ng-switch-when="STOPPING">{{ vm.supervisor.processes['minemeld-core']['statename'] }}</span>
+          <span class="label label-default" ng-switch-default>{{ vm.supervisor.processes['minemeld-core']['statename'] }}</span>
+        </h3>
+      </div>
+      <div class="col-xs-5 text-center dashboard-main-statistic">
+        <h2 class="m-b-xs" ng-bind="(vm.supervisor.processes['minemeld-core']['children'])||N/A"></h2>
+        <small># of chassis</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-3 col-md-3">
+    <div class="row dashboard-row-system">
+      <div class="dashboard-label dashboard-label-system">
+        <div class="dashboard-label-text">API</div>
+      </div>
+      <div class="col-xs-10 text-center dashboard-main-statistic">
+        <h2 class="m-b-xs" ng-bind="(vm.supervisor.processes['minemeld-web']['children'])||N/A"></h2>
+        <small># of processes</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- system -->
+<div class="row dashboard-row">
+  <div class="col-sm-3 col-md-3">
+    <div class="row dashboard-row-system">
+      <div class="dashboard-label dashboard-label-system">
+        <div class="dashboard-label-text">CPU</div>
+      </div>
+      <div class="dashboard-piechart" easypiechart options="vm.epOptions" percent="vm.system.cpu[0]">
+        <div class="dashboard-piechart-value" ng-bind="vm.system.cpu[0]"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-3 col-md-3">
+    <div class="row dashboard-row-system">
+      <div class="dashboard-label dashboard-label-system">
+        <div class="dashboard-label-text">MEMORY</div>
+      </div>
+      <div class="dashboard-piechart" easypiechart options="vm.epOptions" percent="vm.system.memory">
+        <div class="dashboard-piechart-value" ng-bind="vm.system.memory"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-3 col-md-3">
+    <div class="row dashboard-row-system">
+      <div class="dashboard-label dashboard-label-system">
+        <div class="dashboard-label-text">DISK</div>
+      </div>
+      <div class="dashboard-piechart" easypiechart options="vm.epOptions" percent="vm.system.disk">
+        <div class="dashboard-piechart-value" ng-bind="vm.system.disk"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-3 col-md-3">
+    <div class="row dashboard-row-system">
+      <div class="dashboard-label dashboard-label-system">
+        <div class="dashboard-label-text">SWAP</div>
+      </div>
+      <div class="dashboard-piechart" easypiechart options="vm.epOptions" percent="vm.system.swap">
+        <div class="dashboard-piechart-value" ng-bind="vm.system.swap"></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -26,7 +26,7 @@ function browserSyncInit(baseDir, browser) {
     routes: routes
   };
 
-  server.middleware = proxyMiddleware(['/status', '/metrics', '/prototype', '/config'], {target: 'http://192.168.55.151'});
+  server.middleware = proxyMiddleware(['/status', '/metrics', '/prototype', '/config', '/supervisor'], {target: 'http://192.168.55.151'});
 
   browserSync.instance = browserSync.init({
     startPath: '/',

@@ -7,6 +7,12 @@ export function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterPro
       controller: 'LoginController',
       controllerAs: 'login'
     })
+    .state('system', {
+      url: '/system',
+      templateUrl: 'app/dashboard/system.view.html',
+      controller: 'SystemController',
+      controllerAs: 'vm'
+    })
     .state('dashboard', {
       url: '/dashboard',
       templateUrl: 'app/dashboard/view.html',
