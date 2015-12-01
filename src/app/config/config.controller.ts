@@ -2,6 +2,7 @@
 
 import { IMinemeldConfigService, IMinemeldConfigInfo, IMinemeldConfigNode } from  '../../app/services/config';
 import { IConfirmService } from '../../app/services/confirm';
+import { IMinemeldSupervisor } from '../../app/services/supervisor';
 
 export class ConfigController {
     toastr: any;
@@ -13,6 +14,7 @@ export class ConfigController {
     DTColumnBuilder: any;
     DTOptionsBuilder: any;
     MinemeldConfig: IMinemeldConfigService;
+    MinemeldSupervisor: IMinemeldSupervisor;
     ConfirmService: IConfirmService;
 
     dtNodes: any = {};
@@ -29,6 +31,7 @@ export class ConfigController {
     constructor(toastr: any, $scope: angular.IScope, DTOptionsBuilder: any,
                 DTColumnBuilder: any, $compile: angular.ICompileService,
                 MinemeldConfig: IMinemeldConfigService,
+                MinemeldSupervisor: IMinemeldSupervisor,
                 $state: angular.ui.IStateService, $q: angular.IQService,
                 $modal: angular.ui.bootstrap.IModalService,
                 ConfirmService: IConfirmService) {
@@ -41,6 +44,7 @@ export class ConfigController {
         this.$q = $q;
         this.$modal = $modal;
         this.MinemeldConfig = MinemeldConfig;
+        this.MinemeldSupervisor = MinemeldSupervisor;
         this.ConfirmService = ConfirmService;
 
         this.setupNodesTable();
@@ -79,7 +83,6 @@ export class ConfigController {
             } else {
                 this.changed = this.MinemeldConfig.changed;
                 this.dtNodes.reloadData();
-                console.log('changed', this.changed);
             }
         });
     }
@@ -104,7 +107,7 @@ export class ConfigController {
                 this.toastr.error('ERROR SAVING NODE CONFIG: ' + result.statusText);
                 this.refreshConfig().finally(() => {
                     this.dtNodes.reloadData();
-            });
+                });
             } else {
                 this.dtNodes.reloadData();
             }
@@ -134,11 +137,18 @@ export class ConfigController {
 
         this.inCommit = true;
         p = this.MinemeldConfig.commit().then((result: any) => {
-            this.toastr.success('COMMIT SUCCESSFUL');
             this.dtNodes.reloadData();
+            this.ConfirmService.show(
+                'COMMIT',
+                'Commit successful, restart engine to apply changes ?'
+            ).then((result: any) => {
+                this.MinemeldSupervisor.restartCore().then(
+                    (result: any) => { this.toastr.success('Restarting engine, could take some minutes. Check <a href="/#/system">SYSTEM</a>'); },
+                    (error: any) => { this.toastr.error('ERROR RESTARTING ENGINE: ' + error.statusText); }
+                );
+            });
         }, (error: any) => {
             if (error.status == 402) {
-                console.log(error);
                 this.toastr.error('COMMIT FAILED: ' + error.data.error.message.join(', '), '', { timeOut: 60000 });
             } else {
                 this.toastr.error('ERROR IN COMMIT: ' + error.statusText);
@@ -296,7 +306,6 @@ export class ConfigController {
             this.configInfo = this.MinemeldConfig.configInfo;
             this.nodesConfig = this.MinemeldConfig.nodesConfig;
             this.changed = this.MinemeldConfig.configInfo.changed;
-            console.log('changed', this.changed);
 
             return result;
         }, (error: any) => {
@@ -305,7 +314,6 @@ export class ConfigController {
             this.configInfo = undefined;
             this.nodesConfig = [];
             this.changed = false;
-            console.log('changed', this.changed);
 
             return this.nodesConfig;
         });

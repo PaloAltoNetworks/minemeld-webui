@@ -6,6 +6,7 @@ export interface IMinemeldSupervisor {
     getStatus(): angular.IPromise<any>;
     startCore(): angular.IPromise<any>;
     stopCore(): angular.IPromise<any>;
+    restartCore(): angular.IPromise<any>;
 }
 
 export class MinemeldSupervisor implements IMinemeldSupervisor {
@@ -92,6 +93,36 @@ export class MinemeldSupervisor implements IMinemeldSupervisor {
         }
 
         minemeld = this.$resource('/supervisor/minemeld-core/stop', {}, {
+            get: {
+                method: 'GET',
+                headers: this.MinemeldAuth.getAuthorizationHeaders()
+            }
+        });
+
+        return minemeld.get().$promise.then((result: any) => {
+            if ('result' in result) {
+                return result.result;
+            }
+
+            return new Array();
+        }, (error: any) => {
+            if (error.status === 401) {
+                this.$state.go('login');
+            }
+
+            return error;
+        });
+    }
+
+    public restartCore(): angular.IPromise<any> {
+        var minemeld: angular.resource.IResourceClass<angular.resource.IResource<any>>;
+
+        if (!this.MinemeldAuth.authorizationSet) {
+            this.$state.go('login');
+            return;
+        }
+
+        minemeld = this.$resource('/supervisor/minemeld-core/restart', {}, {
             get: {
                 method: 'GET',
                 headers: this.MinemeldAuth.getAuthorizationHeaders()
