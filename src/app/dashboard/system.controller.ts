@@ -9,6 +9,7 @@ export class SystemController {
     toastr: any;
     $interval: angular.IIntervalService;
     $scope: angular.IScope;
+    moment: moment.MomentStatic;
 
     epOptions: any = {
         barColor: '#977390'
@@ -24,13 +25,15 @@ export class SystemController {
 
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
-                MinemeldStatus: IMinemeldStatus, $scope: angular.IScope, 
+                MinemeldStatus: IMinemeldStatus, $scope: angular.IScope,
+                moment: moment.MomentStatic,
                 MinemeldSupervisor: IMinemeldSupervisor, $state: angular.ui.IStateService) {
         this.toastr = toastr;
         this.mmstatus = MinemeldStatus;
         this.MinemeldSupervisor = MinemeldSupervisor;
         this.$interval = $interval;
         this.$scope = $scope;
+        this.moment = moment;
 
         this.updateSystem();
         this.updateSupervisor();
@@ -41,6 +44,9 @@ export class SystemController {
     private destroy() {
         if (this.systemUpdatePromise) {
             this.$interval.cancel(this.systemUpdatePromise);
+        }
+        if (this.supervisorUpdatePromise) {
+            this.$interval.cancel(this.supervisorUpdatePromise);
         }
     }
 
@@ -71,7 +77,15 @@ export class SystemController {
         vm.MinemeldSupervisor.getStatus()
         .then(
             function(result: any) {
+                var p: string;
+
                 vm.supervisor = result;
+
+                for (p in vm.supervisor.processes) {
+                    if (vm.supervisor.processes[p].start) {
+                        vm.supervisor.processes[p].start = vm.moment.unix(vm.supervisor.processes[p].start).fromNow().toUpperCase();
+                    }
+                }
             },
             function(error: any) {
                 vm.toastr.error('ERROR RETRIEVING SUPERVISOR STATUS: '+error.status);
