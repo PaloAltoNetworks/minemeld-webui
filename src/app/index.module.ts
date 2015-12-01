@@ -13,6 +13,7 @@ import { NodeDetailGraphController } from './nodedetail/nodedetail.graph.control
 import { PrototypedetailController } from './prototypedetail/prototypedetail.controller';
 import { ConfigController } from './config/config.controller';
 import { ConfigAddController } from './config/configadd.controller';
+import { AboutController } from './about/about.controller';
 import { appNavbar } from '../app/components/navbar/navbar.directive';
 import { LoginController } from './login/login.controller';
 import { MinemeldStatus } from './services/status';
@@ -66,6 +67,7 @@ module minemeldWebui {
   .controller('PrototypedetailController', PrototypedetailController)
   .controller('ConfigController', ConfigController)
   .controller('ConfigAddController', ConfigAddController)
+  .controller('AboutController', AboutController)
   .directive('minemeldOptions', minemeldOptions)
   .directive('nodeConfig', nodeConfig)
   .directive('appNavbar', appNavbar)
