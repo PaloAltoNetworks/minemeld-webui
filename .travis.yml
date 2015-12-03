@@ -21,7 +21,10 @@ script:
   - gulp build
 
 before_deploy:
-  - cd dist && tar -cvzf minemeld-webui-$TRAVIS_TAG.tar.gz *
+  - cd dist
+  - tar --remove-files -cvzf minemeld-webui-$TRAVIS_TAG.tar.gz *
+  - cd ..
+  - ls dist
 
 deploy:
   provider: s3
