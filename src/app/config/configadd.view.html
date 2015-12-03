@@ -1,0 +1,61 @@
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+        <h3 class="m-t-xs">
+            ADD NODE
+        </h3>
+    </div>
+</div>
+<div class="row">
+    <form class="config-add-form form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-2 col-md-2 control-label">NAME</label>
+            <div class="col-sm-6 col-md-6">
+                <input type="text" ng-model="vm.name" class="form-control" placeholder="Node name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 col-md-2 control-label">PROTOTYPE</label>
+            <div class="col-sm-6 col-md-6">
+                <ui-select ng-model="vm.prototype"
+                           theme="bootstrap"
+                           reset-search-input="false"
+                           style="width: 100%;">
+                    <ui-select-match placeholder="Select prototype...">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="prototype.name as prototype in vm.availablePrototypes | filter: {'name':$select.search}">
+                        <div>
+                            <span tooltip-template="'prototype-tooltip.html'" tooltip-append-to-body="true" tooltip-placement="right"
+                                  tooltip-popup-delay="1000" ng-bind-html="prototype.name | highlight: $select.search"></span>
+                        </div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 col-md-2 control-label">INPUTS</label>
+            <div class="col-sm-6 col-md-6">
+                <ui-select multiple ng-model="vm.inputs" theme="bootstrap">
+                    <ui-select-match placeholder="None">{{$item}}</ui-select-match>
+                    <ui-select-choices repeat="input in vm.availableInputs | filter:$select.search">
+                        {{input}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 col-md-2 control-label">OUTPUT</label>
+            <div class="col-sm-6 col-md-6">
+                <span ng-if="!vm.output" class="btn config-btn-disabled btn-sm" type="button" ng-click="vm.output = true">DISABLED</span>
+                <span ng-if="vm.output" class="btn config-btn-enabled active btn-sm" type="button" ng-click="vm.output = false">ENABLED</span>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="row">
+    <div class="col-sm-8 col-md-8 text-right">
+        <button ng-disabled="!vm.valid()" class="btn btn-primary btn-sm" type="button" ng-click="vm.save()">OK</button>
+        <button class="btn btn-warning btn-sm" type="button" ng-click="vm.$state.go('config')">CANCEL</button>
+    </div>
+</div>
+<script type="text/ng-template" id="prototype-tooltip.html">
+    <prototype-tooltip name="prototype.name"></prototype-tooltip>
+</script>

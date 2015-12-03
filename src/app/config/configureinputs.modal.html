@@ -1,0 +1,22 @@
+<div class="modal-header">
+    <h1 class="modal-title">{{ vm.nodeConfig.name }} <span ng-if="vm.originalOutput != vm.output">*</span></h1>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-2">
+            INPUTS
+        </div>
+        <div class="col-xs-10">
+            <ui-select multiple ng-model="vm.inputs" theme="bootstrap" on-select="vm.hasChanged()" on-remove="vm.hasChanged()">
+                <ui-select-match placeholder="Select inputs...">{{$item}}</ui-select-match>
+                <ui-select-choices repeat="input in vm.availableInputs | filter:$select.search">
+                    {{input}}
+                </ui-select-choices>
+            </ui-select>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button ng-disabled="!vm.changed" class="btn btn-primary btn-sm" type="button" ng-click="vm.save()">OK</button>
+    <button class="btn btn-warning btn-sm" type="button" ng-click="vm.cancel()">CANCEL</button>
+</div>

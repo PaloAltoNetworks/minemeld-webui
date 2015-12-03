@@ -1,0 +1,9 @@
+<div id="login-background">
+    <img src="assets/images/logo.png" class="m-b-xs"></img>
+    <h2 class="m-t-xs">MINEMELD</h2>
+    <form ng-submit="login.submit()" id="login-form">
+        <input id="username" ng-disabled="login.checking" ng-model="login.username" placeholder="USERNAME" class="form-control" type="text"></input>
+        <input id="password" ng-disabled="login.checking" ng-model="login.password" placeholder="PASSWORD" class="form-control" type="password"></input>
+        <button ng-disabled="login.checking" class="btn btn-lg btn-primary btn-block" type="submit">LOGIN</button>
+    </form>
+</div>

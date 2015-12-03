@@ -1,0 +1,147 @@
+<!-- nodes -->
+<div class="row dashboard-row">
+  <div class="col-sm-3 col-md-3">
+    <div class="row dashboard-row-processor">
+      <div class="dashboard-label dashboard-label-processor">
+        <div class="dashboard-label-text">NODES</div>
+      </div>
+      <div class="col-xs-10">
+        <div class="row">
+          <div class="col-xs-4 dashboard-3-statistic text-center">
+            <h3 class="m-b-xs dashboard-miner" ng-bind="(dashboard.numMiners|megaNumber)||0"></h3>
+            <small>MINERS</small>
+          </div>
+          <div class="col-xs-4 dashboard-3-statistic text-center">
+            <h3 class="m-b-xs dashboard-processor" ng-bind="(dashboard.numProcessors|megaNumber)||0"></h3>
+            <small>PROCS</small>
+          </div>
+          <div class="col-xs-4 dashboard-3-statistic text-center">
+            <h3 class="m-b-xs dashboard-output" ng-bind="(dashboard.numOutputs|megaNumber)||0"></h3>
+            <small>OUTPUTS</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-3 col-md-3">
+    <div class="row dashboard-row-processor">
+      <div class="col-xs-12 dashboard-main-statistic text-center">
+        <h2 class="m-b-xs" ng-bind="(dashboard.numIndicators|megaNumber)||0"></h2>
+        <small># OF INDICATORS</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-6">
+    <div class="row dashboard-row-processor">
+      <div class="col-xs-12 dashboard-chart-column">
+        <div class="dashboard-chart-title small m-t-xs"># OF INDICATORS (LAST {{dashboard.chartRange}})</div>
+        <nvd3 ng-if="dashboard.minemeldMetrics.length" api="dashboard.minemeldMetricsLengthAPI" 
+          options="dashboard.indicatorsOptions" data="dashboard.minemeldMetrics.length"></nvd3>
+        <div ng-if="!dashboard.minemeldMetrics.length" class="dashboard-chart-placeholder">NO STATS YET</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- miners -->
+<div class="row dashboard-row">
+  <div class="col-sm-4 col-md-3">
+    <div class="row dashboard-row-miner">
+      <div class="dashboard-label dashboard-label-miner">
+        <div class="dashboard-label-text">MINERS</div>
+      </div>
+      <div class="col-xs-6 dashboard-main-statistic text-center">
+        <h2 class="m-b-xs" ng-bind="(dashboard.minersStats.length|megaNumber)||0"></h2>
+        <small>TOTAL</small>
+      </div>
+      <div class="col-xs-2">
+        <div class="dashboard-added">
+          <h4 class="m-b-xs" ng-bind="(dashboard.minersStats.added|megaNumber)||0"></h4>
+          <small>ADDED</small>
+        </div>
+        <div class="dashboard-removed">
+          <h4 class="m-b-xs" ng-bind="(dashboard.minersStats.aged_out|megaNumber)||0"></h4>
+          <small>AGED OUT</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-3 col-md-3">
+    <div class="row dashboard-row-miner">
+      <div class="col-xs-12 dashboard-chart-column">
+        <div class="dashboard-chart-title small m-t-xs"># OF INDICATORS (LAST {{dashboard.chartRange}})</div>
+        <nvd3 ng-if="dashboard.minersMetrics.length" options="dashboard.indicatorsOptions"
+          api="dashboard.minersMetricsLengthAPI" data="dashboard.minersMetrics.length"></nvd3>
+        <div ng-if="!dashboard.minersMetrics.length" class="dashboard-chart-placeholder">NO STATS YET</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-5 col-md-6">
+    <div class="row dashboard-row-miner">
+      <div class="col-xs-12 dashboard-chart-column">
+        <div class="dashboard-chart-title small m-t-xs">ADDED/AGED OUT (LAST {{dashboard.chartRange}})</div>
+        <nvd3 ng-if="dashboard.minersMetrics.ar" options="dashboard.arOptions"
+          api="dashboard.minersMetricsArAPI" data="dashboard.minersMetrics.ar"></nvd3>
+        <div ng-if="!dashboard.minersMetrics.ar" class="dashboard-chart-placeholder">NO STATS YET</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- outputs -->
+<div class="row dashboard-row">
+  <div class="col-sm-4 col-md-3">
+    <div class="row dashboard-row-output">
+      <div class="dashboard-label dashboard-label-output">
+        <div class="dashboard-label-text">OUTPUTS</div>
+      </div>
+      <div class="col-xs-6 dashboard-main-statistic text-center">
+        <h2 class="m-b-xs" ng-bind="(dashboard.outputsStats.length|megaNumber)||0"></h2>
+        <small>TOTAL</small>
+      </div>
+      <div class="col-xs-4">
+        <div class="dashboard-added">
+          <h4 class="m-b-xs" ng-bind="(dashboard.outputsStats.added|megaNumber)||0"></h4>
+          <small>ADDED</small>
+        </div>
+        <div class="dashboard-removed">
+          <h4 class="m-b-xs" ng-bind="(dashboard.outputsStats.removed|megaNumber)||0"></h4>
+          <small>REMOVED</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-3 col-md-3">
+    <div class="row dashboard-row-output">
+      <div class="col-xs-12 dashboard-chart-column">
+        <div class="dashboard-chart-title small m-t-xs"># OF INDICATORS (LAST {{dashboard.chartRange}})</div>
+        <nvd3 ng-if="dashboard.outputsMetrics.length" options="dashboard.indicatorsOptions"
+          api="dashboard.outputsMetricsLengthAPI" data="dashboard.outputsMetrics.length"></nvd3>
+        <div ng-if="!dashboard.outputsMetrics.length" class="dashboard-chart-placeholder">NO STATS YET</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-5 col-md-6">
+    <div class="row dashboard-row-output">
+      <div class="col-xs-12 dashboard-chart-column">
+        <div class="dashboard-chart-title small m-t-xs">ADDED/REMOVED (LAST {{dashboard.chartRange}})</div>
+        <nvd3 ng-if="dashboard.outputsMetrics.ar" options="dashboard.arOptions"
+          api="dashboard.outputsMetricsArAPI" data="dashboard.outputsMetrics.ar"></nvd3>
+        <div ng-if="!dashboard.outputsMetrics.ar" class="dashboard-chart-placeholder">NO STATS YET</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<minemeld-options>
+  <h5 class="m-t-xs m-b-xs">OPTIONS</h5>
+  <div class="minemeld-options-form">
+    <h6>Range</h6>
+    <select class="form-control" ng-model="dashboard.chartRange" ng-change="dashboard.chartRangeChanged()">
+      <option value="1h">1 hour</option>
+      <option value="24h">24 hours</option>
+      <option value="7d">7 days</option>
+      <option value="30d">30 days</option>
+    </select>
+  </div>
+</minemeld-options>

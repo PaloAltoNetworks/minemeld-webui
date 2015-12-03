@@ -1,0 +1,40 @@
+.prototypedetail-description {
+  color: darken($body-bg, 30%);
+  font-size: 14px;
+}
+
+.prototypedetail-section > h4 {
+  padding-bottom: 2px;
+  border-bottom: 3px solid darken($body-bg, 20%);
+}
+
+.prototypedetail-config > table {
+  margin-top: 15px;
+  background-color: lighten($body-bg, 2%);
+  font-size: 12px;
+}
+
+.prototypedetail-config > table > tbody {
+  border-top: 2px solid $table-border-color;
+  border-bottom: 1px solid $table-border-color;
+}
+
+.prototypedetail-config > table > tbody ul {
+  padding-left: 0 !important;
+}
+
+.prototypedetail-config > table > tbody li {
+    list-style-type: none;
+}
+
+.prototypedetail-config > table table {
+  margin-top: 0;
+  background-color: lighten($body-bg, 2%) !important;
+  font-size: 12px;  
+}
+
+.prototypedetail-config > table table > thead th {
+  background-color: darken($body-bg, 5%);
+  font-size: 12px;
+  font-weight: 400 !important;  
+}

@@ -1,0 +1,58 @@
+.minemeld-options {
+    position: fixed;
+    top: 60px;
+    right: 0px;
+    overflow: hidden;
+}
+
+.minemeld-options > div {
+    position: relative;
+    z-index: 2001;
+    margin-right: -250px;
+    transition: 0.5s;
+}
+
+.minemeld-options-entries {
+    margin-left: 40px;
+    width: 250px;
+    background-color: darken($body-bg, 5%);
+    min-height: 100px;
+    padding-top: 5px;
+    padding-left: 10px;
+}
+
+.minemeld-options-entries > h5 {
+    font-weight: 500;
+}
+
+.minemeld-options-knob {
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+    width: 40px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: $panw-blue;
+    font-size: 20px;
+    text-align: center;
+    padding-top: 7px;
+    padding-bottom: 3px;
+    color: $navbar-default-link-color;
+    cursor: pointer;
+}
+
+.minemeld-options-knob:hover {
+    color: $navbar-default-link-hover-color;
+}
+
+.minemeld-options-show {
+    margin-right: 0px !important;
+}
+
+.minemeld-options-form {
+    padding-right: 5px;
+}
+
+.minemeld-options-form > select {
+    background-color: $body-bg;
+}

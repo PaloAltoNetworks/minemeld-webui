@@ -1,0 +1,72 @@
+#nodesTable th {
+    font-weight: 500;
+    font-size: 12px;
+}
+
+.nodes-table-row > td {
+    font-weight: 500;
+    font-size: 12px;
+    background-color: #FFF;
+}
+
+.nodes-table-row:hover > td {
+    background-color: darken($body-bg, 5%);
+    cursor: pointer;
+}
+
+.nodes-table-chevron {
+    color: #FFF;
+    font-size: 30px;
+    margin-top: 20px;
+}
+
+#nodesTable ul {
+    padding: 0;
+}
+
+#nodesTable ul > li {
+    list-style-type: none;
+    padding-bottom: 5px;
+    vertical-align: middle;
+}
+
+#nodesTable ul > li > span {
+    vertical-align: middle;
+    margin-top: -2px;
+}
+
+#nodesTable_wrapper label {
+    font-size: 12px;
+}
+
+#nodesTable_info {
+    font-size: 12px;
+}
+
+#nodesTable_paginate {
+    font-size: 12px;
+}
+
+.nodes-dt-header-miner {
+    background-color: $minemeld-miner !important;
+}
+
+.nodes-dt-header-output {
+    background-color: $minemeld-output !important;
+}
+
+.nodes-dt-header-processor {
+    background-color: $minemeld-processor !important;
+}
+
+.nodes-label-miner {
+    background-color: $minemeld-miner;
+}
+
+.nodes-label-output {
+    background-color: $minemeld-output;
+}
+
+.nodes-label-processor {
+    background-color: $minemeld-processor;
+}

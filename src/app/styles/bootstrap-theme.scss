@@ -1,0 +1,169 @@
+.modal-content {
+  background-color: lighten($body-bg, 2%);
+  border-radius: 0 !important;
+}
+
+.modal-header {
+  padding-left: 10px !important;
+  background-color: darken($body-bg, 10%);
+  border-radius: 6px 6px 0 0;
+}
+
+.modal-title {
+  font-size: 14px;
+}
+
+.modal-body {
+  padding-left: 10px;
+}
+
+.ui-select-bootstrap .ui-select-choices-row.active>a {
+  background-color: darken($body-bg, 10%) !important;
+  color: darken($body-bg, 80%);
+}
+
+.ui-select-bootstrap .ui-select-choices-row >a {
+  font-size: 12px !important;
+  color: darken($body-bg, 80%);
+}
+
+.ui-select-multiple.ui-select-bootstrap .ui-select-match .close {
+  line-height: 1 !important;
+}
+
+.no-padding {
+    padding: 0px !important;
+}
+
+.navbar-fixed-top {
+    border-width: 0 !important;
+}
+
+body {
+    min-width: 768px !important;
+    width: auto !important;
+    width: 768px;
+}
+
+div.main-container {
+    padding: 80px 0px 0px 0px;
+}
+
+.m-b-xs {
+    margin-bottom: 5px;
+}
+
+.m-t-xs {
+    margin-top: 5px;
+}
+
+.albert_stripe {
+    float: left;
+    height: 3px;
+    width: 25%;
+}
+
+.albert_stripe_first {
+    background-color: $minemeld-system;
+}
+
+.albert_stripe_second {
+    background-color: $minemeld-processor;
+}
+
+.albert_stripe_third {
+    background-color: $minemeld-miner;
+}
+
+.albert_stripe_fourth {
+    background-color: $minemeld-output;
+}
+
+.nvtooltip {
+    border-radius: 0px !important;
+    border-color: $minemeld-system;
+    border-width: 1px;
+}
+
+.nvtooltip strong, .nvtooltip td {
+    font-family: $font-family-sans-serif;
+    font-size: 10px;
+    font-weight: 500 !important;
+}
+
+.d3-container {
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-bottom: 20px;
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    height: 700px;
+    vertical-align: top;
+    overflow: hidden;
+    background-color: lighten($body-bg, 2%);
+}
+
+.d3-responsive {
+    display: inline-block;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+/* .mw-sankey-node circle {
+    fill: white;
+    fill-opacity: .8;
+    stroke: $panw-green;
+    stroke-width: 2px;
+} */
+
+.mw-sankey-node-output circle {
+    fill: $minemeld-output;
+    fill-opacity: .8;
+}
+
+.mw-sankey-node-processor circle {
+    fill: $minemeld-processor;
+    fill-opacity: .8;
+}
+
+.mw-sankey-node-miner circle {
+    fill: $minemeld-miner;
+    fill-opacity: .8;
+}
+
+.mw-sankey-node .node-overlay {
+    fill: white;
+    fill-opacity: 0;
+    stroke-width: 0;
+}
+
+.mw-sankey-node text {
+    fill: #fff;
+}
+
+.mw-sankey-link {
+  fill: none;
+  stroke: #000;
+  stroke-opacity: .2;
+  stroke-linecap: round;
+}
+
+.mw-sankey-link:hover {
+  stroke-opacity: .5;
+}
+
+.d3-tip {
+  line-height: 1;
+  padding: 12px;
+  padding-bottom: 0px;
+  background: rgba(255, 255, 255, 0.9);
+  color: $gray;
+  border-radius: 0px;
+  pointer-events: none;
+  border: 1px solid rgba(100,100,100,0.85);
+  font-size: 12px;
+}

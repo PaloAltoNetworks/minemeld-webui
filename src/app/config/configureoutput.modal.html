@@ -1,0 +1,18 @@
+<div class="modal-header">
+    <h1 class="modal-title">{{ vm.nodeConfig.name }} <span ng-if="vm.originalOutput != vm.output">*</span></h1>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-2">
+            OUTPUT
+        </div>
+        <div class="col-xs-10">
+            <span ng-if="!vm.output" class="btn config-btn-disabled btn-xs" style="margin-left: 10px;" type="button" ng-click="vm.enableOutput()">DISABLED</span>
+            <span ng-if="vm.output" class="btn config-btn-enabled btn-xs active" style="margin-left: 10px;" type="button" ng-click="vm.disableOutput()">ENABLED</span>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button ng-disabled="vm.originalOutput == vm.output" class="btn btn-primary btn-sm" type="button" ng-click="vm.save()">OK</button>
+    <button class="btn btn-warning btn-sm" type="button" ng-click="vm.cancel()">CANCEL</button>
+</div>
