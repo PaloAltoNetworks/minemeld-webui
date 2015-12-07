@@ -142,7 +142,7 @@ export class ConfigController {
                 'COMMIT',
                 'Commit successful, restart engine to apply changes ?'
             ).then((result: any) => {
-                this.MinemeldSupervisor.restartCore().then(
+                this.MinemeldSupervisor.restartEngine().then(
                     (result: any) => { this.toastr.success('Restarting engine, could take some minutes. Check <a href="/#/system">SYSTEM</a>'); },
                     (error: any) => { this.toastr.error('ERROR RESTARTING ENGINE: ' + error.statusText); }
                 );
