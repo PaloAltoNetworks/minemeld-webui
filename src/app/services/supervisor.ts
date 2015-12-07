@@ -4,9 +4,9 @@ import { IMinemeldAuth } from './auth';
 
 export interface IMinemeldSupervisor {
     getStatus(): angular.IPromise<any>;
-    startCore(): angular.IPromise<any>;
-    stopCore(): angular.IPromise<any>;
-    restartCore(): angular.IPromise<any>;
+    startEngine(): angular.IPromise<any>;
+    stopEngine(): angular.IPromise<any>;
+    restartEngine(): angular.IPromise<any>;
 }
 
 export class MinemeldSupervisor implements IMinemeldSupervisor {
@@ -54,7 +54,7 @@ export class MinemeldSupervisor implements IMinemeldSupervisor {
         });
     }
 
-    public startCore(): angular.IPromise<any> {
+    public startEngine(): angular.IPromise<any> {
         var minemeld: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
         if (!this.MinemeldAuth.authorizationSet) {
@@ -62,7 +62,7 @@ export class MinemeldSupervisor implements IMinemeldSupervisor {
             return;
         }
 
-        minemeld = this.$resource('/supervisor/minemeld-core/start', {}, {
+        minemeld = this.$resource('/supervisor/minemeld-engine/start', {}, {
             get: {
                 method: 'GET',
                 headers: this.MinemeldAuth.getAuthorizationHeaders()
@@ -84,7 +84,7 @@ export class MinemeldSupervisor implements IMinemeldSupervisor {
         });
     }
 
-    public stopCore(): angular.IPromise<any> {
+    public stopEngine(): angular.IPromise<any> {
         var minemeld: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
         if (!this.MinemeldAuth.authorizationSet) {
@@ -92,7 +92,7 @@ export class MinemeldSupervisor implements IMinemeldSupervisor {
             return;
         }
 
-        minemeld = this.$resource('/supervisor/minemeld-core/stop', {}, {
+        minemeld = this.$resource('/supervisor/minemeld-engine/stop', {}, {
             get: {
                 method: 'GET',
                 headers: this.MinemeldAuth.getAuthorizationHeaders()
@@ -114,7 +114,7 @@ export class MinemeldSupervisor implements IMinemeldSupervisor {
         });
     }
 
-    public restartCore(): angular.IPromise<any> {
+    public restartEngine(): angular.IPromise<any> {
         var minemeld: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
         if (!this.MinemeldAuth.authorizationSet) {
@@ -122,7 +122,7 @@ export class MinemeldSupervisor implements IMinemeldSupervisor {
             return;
         }
 
-        minemeld = this.$resource('/supervisor/minemeld-core/restart', {}, {
+        minemeld = this.$resource('/supervisor/minemeld-engine/restart', {}, {
             get: {
                 method: 'GET',
                 headers: this.MinemeldAuth.getAuthorizationHeaders()

@@ -20,16 +20,16 @@
         <div class="dashboard-label-text">ENGINE</div>
       </div>
       <div class="col-xs-5 text-center dashboard-main-statistic">
-        <h3 ng-switch="vm.supervisor.processes['minemeld-core']['statename']">
-          <span class="label label-success" ng-switch-when="RUNNING">{{ vm.supervisor.processes['minemeld-core']['statename'] }}</span>
-          <span class="label label-danger" ng-switch-when="STOPPED">{{ vm.supervisor.processes['minemeld-core']['statename'] }}</span>
-          <span class="label label-danger" ng-switch-when="STOPPING">{{ vm.supervisor.processes['minemeld-core']['statename'] }}</span>
-          <span class="label label-default" ng-switch-default>{{ vm.supervisor.processes['minemeld-core']['statename'] }}</span>
+        <h3 ng-switch="vm.supervisor.processes['minemeld-engine']['statename']">
+          <span class="label label-success" ng-switch-when="RUNNING">{{ vm.supervisor.processes['minemeld-engine']['statename'] }}</span>
+          <span class="label label-danger" ng-switch-when="STOPPED">{{ vm.supervisor.processes['minemeld-engine']['statename'] }}</span>
+          <span class="label label-danger" ng-switch-when="STOPPING">{{ vm.supervisor.processes['minemeld-engine']['statename'] }}</span>
+          <span class="label label-default" ng-switch-default>{{ vm.supervisor.processes['minemeld-engine']['statename'] }}</span>
         </h3>
-        <small ng-if="vm.supervisor.processes['minemeld-core']['statename'] == 'RUNNING'">STARTED {{ vm.supervisor.processes['minemeld-core']['start'] }}</small>
+        <small ng-if="vm.supervisor.processes['minemeld-engine']['statename'] == 'RUNNING'">STARTED {{ vm.supervisor.processes['minemeld-engine']['start'] }}</small>
       </div>
       <div class="col-xs-5 text-center dashboard-main-statistic">
-        <h2 class="m-b-xs" ng-bind="(vm.supervisor.processes['minemeld-core']['children'])||N/A"></h2>
+        <h2 class="m-b-xs" ng-bind="(vm.supervisor.processes['minemeld-engine']['children'])||N/A"></h2>
         <small># of chassis</small>
       </div>
     </div>
