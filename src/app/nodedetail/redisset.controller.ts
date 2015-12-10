@@ -27,7 +27,7 @@ function redisSetRouterConfig($stateProvider: ng.ui.IStateProvider) {
 
 /** @ngInject **/
 function redisSetRegisterClass(NodeDetailResolver: INodeDetailResolverService) {
-    NodeDetailResolver.registerClass('RedisSet', {
+    NodeDetailResolver.registerClass('minemeld.ft.redis.RedisSet', {
         tabs: [{
             icon: 'fa fa-circle-o',
             tooltip: 'INFO',
