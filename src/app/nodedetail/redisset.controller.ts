@@ -6,10 +6,17 @@ import { NodeDetailInfoController } from './nodedetail.info.controller';
 
 class NodeDetailRedisSetInfoController extends NodeDetailInfoController{
     public renderState(vm: any, ns: IMinemeldStatusNode) {
+        var clocation: string;
+
         vm.nodeState = ns;
         vm.nodeState.indicators = ns.length;
         vm.nodeState.stateAsString = vm.mmstatus.NODE_STATES[ns.state];
-        vm.nodeState.feedURL = location.protocol + '//' + location.hostname + '/feeds/' + vm.nodename;
+
+        clocation = location.protocol + '//' + location.hostname;
+        if (location.port) {
+            clocation += ':' + location.port;
+        }
+        vm.nodeState.feedURL = clocation + '/feeds/' + vm.nodename;
         console.log(vm);
     }
 }
