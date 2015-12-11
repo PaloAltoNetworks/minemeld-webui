@@ -4,7 +4,7 @@ import { INodeDetailResolverService } from '../../app/services/nodedetailresolve
 import { IMinemeldStatusNode } from '../../app/services/status';
 import { NodeDetailInfoController } from './nodedetail.info.controller';
 
-class NodeDetailRedisSetInfoController extends NodeDetailInfoController{
+class NodeDetailRedisSetInfoController extends NodeDetailInfoController {
     public renderState(vm: any, ns: IMinemeldStatusNode) {
         var clocation: string;
 
@@ -17,7 +17,6 @@ class NodeDetailRedisSetInfoController extends NodeDetailInfoController{
             clocation += ':' + location.port;
         }
         vm.nodeState.feedURL = clocation + '/feeds/' + vm.nodename;
-        console.log(vm);
     }
 }
 
