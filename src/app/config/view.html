@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-sm-12 col-md-12">
-    <button tooltip-popup-delay="500" tooltip="commit config" type="button" class="btn btn-primary btn-sm" ng-disabled="(vm.changed === false) || inCommit" ng-click="vm.commit()">
+    <button tooltip-popup-delay="500" tooltip="commit config" type="button" class="btn btn-primary btn-sm" ng-disabled="(vm.changed === false) || vm.inCommit" ng-click="vm.commit()">
         <span class="glyphicon glyphicon-save"></span> COMMIT
     </button>
     <button tooltip-popup-delay="500" tooltip="reload running config" type="button" class="config-action btn btn-config-action btn-sm" ng-click="vm.reload()">
