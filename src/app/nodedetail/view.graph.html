@@ -1,6 +1,11 @@
 <div class="row">
+    <div class="col-sm-12 col-md-12">
+        <h5 class="m-b-xs">CONNECTION GRAPH</h5>
+    </div>
+</div>
+<div class="row">
     <div class="col-sm-12 col-md-12 d3-container">
         <mm-sankey fts="vm.nodes" ng-if="vm.nodes.length > 1"></mm-sankey>
-        <div ng-if="!(vm.nodes.length > 1)"><em>No graph. The node is not connected</em></div>
+        <div ng-if="vm.nodes && !(vm.nodes.length > 1)"><em>No graph. Node is not connected</em></div>
     </div>
 </div>
