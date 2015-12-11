@@ -97,10 +97,10 @@ export class ConfigController {
             bindToController: true,
             resolve: {
                 nodenum: () => { return nodenum }
-                },
-                backdrop: 'static',
-                animation: false
-            });
+            },
+            backdrop: 'static',
+            animation: false
+        });
                  
         mi.result.then((result: any) => {
             if (result !== 'ok') {

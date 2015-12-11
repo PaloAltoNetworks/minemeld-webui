@@ -28,6 +28,8 @@ export interface IMinemeldConfigService {
     deleteNode(noden: number): angular.IPromise<any>;
     commit(): angular.IPromise<any>;
     addNode(name: string, properties: any): angular.IPromise<any>;
+    getDataFile(datafilename: string): angular.IPromise<any>;
+    saveDataFile(datafilename: string, data: any): angular.IPromise<any>;
 }
 
 interface IMinemeldConfigResource extends angular.resource.IResourceClass<angular.resource.IResource<any>> {
@@ -187,6 +189,58 @@ export class MinemeldConfig implements IMinemeldConfigService {
         }).then((result: any) => {
             this.changed = true;
         });        
+    }
+
+    getDataFile(datafilename: string): angular.IPromise<any> {
+        var r: IMinemeldConfigResource;
+
+        if(!this.MinemeldAuth.authorizationSet) {
+            this.$state.go('login');
+            return;
+        }
+
+        r = <IMinemeldConfigResource>(this.$resource('/config/data/:datafilename', {
+            datafilename: datafilename
+        }, {
+            get: {
+                method: 'GET',
+                headers: this.MinemeldAuth.getAuthorizationHeaders()
+            }
+        }));
+               
+        return r.get().$promise
+        .then((result: any) => {
+            return result.result;
+        }, (error: any) => {
+            if (error.status == 400) {
+                return null;
+            }
+
+            throw error;
+        });
+    }
+
+    saveDataFile(datafilename: string, data: any): angular.IPromise<any> {
+        var r: IMinemeldConfigResource;
+
+        if(!this.MinemeldAuth.authorizationSet) {
+            this.$state.go('login');
+            return;
+        }
+
+        r = <IMinemeldConfigResource>(this.$resource('/config/data/:datafilename', {
+            datafilename: datafilename
+        }, {
+                put: {
+                    method: 'PUT',
+                    headers: this.MinemeldAuth.getAuthorizationHeaders()
+                }
+        }));
+
+        return r.put({}, JSON.stringify(data)).$promise
+        .then((result: any) => {
+            return result.result;
+        });
     }
 
     private getNodeConfig(noden: number): angular.IPromise<any> {

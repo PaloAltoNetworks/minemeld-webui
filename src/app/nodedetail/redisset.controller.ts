@@ -4,13 +4,19 @@ import { INodeDetailResolverService } from '../../app/services/nodedetailresolve
 import { IMinemeldStatusNode } from '../../app/services/status';
 import { NodeDetailInfoController } from './nodedetail.info.controller';
 
-class NodeDetailRedisSetInfoController extends NodeDetailInfoController{
+class NodeDetailRedisSetInfoController extends NodeDetailInfoController {
     public renderState(vm: any, ns: IMinemeldStatusNode) {
+        var clocation: string;
+
         vm.nodeState = ns;
         vm.nodeState.indicators = ns.length;
         vm.nodeState.stateAsString = vm.mmstatus.NODE_STATES[ns.state];
-        vm.nodeState.feedURL = location.protocol + '//' + location.hostname + '/feeds/' + vm.nodename;
-        console.log(vm);
+
+        clocation = location.protocol + '//' + location.hostname;
+        if (location.port) {
+            clocation += ':' + location.port;
+        }
+        vm.nodeState.feedURL = clocation + '/feeds/' + vm.nodename;
     }
 }
 
@@ -27,7 +33,7 @@ function redisSetRouterConfig($stateProvider: ng.ui.IStateProvider) {
 
 /** @ngInject **/
 function redisSetRegisterClass(NodeDetailResolver: INodeDetailResolverService) {
-    NodeDetailResolver.registerClass('RedisSet', {
+    NodeDetailResolver.registerClass('minemeld.ft.redis.RedisSet', {
         tabs: [{
             icon: 'fa fa-circle-o',
             tooltip: 'INFO',

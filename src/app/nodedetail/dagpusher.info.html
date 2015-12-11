@@ -1,0 +1,75 @@
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+        <h5 class="m-b-xs">STATUS</h5>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6 col-md-6">
+        <table class="table table-condensed nodedetail-info-table">
+              <colgroup>
+                <col style="width: 30%">
+                <col>
+            </colgroup>
+            <tbody>
+                <tr>
+                    <td>CLASS</td>
+                    <td>{{ vm.nodeState.class }}</td>
+                </tr>
+                <tr ng-if="vm.nodeConfig.prototype">
+                    <td>PROTOTYPE</td>
+                    <td><a tooltip-template="'tooltip.prototype.html'" ui-sref="prototypedetail({ prototypeName: vm.nodeConfig.prototype.split('.')[1], libraryName: vm.nodeConfig.prototype.split('.')[0] })">{{ vm.nodeConfig.prototype }}</a></td>
+                    <script type="text/ng-template" id="tooltip.prototype.html">
+                        <prototype-tooltip name="vm.nodeConfig.prototype"></prototype-tooltip>
+                    </script>
+                </tr>
+                <tr>
+                    <td>STATE</td>
+                    <td ng-switch on="vm.nodeState.state">
+                        <span ng-switch-when="5" class="label label-success">{{ vm.nodeState.stateAsString }}</span>
+                        <span ng-switch-default class="label label-warning">{{ vm.nodeState.stateAsString }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td># HANDLED DEVICES</td>
+                    <td>{{ vm.nodeState.devices }}</td>
+                </tr>
+                <tr>
+                    <td># INDICATORS</td>
+                    <td>{{ vm.nodeState.indicators }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-sm-6 col-md-6">
+        <table class="table table-condensed nodedetail-info-table">
+              <colgroup>
+                <col style="width: 15%">
+                <col style="width: 85%">
+            </colgroup>
+            <tbody>
+                <tr>
+                    <td>OUTPUT</td>
+                    <td>
+                        <span class="label label-success" ng-if="vm.nodeState.output">ENABLED</span>
+                        <span class="label label-default" ng-if="!vm.nodeState.output">DISABLED</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>INPUTS</td>
+                    <td>
+                        <ul class="nodetails-info-inputs" ng-if="vm.nodeState.inputs.length > 0">
+                            <li ng-repeat="input in vm.nodeState.inputs"><a ui-sref="nodedetail({ nodename: input })">{{ input }}</a></li>
+                        </ul>
+                        <em ng-if="vm.nodeState.inputs.length == 0">none</em>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row" ng-if="vm.nodeConfig.config">
+    <div class="col-sm-12 col-md-12">
+        <h5 class="m-b-xs">CONFIG</h5>
+        <node-config class="nodedetail-info-config" config="vm.nodeConfig.config"></node-config>
+    </div>
+</div>
