@@ -1,5 +1,10 @@
 <div class="row">
     <div class="col-sm-12 col-md-12">
+        <h5 class="m-b-xs">STATISTICS</h5>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12">
         <table class="table table-condensed nodedetails-stats-table">
               <colgroup>
                 <col style="width: 15%">
@@ -20,6 +25,24 @@
                             data="nodedetailstats.metrics.indicators"></nvd3>
                     </td>
                 </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+        <table class="table table-condensed nodedetails-stats-table">
+              <colgroup>
+                <col style="width: 15%">
+                <col style="width: 10%">
+                <col style="width: 75%">
+            </colgroup> 
+            <thead>
+                <th>METRIC</th>
+                <th>SINCE<br>ENGINE START</th>
+                <th>HISTORY (LAST {{ nodedetailstats.chartRange | uppercase }})</th>
+            </thead>
+            <tbody>
                 <tr ng-repeat="name in nodedetailstats.metrics_names | orderBy" ng-if="name != 'indicators'">
                     <td>{{ name | uppercase }}</td>
                     <td>{{ nodedetailstats.nodeState.statistics[name] || 0 }}</td>
