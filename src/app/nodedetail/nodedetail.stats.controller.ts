@@ -127,6 +127,11 @@ export class NodeDetailStatsController {
                         return { x: e[0], y: e[1] };
                     })
                 };
+                if (cm.values.length > 0) {
+                    if (cm.values[cm.values.length-1].y == null) {
+                        cm.values = cm.values.slice(0, -1);
+                    }
+                }
                 nmetrics[m] = [cm];
             }
             vm.metrics = nmetrics;

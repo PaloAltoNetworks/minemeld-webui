@@ -238,6 +238,7 @@ export class DashboardController {
             function(result: any) {
                 var metrics: IMetricsDictionary =  <IMetricsDictionary>{};
                 var p: number;
+                var tim: IMetric;
                 var cmetric: string;
 
                 metrics['length'] = new Array(<IMetric>{});
@@ -252,6 +253,12 @@ export class DashboardController {
                         metrics['length'][0].values = result[p].values.map(function(e: number[]) {
                             return { x: e[0], y: e[1] };
                         });
+                        if (metrics['length'][0].values.length > 0) {
+                            tim = metrics['length'][0];
+                            if (tim.values[tim.values.length-1].y == null) {
+                                tim.values = tim.values.slice(0, -1);
+                            }
+                        }
                     } else if (cmetric === 'added') {
                         metrics['ar'][0].key = 'ADDED';
                         metrics['ar'][0].area = true;
@@ -259,6 +266,12 @@ export class DashboardController {
                         metrics['ar'][0].values = result[p].values.map(function(e: number[]) {
                             return { x: e[0], y: e[1] };
                         });
+                        if (metrics['ar'][0].values.length > 0) {
+                            tim = metrics['ar'][0];
+                            if (tim.values[tim.values.length-1].y == null) {
+                                tim.values = tim.values.slice(0, -1);
+                            }
+                        }
                     } else if (cmetric === 'aged_out') {
                         metrics['ar'][1].key = 'AGED_OUT';
                         metrics['ar'][1].area = true;
@@ -266,6 +279,12 @@ export class DashboardController {
                         metrics['ar'][1].values = result[p].values.map(function(e: number[]) {
                             return { x: e[0], y: e[1] };
                         });
+                        if (metrics['ar'][1].values.length > 0) {
+                            tim = metrics['ar'][1];
+                            if (tim.values[tim.values.length-1].y == null) {
+                                tim.values = tim.values.slice(0, -1);
+                            }
+                        }
                     }
                 }
 
@@ -305,6 +324,7 @@ export class DashboardController {
             function(result: any) {
                 var metrics: IMetricsDictionary =  <IMetricsDictionary>{};
                 var p: number;
+                var tim: IMetric;
                 var cmetric: string;
 
                 metrics['length'] = new Array(<IMetric>{});
@@ -319,6 +339,12 @@ export class DashboardController {
                         metrics['length'][0].values = result[p].values.map(function(e: number[]) {
                             return { x: e[0], y: e[1] };
                         });
+                        if (metrics['length'][0].values.length > 0) {
+                            tim = metrics['length'][0];
+                            if (tim.values[tim.values.length-1].y == null) {
+                                tim.values = tim.values.slice(0, -1);
+                            }
+                        }
                     } else if (cmetric === 'added') {
                         metrics['ar'][0].key = 'ADDED';
                         metrics['ar'][0].area = true;
@@ -326,6 +352,12 @@ export class DashboardController {
                         metrics['ar'][0].values = result[p].values.map(function(e: number[]) {
                             return { x: e[0], y: e[1] };
                         });
+                        if (metrics['ar'][0].values.length > 0) {
+                            tim = metrics['ar'][0];
+                            if (tim.values[tim.values.length-1].y == null) {
+                                tim.values = tim.values.slice(0, -1);
+                            }
+                        }
                     } else if (cmetric === 'removed') {
                         metrics['ar'][1].key = 'REMOVED';
                         metrics['ar'][1].area = true;
@@ -333,6 +365,12 @@ export class DashboardController {
                         metrics['ar'][1].values = result[p].values.map(function(e: number[]) {
                             return { x: e[0], y: e[1] };
                         });
+                        if (metrics['ar'][1].values.length > 0) {
+                            tim = metrics['ar'][1];
+                            if (tim.values[tim.values.length-1].y == null) {
+                                tim.values = tim.values.slice(0, -1);
+                            }
+                        }
                     }
                 }
 
@@ -375,6 +413,7 @@ export class DashboardController {
                 var metrics: IMetricsDictionary =  <IMetricsDictionary>{};
                 var p: number;
                 var cmetric: string;
+                var tim: IMetric;
 
                 metrics['length'] = new Array(<IMetric>{});
 
@@ -387,6 +426,12 @@ export class DashboardController {
                         metrics['length'][0].values = result[p].values.map(function(e: number[]) {
                             return { x: e[0], y: e[1] };
                         });
+                        if (metrics['length'][0].values.length > 0) {
+                            tim = metrics['length'][0];
+                            if (tim.values[tim.values.length-1].y == null) {
+                                tim.values = tim.values.slice(0, -1);
+                            }
+                        }
                     }
                 }
 
