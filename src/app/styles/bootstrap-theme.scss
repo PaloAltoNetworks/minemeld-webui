@@ -160,10 +160,31 @@ div.main-container {
   line-height: 1;
   padding: 12px;
   padding-bottom: 0px;
-  background: rgba(255, 255, 255, 0.9);
-  color: $gray;
-  border-radius: 0px;
+  background: rgba(0, 0, 0, 0.9);
+  color: $tooltip-color;
+  border-radius: $border-radius-base;
   pointer-events: none;
-  border: 1px solid rgba(100,100,100,0.85);
+  border-width: 0;
   font-size: 12px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.9);
+  position: absolute;
+  pointer-events: none;
+}
+
+/* Northward tooltips */
+.d3-tip.n:after {
+  content: "\25BC";
+  margin: -2px 0 0 0;
+  top: 100%;
+  left: 0;
+  text-align: center;
 }

@@ -61,13 +61,28 @@ directive('mmSankey', function() {
 
             var tip = d3.tip().attr('class', 'd3-tip')
                 .direction('n')
-                .offset([-10, 0])
+                .offset(function (d) {
+                    if (d.source_name) {
+                        return [this.getBBox().height/2-20, 0];
+                    }
+
+                    return [-10, 0];
+                })
                 .html(function(d) {
-                    var lines = [
-                        '<p class="text-center strong">' + d.name + '</p>',
-                        '<p>' + d.num_indicators + ' INDICATORS</p>',
-                        '<p>' + d.updates_emitted + ' UPDATE.TX</p>'
-                    ]
+                    var lines;
+
+                    if (d.source_name) {
+                        lines = [
+                            '<p class="text-center strong">' + d.source_name + '</p>',
+                            '<p>' + d.updates_emitted + ' UPDATE.TX</p>'
+                        ];
+                    } else {
+                        lines = [
+                            '<p class="text-center strong">' + d.name + '</p>',
+                            '<p>' + d.num_indicators + ' INDICATORS</p>'
+                        ];
+                    }
+
                     return lines.join('');
                 });
 
@@ -124,10 +139,17 @@ directive('mmSankey', function() {
                     var ftname = ftstatus.name;
 
                     angular.forEach(ftstatus.inputs, function(input) {
+                        var cnode;
+
+                        cnode = fts.nodes[fts.nodes_flat.indexOf(input)];
+
                         fts.links.push({
                             source: fts.nodes_flat.indexOf(input),
                             target: fts.nodes_flat.indexOf(ftname),
-                            value: Math.max(Math.sqrt(fts.nodes[fts.nodes_flat.indexOf(input)].updates_emitted), 0.1),
+                            value: Math.max(Math.sqrt(cnode.updates_emitted), 0.1),
+                            updates_emitted: cnode.updates_emitted,
+                            source_name: input,
+                            target_name: ftname,
                             changed: fts.nodes[fts.nodes_flat.indexOf(input)].updates_emitted_changed
                         });
                     });
@@ -159,7 +181,9 @@ directive('mmSankey', function() {
                     })
                     .sort(function(a, b) {
                         return b.dy - a.dy;
-                    });
+                    })
+                    .on('mouseover', tip.show)
+                    .on('mouseout', tip.hide);
                 link.filter(function(d) {
                         return d.changed;
                     })
