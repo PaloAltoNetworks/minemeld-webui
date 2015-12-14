@@ -17,7 +17,7 @@
     "moment": "~2.10.6",
     "animate.css": "~3.4.0",
     "angular": "~1.4.2",
-    "angular-nvd3": "~1.0.3",
+    "angular-nvd3": "~1.0.5",
     "angular-datatables": "~0.5.1",
     "angular-loading-bar": "~0.8.0",
     "components-font-awesome": "~4.4.0",
