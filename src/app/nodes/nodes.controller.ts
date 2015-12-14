@@ -123,7 +123,11 @@ export class NodesController {
             this.DTColumnBuilder.newColumn(null).withTitle('').renderWith(function(data: any, type: any, full: any) {
                 return '';
             }).withOption('width', '5px'),
-            this.DTColumnBuilder.newColumn('name').withTitle('NAME'),
+            this.DTColumnBuilder.newColumn('name').withTitle('NAME').renderWith(function(data: any, type: any, full: any) {
+                var result: string = '<div tooltip="class ' + full.class + '" tooltip-popup-delay="500">' + data + '</div>';
+
+                return result;
+            }),
             this.DTColumnBuilder.newColumn(null).withTitle('POSITION').renderWith(function(data: any, type: any, full: any) {
                 var c: string;
                 var v: string;

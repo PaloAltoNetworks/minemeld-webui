@@ -102,6 +102,45 @@ export class NodeDetailStatsController {
         this.$scope.$on('$destroy', this.destroy.bind(this));
     }
 
+    renderMetrics(vm: NodeDetailStatsController, result: any) {
+        var j: number;
+        var m: string;
+        var cm: IMetric;
+        var nmetrics: IMetricsDictionary = <IMetricsDictionary>{};
+
+        for (j = 0; j < result.length; j++) {
+            m = result[j].metric;
+            if (m === 'length') {
+                m = 'indicators';
+            }
+            cm = <IMetric> {
+            area: true,
+                color: '#ff7f0e',
+                values: result[j].values.map(function(e: number[]) {
+                    return { x: e[0], y: e[1] };
+                })
+            };
+            if (cm.values.length > 0) {
+                if (cm.values[cm.values.length-1].y == null) {
+                    cm.values = cm.values.slice(0, -1);
+                }
+            }
+            nmetrics[m] = [cm];
+        }
+        vm.metrics = nmetrics;
+        vm.metrics_names = Object.keys(nmetrics);
+
+        if (!vm.$scope.$$phase) {
+            vm.$scope.$digest();
+        }
+
+        for (var p in vm.chartApi) {
+            if (nmetrics.hasOwnProperty(p)) {
+                vm.chartApi[p].updateWithData(nmetrics[p]);
+            }
+        }        
+    }
+
     private updateNodeMetrics() {
         var vm: any = this;
 
@@ -110,42 +149,7 @@ export class NodeDetailStatsController {
             r: vm.chartDR
         })
         .then(function(result: any) {
-            var j: number;
-            var m: string;
-            var cm: IMetric;
-            var nmetrics: IMetricsDictionary = <IMetricsDictionary>{};
-
-            for (j = 0; j < result.length; j++) {
-                m = result[j].metric;
-                if (m === 'length') {
-                    m = 'indicators';
-                }
-                cm = <IMetric> {
-                    area: true,
-                    color: '#ff7f0e',
-                    values: result[j].values.map(function(e: number[]) {
-                        return { x: e[0], y: e[1] };
-                    })
-                };
-                if (cm.values.length > 0) {
-                    if (cm.values[cm.values.length-1].y == null) {
-                        cm.values = cm.values.slice(0, -1);
-                    }
-                }
-                nmetrics[m] = [cm];
-            }
-            vm.metrics = nmetrics;
-            vm.metrics_names = Object.keys(nmetrics);
-
-            if (!vm.$scope.$$phase) {
-                vm.$scope.$digest();
-            }
-
-            for (var p in vm.chartApi) {
-                if (nmetrics.hasOwnProperty(p)) {
-                    vm.chartApi[p].updateWithData(nmetrics[p]);
-                }
-            }
+            vm.renderMetrics(vm, result);
         }, function(error: any) {
             vm.toastr.error('ERROR RETRIEVING MINEMELD METRICS: ' + error.status);
         })
