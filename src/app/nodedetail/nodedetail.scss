@@ -136,3 +136,8 @@
   font-size: 12px;
   font-weight: 400 !important;  
 }
+
+// used to solve a nvd3 tooltip bug
+.nodedetail-nvd3-container {
+  position: relative;
+}

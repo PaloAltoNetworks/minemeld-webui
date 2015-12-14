@@ -21,8 +21,10 @@
                     <td>INDICATORS</td>
                     <td>{{ nodedetailstats.nodeState.length }}</td>
                     <td>
-                        <nvd3 api="nodedetailstats.chartApi.indicators" options="nodedetailstats.chartOptions"
-                            data="nodedetailstats.metrics.indicators"></nvd3>
+                        <div class="nodedetail-nvd3-container">
+                            <nvd3 api="nodedetailstats.chartApi.indicators" options="nodedetailstats.chartOptions"
+                                data="nodedetailstats.metrics.indicators"></nvd3>
+                        </div>
                     </td>
                 </tr>
             </tbody>
@@ -47,8 +49,10 @@
                     <td>{{ name | uppercase }}</td>
                     <td>{{ nodedetailstats.nodeState.statistics[name] || 0 }}</td>
                     <td>
-                        <nvd3 api="nodedetailstats.chartApi[name]" options="nodedetailstats.chartOptions"
-                            data="nodedetailstats.metrics[name]"></nvd3>
+                        <div class="nodedetail-nvd3-container">
+                            <nvd3 api="nodedetailstats.chartApi[name]" options="nodedetailstats.chartOptions"
+                                data="nodedetailstats.metrics[name]"></nvd3>
+                        </div>
                     </td>
                 </tr>
             </tbody>
