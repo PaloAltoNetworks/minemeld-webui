@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('mmSankey', []).
-directive('mmSankey', function() {
+directive('mmSankey', ['$state', function($state) {
     var width = 960,
         height = 700,
         margin_top = 5,
@@ -239,6 +239,10 @@ directive('mmSankey', function() {
                     .classed('node-overlay', true)
                     .on('mouseover', tip.show)
                     .on('mouseout', tip.hide)
+                    .on('click', function(d) {
+                        tip.hide();
+                        $state.go('nodedetail.info', { nodename: d.name });
+                    });
 
                 node.append("text")
                     .attr("x", function(d) {
@@ -272,6 +276,6 @@ directive('mmSankey', function() {
             fts: '='
         }
     };
-})
+}])
 ;
 
