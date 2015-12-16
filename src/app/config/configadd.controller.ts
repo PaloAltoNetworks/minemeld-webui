@@ -8,6 +8,7 @@ interface IPrototypesDescription {
     name: string;
     prototypeDescription?: string;
     libraryDescription?: string;
+    developmentStatus?: string;
 }
 
 export class ConfigAddController {
@@ -23,6 +24,8 @@ export class ConfigAddController {
     prototype: string;
     inputs: string[] = new Array();
     output: boolean = false;
+
+    developmentStatus: string;
 
     /* @ngInject */
     constructor(MinemeldPrototype: IMinemeldPrototypeService,
@@ -50,7 +53,8 @@ export class ConfigAddController {
                     this.availablePrototypes.push({
                         name: l + '.' + p,
                         libraryDescription: result[l].description,
-                        prototypeDescription: result[l].prototypes[p].description
+                        prototypeDescription: result[l].prototypes[p].description,
+                        developmentStatus: result[l].prototypes[p].development_status
                     });
                 }
             }
@@ -110,5 +114,13 @@ export class ConfigAddController {
         }
 
         return true;
+    }
+
+    prototypeSelected($item: IPrototypesDescription, $model: string): void {
+        this.developmentStatus = $item.developmentStatus;
+    }
+
+    prototypeRemoved($item: IPrototypesDescription, $model: string): void {
+        this.developmentStatus = null;
     }
 }
