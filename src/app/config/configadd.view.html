@@ -19,7 +19,9 @@
                 <ui-select ng-model="vm.prototype"
                            theme="bootstrap"
                            reset-search-input="false"
-                           style="width: 100%;">
+                           style="width: 100%;"
+                           on-select="vm.prototypeSelected($item, $model)"
+                           on-remove="vm.prototypeRemoved($item, $model)">
                     <ui-select-match placeholder="Select prototype...">{{$select.selected.name}}</ui-select-match>
                     <ui-select-choices repeat="prototype.name as prototype in vm.availablePrototypes | filter: {'name':$select.search}">
                         <div>
@@ -28,6 +30,13 @@
                         </div>
                     </ui-select-choices>
                 </ui-select>
+            </div>
+        </div>
+        <div class="form-group"  ng-if="vm.developmentStatus && vm.developmentStatus != 'STABLE'">
+            <div class="col-sm-6 col-md-6 col-md-offset-2 col-sm-offset-2">
+                <div class="alert alert-danger m-b-xs" role="alert">
+                    <strong>WARNING !</strong> Selected prototype is marked as <strong>{{ vm.developmentStatus }}</strong>
+                </div>
             </div>
         </div>
         <div class="form-group">
