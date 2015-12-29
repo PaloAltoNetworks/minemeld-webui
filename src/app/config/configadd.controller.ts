@@ -6,9 +6,12 @@ import { IConfirmService } from '../../app/services/confirm';
 
 interface IPrototypesDescription {
     name: string;
+    libraryName: string;
+    prototypeName: string;
     prototypeDescription?: string;
     libraryDescription?: string;
     developmentStatus?: string;
+    nodeType?: string;
 }
 
 export class ConfigAddController {
@@ -25,7 +28,7 @@ export class ConfigAddController {
     inputs: string[] = new Array();
     output: boolean = false;
 
-    developmentStatus: string;
+    selectedPrototype: IPrototypesDescription;
 
     /* @ngInject */
     constructor(MinemeldPrototype: IMinemeldPrototypeService,
@@ -39,6 +42,7 @@ export class ConfigAddController {
         this.MinemeldPrototype.getPrototypeLibraries().then((result: any) => {
             var l: string;
             var p: string;
+            var nt: string;
 
             for (l in result) {
                 if (!result.hasOwnProperty(l)) {
@@ -50,11 +54,19 @@ export class ConfigAddController {
                         continue;
                     }
 
+                    nt = 'UNKNOWN';
+                    if (result[l].prototypes[p].node_type) {
+                        nt = result[l].prototypes[p].node_type.toUpperCase();
+                    }
+
                     this.availablePrototypes.push({
                         name: l + '.' + p,
+                        libraryName: l,
+                        prototypeName: p,
                         libraryDescription: result[l].description,
                         prototypeDescription: result[l].prototypes[p].description,
-                        developmentStatus: result[l].prototypes[p].development_status
+                        developmentStatus: result[l].prototypes[p].development_status,
+                        nodeType: nt
                     });
                 }
             }
@@ -117,10 +129,10 @@ export class ConfigAddController {
     }
 
     prototypeSelected($item: IPrototypesDescription, $model: string): void {
-        this.developmentStatus = $item.developmentStatus;
+        this.selectedPrototype = $item;
     }
 
     prototypeRemoved($item: IPrototypesDescription, $model: string): void {
-        this.developmentStatus = null;
+        this.selectedPrototype = $item;
     }
 }
