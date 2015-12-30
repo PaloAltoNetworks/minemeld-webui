@@ -168,7 +168,7 @@ export class ConfigController {
         .withPaginationType('simple_numbers')
         .withOption('aaSorting', [])
         .withOption('aaSortingFixed', [])
-        .withOption('lengthMenu', [[50, -1], [50, 'All']])
+        .withOption('paging', false)
         .withOption('createdRow', function(row: HTMLScriptElement, data: any, index: any) {
             var c: string;
             var fc: HTMLElement;
@@ -383,7 +383,12 @@ export class ConfigureInputsController {
         this.$modalInstance = $modalInstance;
         this.nodeConfig = this.MinemeldConfig.nodesConfig[nodenum];
         this.inputs = angular.copy(this.nodeConfig.properties.inputs);
-        this.availableInputs = this.MinemeldConfig.nodesConfig.map((x: IMinemeldConfigNode) => { return x.name; });
+        this.availableInputs = this.MinemeldConfig.nodesConfig
+            .filter((x: IMinemeldConfigNode) => {
+                if (x.deleted) return false;
+                return true;
+            })
+            .map((x: IMinemeldConfigNode) => { return x.name; });
     }
 
     hasChanged() {
