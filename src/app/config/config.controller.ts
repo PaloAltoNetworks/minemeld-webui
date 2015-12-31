@@ -50,8 +50,16 @@ export class ConfigController {
         this.setupNodesTable();
     }
 
-    reload() {
-        this.MinemeldConfig.reload().then((result: any) => {
+    revert() {
+        this.MinemeldConfig.reload('running').then((result: any) => {
+            this.$state.go(this.$state.current.name, {}, {reload: true});
+        }, (error: any) => {
+            this.toastr.error("ERROR RELOADING CONFIG: " + error.statusText);
+        });
+    }
+
+    load() {
+        this.MinemeldConfig.reload('committed').then((result: any) => {
             this.$state.go(this.$state.current.name, {}, {reload: true});
         }, (error: any) => {
             this.toastr.error("ERROR RELOADING CONFIG: " + error.statusText);
@@ -137,16 +145,12 @@ export class ConfigController {
 
         this.inCommit = true;
         p = this.MinemeldConfig.commit().then((result: any) => {
+            this.toastr.success('COMMIT SUCCESSFUL');
             this.dtNodes.reloadData();
-            this.ConfirmService.show(
-                'COMMIT',
-                'Commit successful, restart engine to apply changes ?'
-            ).then((result: any) => {
-                this.MinemeldSupervisor.restartEngine().then(
-                    (result: any) => { this.toastr.success('Restarting engine, could take some minutes. Check <a href="/#/system">SYSTEM</a>'); },
-                    (error: any) => { this.toastr.error('ERROR RESTARTING ENGINE: ' + error.statusText); }
-                );
-            });
+            this.MinemeldSupervisor.restartEngine().then(
+                (result: any) => { this.toastr.success('Restarting engine, could take some minutes. Check <a href="/#/system">SYSTEM</a>'); },
+                (error: any) => { this.toastr.error('ERROR RESTARTING ENGINE: ' + error.statusText); }
+            );
         }, (error: any) => {
             if (error.status == 402) {
                 this.toastr.error('COMMIT FAILED: ' + error.data.error.message.join(', '), '', { timeOut: 60000 });
