@@ -114,7 +114,7 @@ export class ConfigAddController {
             return false;
         }
 
-        if (this.name in this.availableInputs) {
+        if (this.availableInputs.indexOf(this.name) > -1) {
             return false;
         }
 
