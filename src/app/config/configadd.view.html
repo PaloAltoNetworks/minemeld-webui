@@ -44,7 +44,7 @@
             <label class="col-sm-2 col-md-2 control-label">INPUTS</label>
             <div class="col-sm-6 col-md-6">
                 <ui-select multiple ng-model="vm.inputs" theme="bootstrap">
-                    <ui-select-match placeholder="None">{{$item}}</ui-select-match>
+                    <ui-select-match placeholder="Select inputs...">{{$item}}</ui-select-match>
                     <ui-select-choices repeat="input in vm.availableInputs | filter:$select.search">
                         {{input}}
                     </ui-select-choices>
