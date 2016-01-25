@@ -137,6 +137,10 @@
   font-weight: 400 !important;  
 }
 
+.nodedetail-info-clickable:hover{
+    background-color: darken($body-bg, 10%) !important;
+}
+
 // used to solve a nvd3 tooltip bug
 .nodedetail-nvd3-container {
   position: relative;

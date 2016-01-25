@@ -120,8 +120,6 @@ export class MinemeldPrototype implements IMinemeldPrototypeService {
             .then((result: any) => {
                 this.prototypesDict = result.result;
 
-                console.log(this.prototypesDict);
-
                 return this.prototypesDict;
             });
     }

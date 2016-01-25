@@ -29,7 +29,7 @@ export interface IMinemeldConfigService {
     commit(): angular.IPromise<any>;
     addNode(name: string, properties: any): angular.IPromise<any>;
     getDataFile(datafilename: string): angular.IPromise<any>;
-    saveDataFile(datafilename: string, data: any): angular.IPromise<any>;
+    saveDataFile(datafilename: string, data: any, hup?: string): angular.IPromise<any>;
 }
 
 interface IMinemeldConfigResource extends angular.resource.IResourceClass<angular.resource.IResource<any>> {
@@ -262,8 +262,9 @@ export class MinemeldConfig implements IMinemeldConfigService {
         });
     }
 
-    saveDataFile(datafilename: string, data: any): angular.IPromise<any> {
+    saveDataFile(datafilename: string, data: any, hup?: string): angular.IPromise<any> {
         var r: IMinemeldConfigResource;
+        var params: any = {};
 
         if(!this.MinemeldAuth.authorizationSet) {
             this.$state.go('login');
@@ -279,7 +280,11 @@ export class MinemeldConfig implements IMinemeldConfigService {
                 }
         }));
 
-        return r.put({}, JSON.stringify(data)).$promise
+        if (hup) {
+            params.h = hup;
+        }
+
+        return r.put(params, JSON.stringify(data)).$promise
         .then((result: any) => {
             return result.result;
         });

@@ -46,8 +46,6 @@ export class MinemeldStatus implements IMinemeldStatus {
     constructor($resource: angular.resource.IResourceService,
                 $state: angular.ui.IStateService,
                 MinemeldAuth: IMinemeldAuth) {
-        console.log('MinemeldStatus');
-
         this.$resource = $resource;
         this.$state = $state;
         this.MinemeldAuth = MinemeldAuth;

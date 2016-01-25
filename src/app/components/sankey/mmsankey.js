@@ -164,8 +164,6 @@ directive('mmSankey', ['$state', function($state) {
                     .minNodeWidth(min_node_radius * 2)
                     .layout(32);
 
-                console.log(fts);
-
                 var link = svg.append("g").selectAll(".mw-sankey-link").data(fts.links)
                     .enter().append("path")
                     .attr("class", "mw-sankey-link")

@@ -75,7 +75,12 @@ export class ConfigAddController {
         });
 
         this.MinemeldConfig.refresh().then((result: any) => {
-            this.availableInputs = this.MinemeldConfig.nodesConfig.map((x: IMinemeldConfigNode) => { return x.name; });
+            this.availableInputs = this.MinemeldConfig.nodesConfig
+            .filter((x: IMinemeldConfigNode) => {
+                    if (x.deleted) return false;
+                return true;
+            })
+            .map((x: IMinemeldConfigNode) => { return x.name; });
         }, (error: any) => {
             this.toastr.error('ERROR RETRIEVING CONFIG: ' + error.statusText);
         });
