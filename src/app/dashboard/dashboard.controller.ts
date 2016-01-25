@@ -68,7 +68,7 @@ export class DashboardController {
             height: 128,
             x: function(d: any) { return d.x; },
             y: function(d: any) { return d.y; },
-            getSize: function(d: any) { console.log(d); return 0.1; },
+            getSize: function(d: any) { return 0.1; },
             useInteractiveGuideline: true,
             showXAxis: false,
             interactiveLayer: {
@@ -401,8 +401,6 @@ export class DashboardController {
 
     private updateMinemeldMetrics() {
         var vm: any = this;
-
-        console.log('updateMinemeldMetrics');
 
         vm.mmmetrics.getMinemeld({
             dt: vm.chartDT,

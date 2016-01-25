@@ -84,8 +84,6 @@ d3.sankey = function() {
     // Populate the sourceLinks and targetLinks for each node.
     // Also, if the source and target are not objects, assume they are indices.
     function computeNodeLinks() {
-        console.log(links);
-
         nodes.forEach(function(node) {
             node.sourceLinks = [];
             node.targetLinks = [];

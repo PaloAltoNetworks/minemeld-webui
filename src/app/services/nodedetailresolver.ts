@@ -64,7 +64,6 @@ export class NodeDetailResolver implements INodeDetailResolverService {
             var node: any;
 
             node = result.filter((x) => { return x.name === nodename; })[0];
-            console.log(node);
 
             if (this.nodeClasses.hasOwnProperty(node.class)) {
                 return this.nodeClasses[node.class];
