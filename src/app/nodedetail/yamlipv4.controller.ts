@@ -11,6 +11,88 @@ interface IYamlIPv4Indicator {
     comment: string;
 }
 
+class ConfigureDirectionController {
+    origDirection: string;
+    indicator: string;
+
+    $modalInstance: angular.ui.bootstrap.IModalServiceInstance;
+
+    direction: string;
+    availableDirections: any = [
+        { value: 'inbound' },
+        { value: 'outbound' }
+    ];
+
+    /** @ngInject **/
+    constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance,
+                indicator: string, direction: string) {
+        this.$modalInstance = $modalInstance;
+        this.origDirection = direction;
+        this.direction = this.origDirection;
+        this.indicator = indicator;
+    }
+
+    save() {
+        this.$modalInstance.close(this.direction);
+    }
+
+    cancel() {
+        this.$modalInstance.dismiss();
+    }
+}
+
+class ConfigureShareLevelController {
+    origShareLevel: string;
+    indicator: string;
+
+    $modalInstance: angular.ui.bootstrap.IModalServiceInstance;
+
+    share_level: string;
+
+    /** @ngInject **/
+    constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance,
+                indicator: string, share_level: string) {
+        this.$modalInstance = $modalInstance;
+        this.origShareLevel = share_level;
+        this.share_level = this.origShareLevel;
+        this.indicator = indicator;
+    }
+
+    save() {
+        this.$modalInstance.close(this.share_level);
+    }
+
+    cancel() {
+        this.$modalInstance.dismiss();
+    }
+}
+
+class ConfigureCommentController {
+    origComment: string;
+    indicator: string;
+
+    $modalInstance: angular.ui.bootstrap.IModalServiceInstance;
+
+    comment: string;
+
+    /** @ngInject **/
+    constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance,
+                indicator: string, comment: string) {
+        this.$modalInstance = $modalInstance;
+        this.origComment = comment;
+        this.comment = this.origComment;
+        this.indicator = indicator;
+    }
+
+    save() {
+        this.$modalInstance.close(this.comment);
+    }
+
+    cancel() {
+        this.$modalInstance.dismiss();
+    }
+}
+
 class NodeDetailYamlIPv4IndicatorsController {
     MinemeldConfig: IMinemeldConfigService;
     toastr: any;
@@ -91,6 +173,128 @@ class NodeDetailYamlIPv4IndicatorsController {
         });
     }
 
+    reload() {
+        this.dtIndicators.reloadData();
+    }
+
+    configureDirection(nodenum: number) {
+        var mi: angular.ui.bootstrap.IModalServiceInstance;
+
+        mi = this.$modal.open({
+            templateUrl: 'app/nodedetail/yamlipv4.direction.modal.html',
+            controller: ConfigureDirectionController,
+            controllerAs: 'vm',
+            bindToController: true,
+            resolve: {
+                indicator: () => {
+                    return this.indicators[nodenum].indicator;
+                },
+                direction: () => {
+                    var d: string;
+
+                    d = null;
+                    if (this.indicators[nodenum].direction) {
+                        d = this.indicators[nodenum].direction;
+                    }
+
+                    return d;
+                }
+            },
+            backdrop: 'static',
+            animation: false
+        });
+                 
+        mi.result.then((result: any) => {
+            if(!result) {
+                if (this.indicators[nodenum].direction) {
+                    delete this.indicators[nodenum].direction;
+                }
+            } else {
+                this.indicators[nodenum].direction = result;
+            }
+
+            this.saveIndicators();
+        });
+    }
+
+    configureShareLevel(nodenum: number) {
+        var mi: angular.ui.bootstrap.IModalServiceInstance;
+
+        mi = this.$modal.open({
+            templateUrl: 'app/nodedetail/yamlipv4.sharelevel.modal.html',
+            controller: ConfigureShareLevelController,
+            controllerAs: 'vm',
+            bindToController: true,
+            resolve: {
+                indicator: () => {
+                    return this.indicators[nodenum].indicator;
+                },
+                share_level: () => {
+                    var sl: string;
+
+                    sl = null;
+                    if (this.indicators[nodenum].share_level) {
+                        sl = this.indicators[nodenum].share_level;
+                    }
+
+                    return sl;
+                }
+            },
+            backdrop: 'static',
+            animation: false
+        });
+
+        mi.result.then((result: any) => {
+            if (!result) {
+                if (this.indicators[nodenum].share_level) {
+                    delete this.indicators[nodenum].share_level;
+                }
+            } else {
+                this.indicators[nodenum].share_level = result;
+            }
+            this.saveIndicators();
+        });
+    }
+
+    configureComment(nodenum: number) {
+        var mi: angular.ui.bootstrap.IModalServiceInstance;
+
+        mi = this.$modal.open({
+            templateUrl: 'app/nodedetail/yamlipv4.comment.modal.html',
+            controller: ConfigureCommentController,
+            controllerAs: 'vm',
+            bindToController: true,
+            resolve: {
+                indicator: () => {
+                    return this.indicators[nodenum].indicator;
+                },
+                comment: () => {
+                    var c: string;
+
+                    c = null;
+                    if (this.indicators[nodenum].comment) {
+                        c = this.indicators[nodenum].comment;
+                    }
+                    return c;
+                }
+            },
+            backdrop: 'static',
+            animation: false
+        });
+
+        mi.result.then((result: any) => {
+            if (!result || result.length == 0) {
+                if (this.indicators[nodenum].comment) {
+                    delete this.indicators[nodenum].comment;
+                }
+            } else {
+                this.indicators[nodenum].comment = result;
+            }
+
+            this.saveIndicators();
+        });
+    }
+
     private setupIndicatorsTable(): void {
         var vm: NodeDetailYamlIPv4IndicatorsController = this;
 
@@ -118,13 +322,26 @@ class NodeDetailYamlIPv4IndicatorsController {
         .withPaginationType('simple_numbers')
         .withOption('aaSorting', [])
         .withOption('aaSortingFixed', [])
+        .withOption('deferRender', true)
         .withOption('lengthMenu', [[50, 200, -1], [50, 200, 'All']])
         .withOption('createdRow', function(row: HTMLScriptElement, data: any, index: any) {
             var fc: HTMLElement;
 
             row.className += ' config-table-row';
 
+            fc = <HTMLElement>(row.childNodes[1]);
+            fc.setAttribute('ng-click', 'vm.configureDirection(' + index + ')');
+            fc.className += ' config-table-clickable';
+
+            fc = <HTMLElement>(row.childNodes[2]);
+            fc.setAttribute('ng-click', 'vm.configureShareLevel(' + index + ')');
+            fc.className += ' config-table-clickable';
+
             fc = <HTMLElement>(row.childNodes[3]);
+            fc.setAttribute('ng-click', 'vm.configureComment(' + index + ')');
+            fc.className += ' config-table-clickable';
+
+            fc = <HTMLElement>(row.childNodes[4]);
             fc.setAttribute('ng-click', 'vm.removeIndicator(' + index + ')');
             fc.style.textAlign = 'center';
             fc.style.verticalAlign = 'middle';
@@ -143,8 +360,44 @@ class NodeDetailYamlIPv4IndicatorsController {
         ;
 
         this.dtColumns = [
-            this.DTColumnBuilder.newColumn('indicator').withTitle('INDICATOR').withOption('width', '30%'),
-            this.DTColumnBuilder.newColumn('direction').withTitle('DIRECTION').withOption('defaultContent', ' ').withOption('width', '10%'),
+            this.DTColumnBuilder.newColumn('indicator').withTitle('INDICATOR').withOption('width', '25%'),
+            this.DTColumnBuilder.newColumn('direction').withTitle('DIRECTION').withOption('defaultContent', ' ')
+                .withOption('width', '130px').renderWith(function(data: any, type: any, full: any) {
+                    var c: string;
+                    var v: string;
+
+                    if (data == 'inbound') {
+                        c = 'label-info';
+                        v = 'INBOUND';
+                    } else if (data == 'outbound') {
+                        c = 'label-primary';
+                        v = 'OUTBOUND';
+                    } else {
+                        return '';
+                    }
+
+                    return '<span class="label ' + c + '">' + v + '</span>';
+            }),
+            this.DTColumnBuilder.newColumn('share_level').withTitle('SHARE LEVEL')
+                .withOption('defaultContent', ' ').withOption('width', '130px').renderWith(function(data: any, type: any, full: any) {
+                    var c: string;
+                    var v: string;
+        
+                    if (data == 'yellow') {
+                        c = 'label-warning';
+                        v = 'YELLOW';
+                    } else if (data == 'red') {
+                        c = 'label-danger';
+                        v = 'RED';
+                    } else if (data == 'green') {
+                        c = 'label-success';
+                        v = 'GREEN';
+                    } else {
+                        return '';
+                    }
+    
+                    return '<span class="label ' + c + '">' + v + '</span>';
+            }),
             this.DTColumnBuilder.newColumn('comment').withTitle('COMMENT').withOption('defaultContent', ' '),
             this.DTColumnBuilder.newColumn(null).withTitle('').notSortable().renderWith(function(data: any, type: any, full: any) {
                 return '<span class="config-table-icon glyphicon glyphicon-remove"></span>';
@@ -155,6 +408,7 @@ class NodeDetailYamlIPv4IndicatorsController {
     private saveIndicators(): angular.IPromise<any> {
         return this.MinemeldConfig.saveDataFile(this.cfd_indicators, this.indicators)
             .then((result: any) => {
+                this.toastr.success('CHANGES SAVED');
                 this.dtIndicators.reloadData();
             });
     }
@@ -166,6 +420,7 @@ class YamlIPv4AddIndicatorController {
     comment: string;
     indicator: string;
     direction: string;
+    share_level: string = 'red';
 
     availableDirections: any = [
         { value: 'inbound' },
@@ -181,6 +436,9 @@ class YamlIPv4AddIndicatorController {
         var result: any = {};
 
         result.indicator = this.indicator;
+        if (this.share_level) {
+            result.share_level = this.share_level;
+        }
         if ((this.direction == 'inbound') || (this.direction == 'outbound')) {
             result.direction = this.direction;
         }

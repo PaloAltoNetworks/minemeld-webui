@@ -1,0 +1,18 @@
+<div class="modal-header">
+    <h1 class="modal-title">INDICATOR {{ vm.indicator }} <span ng-if="vm.origComment != vm.comment">*</span></h1>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-3 m-t-xs">
+            COMMENT
+        </div>
+        <div class="col-xs-9">
+            <textarea style="resize: vertical" class="form-control" ng-model="vm.comment"
+                      placeholder="Comment (optional)" rows="3"></textarea>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button ng-disabled="vm.origComment == vm.comment" class="btn btn-primary btn-sm" type="button" ng-click="vm.save()">OK</button>
+    <button class="btn btn-warning btn-sm" type="button" ng-click="vm.cancel()">CANCEL</button>
+</div>

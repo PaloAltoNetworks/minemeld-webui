@@ -27,6 +27,15 @@
                 </div>
             </div>
             <div class="form-group">
+                <label class="col-xs-4 control-label">SHARE LEVEL</label>
+                <div class="col-xs-6">
+                    <span ng-if="!vm.share_level" class="btn btn-sm btn-default" type="button" ng-click="vm.share_level = 'green'">UNKNOWN</span>
+                    <span ng-if="vm.share_level == 'green'" class="btn btn-sm btn-success" type="button" ng-click="vm.share_level = 'yellow'">GREEN</span>
+                    <span ng-if="vm.share_level == 'yellow'" class="btn btn-sm btn-warning" type="button" ng-click="vm.share_level = 'red'">YELLOW</span>
+                    <span ng-if="vm.share_level == 'red'" class="btn btn-sm btn-danger" type="button" ng-click="vm.share_level = null">RED</span>
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="col-xs-4 control-label">COMMENT</label>
                 <div class="col-xs-6">
                     <textarea style="resize: vertical" class="form-control" ng-model="vm.comment"
