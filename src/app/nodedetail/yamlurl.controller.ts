@@ -6,37 +6,7 @@ import { NodeDetailStatsController } from './nodedetail.stats.controller';
 import { IConfirmService } from '../../app/services/confirm';
 import { YamlConfigureCommentController, YamlConfigureShareLevelController } from './yamlmodals.controller';
 
-class ConfigureDirectionController {
-    origDirection: string;
-    indicator: string;
-
-    $modalInstance: angular.ui.bootstrap.IModalServiceInstance;
-
-    direction: string;
-    availableDirections: any = [
-        { value: 'inbound' },
-        { value: 'outbound' }
-    ];
-
-    /** @ngInject **/
-    constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance,
-                indicator: string, direction: string) {
-        this.$modalInstance = $modalInstance;
-        this.origDirection = direction;
-        this.direction = this.origDirection;
-        this.indicator = indicator;
-    }
-
-    save() {
-        this.$modalInstance.close(this.direction);
-    }
-
-    cancel() {
-        this.$modalInstance.dismiss();
-    }
-}
-
-class NodeDetailYamlIPv4IndicatorsController {
+class NodeDetailYamlURLIndicatorsController {
     MinemeldConfig: IMinemeldConfigService;
     toastr: any;
     $scope: angular.IScope;
@@ -79,8 +49,8 @@ class NodeDetailYamlIPv4IndicatorsController {
         var mi: angular.ui.bootstrap.IModalServiceInstance;
 
         mi = this.$modal.open({
-            templateUrl: 'app/nodedetail/yamlipv4.add.modal.html',
-            controller: YamlIPv4AddIndicatorController,
+            templateUrl: 'app/nodedetail/yamlurl.add.modal.html',
+            controller: YamlURLAddIndicatorController,
             controllerAs: 'vm',
             bindToController: true,
             backdrop: 'static',
@@ -118,46 +88,6 @@ class NodeDetailYamlIPv4IndicatorsController {
 
     reload() {
         this.dtIndicators.reloadData();
-    }
-
-    configureDirection(nodenum: number) {
-        var mi: angular.ui.bootstrap.IModalServiceInstance;
-
-        mi = this.$modal.open({
-            templateUrl: 'app/nodedetail/yamlipv4.direction.modal.html',
-            controller: ConfigureDirectionController,
-            controllerAs: 'vm',
-            bindToController: true,
-            resolve: {
-                indicator: () => {
-                    return this.indicators[nodenum].indicator;
-                },
-                direction: () => {
-                    var d: string;
-
-                    d = null;
-                    if (this.indicators[nodenum].direction) {
-                        d = this.indicators[nodenum].direction;
-                    }
-
-                    return d;
-                }
-            },
-            backdrop: 'static',
-            animation: false
-        });
-                 
-        mi.result.then((result: any) => {
-            if(!result) {
-                if (this.indicators[nodenum].direction) {
-                    delete this.indicators[nodenum].direction;
-                }
-            } else {
-                this.indicators[nodenum].direction = result;
-            }
-
-            this.saveIndicators();
-        });
     }
 
     configureShareLevel(nodenum: number) {
@@ -239,7 +169,7 @@ class NodeDetailYamlIPv4IndicatorsController {
     }
 
     private setupIndicatorsTable(): void {
-        var vm: NodeDetailYamlIPv4IndicatorsController = this;
+        var vm: NodeDetailYamlURLIndicatorsController = this;
 
         this.dtOptions = this.DTOptionsBuilder.fromFnPromise(function() {
             return vm.MinemeldConfig.getDataFile(vm.cfd_indicators).then((result: any) => {
@@ -273,18 +203,14 @@ class NodeDetailYamlIPv4IndicatorsController {
             row.className += ' config-table-row';
 
             fc = <HTMLElement>(row.childNodes[1]);
-            fc.setAttribute('ng-click', 'vm.configureDirection(' + index + ')');
-            fc.className += ' config-table-clickable';
-
-            fc = <HTMLElement>(row.childNodes[2]);
             fc.setAttribute('ng-click', 'vm.configureShareLevel(' + index + ')');
             fc.className += ' config-table-clickable';
 
-            fc = <HTMLElement>(row.childNodes[3]);
+            fc = <HTMLElement>(row.childNodes[2]);
             fc.setAttribute('ng-click', 'vm.configureComment(' + index + ')');
             fc.className += ' config-table-clickable';
 
-            fc = <HTMLElement>(row.childNodes[4]);
+            fc = <HTMLElement>(row.childNodes[3]);
             fc.setAttribute('ng-click', 'vm.removeIndicator(' + index + ')');
             fc.style.textAlign = 'center';
             fc.style.verticalAlign = 'middle';
@@ -303,24 +229,7 @@ class NodeDetailYamlIPv4IndicatorsController {
         ;
 
         this.dtColumns = [
-            this.DTColumnBuilder.newColumn('indicator').withTitle('INDICATOR').withOption('width', '25%'),
-            this.DTColumnBuilder.newColumn('direction').withTitle('DIRECTION').withOption('defaultContent', ' ')
-                .withOption('width', '130px').renderWith(function(data: any, type: any, full: any) {
-                    var c: string;
-                    var v: string;
-
-                    if (data == 'inbound') {
-                        c = 'label-info';
-                        v = 'INBOUND';
-                    } else if (data == 'outbound') {
-                        c = 'label-primary';
-                        v = 'OUTBOUND';
-                    } else {
-                        return '';
-                    }
-
-                    return '<span class="label ' + c + '">' + v + '</span>';
-            }),
+            this.DTColumnBuilder.newColumn('indicator').withTitle('INDICATOR').withOption('width', '50%'),
             this.DTColumnBuilder.newColumn('share_level').withTitle('SHARE LEVEL')
                 .withOption('defaultContent', ' ').withOption('width', '130px').renderWith(function(data: any, type: any, full: any) {
                     var c: string;
@@ -357,7 +266,7 @@ class NodeDetailYamlIPv4IndicatorsController {
     }
 }
 
-class YamlIPv4AddIndicatorController {
+class YamlURLAddIndicatorController {
     $modalInstance: angular.ui.bootstrap.IModalServiceInstance;
 
     comment: string;
@@ -381,9 +290,6 @@ class YamlIPv4AddIndicatorController {
         result.indicator = this.indicator;
         if (this.share_level) {
             result.share_level = this.share_level;
-        }
-        if ((this.direction == 'inbound') || (this.direction == 'outbound')) {
-            result.direction = this.direction;
         }
         if (this.comment) {
             result.comment = this.comment;
@@ -410,91 +316,25 @@ class YamlIPv4AddIndicatorController {
         this.$modalInstance.dismiss();
     }
 
-    private validateIPv4(addr: string): number {
-        var toks: string[];
-        var j: number;
-        var tn: number;
-        var result: number;
-
-        toks = addr.split('.');
-        if (toks.length != 4) {
-            return -1;
-        }
-
-        result = 0;
-        for (j = toks.length-1; j >= 0; j--) {
-            tn = parseInt(toks[j], 10);
-            if (isNaN(tn)) {
-                return -1;
-            }
-            if ((tn < 0) || (tn > 255)) {
-                return -1;
-            }
-
-            result += tn * (1 << 8*j);
-        }
-
-        return result;
-    }
-
     private validateIndicator(): boolean {
-        var addresses: string[];
-        var toks: string[];
-        var nmbits: number;
-        var t0, t1: number;
-
-        addresses = this.indicator.split('-');
-        if (addresses.length > 2) {
-            return false;
-        }
-
-        if (addresses.length == 2) {
-            t0 = this.validateIPv4(addresses[0]);
-            if (t0 < 0) {
-                return false;
-            }
-
-            t1 = this.validateIPv4(addresses[1]);
-            if (t1 < 0) {
-                return false;
-            }
-
-            return (t0 <= t1);
-        }
-
-        toks = addresses[0].split('/');
-        if (toks.length > 2) {
-            return false;
-        }
-
-        if (toks.length == 2) {
-            nmbits = parseInt(toks[1], 10);
-            if (isNaN(nmbits)) {
-                return false;
-            }
-            if ((nmbits < 0) || (nmbits > 32)) {
-                return false;
-            }
-        }
-
-        return (this.validateIPv4(toks[0]) > 0);
+        return true;
     }
 };
 
 /** @ngInject */
-function yamlIPv4RouterConfig($stateProvider: ng.ui.IStateProvider) {
+function yamlURLRouterConfig($stateProvider: ng.ui.IStateProvider) {
     $stateProvider
-        .state('nodedetail.yamlipv4indicators', {
-            templateUrl: 'app/nodedetail/yamlipv4.indicators.html',
-            controller: NodeDetailYamlIPv4IndicatorsController,
+        .state('nodedetail.yamlurlindicators', {
+            templateUrl: 'app/nodedetail/yamlurl.indicators.html',
+            controller: NodeDetailYamlURLIndicatorsController,
             controllerAs: 'vm'
         })
         ;
 }
 
 /** @ngInject **/
-function yamlIPv4RegisterClass(NodeDetailResolver: INodeDetailResolverService) {
-    NodeDetailResolver.registerClass('minemeld.ft.local.YamlIPv4FT', {
+function yamlURLRegisterClass(NodeDetailResolver: INodeDetailResolverService) {
+    NodeDetailResolver.registerClass('minemeld.ft.local.YamlURLFT', {
         tabs: [{
             icon: 'fa fa-circle-o',
             tooltip: 'INFO',
@@ -510,7 +350,7 @@ function yamlIPv4RegisterClass(NodeDetailResolver: INodeDetailResolverService) {
         {
             icon: 'fa fa-list-alt',
             tooltip: 'INDICATORS',
-            state: 'nodedetail.yamlipv4indicators',
+            state: 'nodedetail.yamlurlindicators',
             active: false
         },
         {
@@ -522,8 +362,8 @@ function yamlIPv4RegisterClass(NodeDetailResolver: INodeDetailResolverService) {
     });
 }
 
-console.log("Loading yamlipv4");
+console.log("Loading yamlurl");
 angular.module('minemeldWebui')
-    .config(yamlIPv4RouterConfig)
-    .run(yamlIPv4RegisterClass)
+    .config(yamlURLRouterConfig)
+    .run(yamlURLRegisterClass)
     ;
