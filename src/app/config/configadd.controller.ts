@@ -103,6 +103,8 @@ export class ConfigAddController {
     }
 
     valid(): boolean {
+        var namere = /^[a-zA-Z0-9_\-]+$/;
+
         if (!this.availableInputs) {
             return false;
         }
@@ -116,6 +118,10 @@ export class ConfigAddController {
         }
 
         if (this.name.length == 0) {
+            return false;
+        }
+
+        if (!namere.test(this.name)) {
             return false;
         }
 

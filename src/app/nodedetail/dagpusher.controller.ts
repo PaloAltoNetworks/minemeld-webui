@@ -4,6 +4,8 @@ import { INodeDetailResolverService } from '../../app/services/nodedetailresolve
 import { IMinemeldConfigService } from '../../app/services/config';
 import { IConfirmService } from '../../app/services/confirm';
 
+declare var he:any;
+
 /** @ngInject */
 function dagPusherRouterConfig($stateProvider: ng.ui.IStateProvider) {
     $stateProvider
@@ -193,8 +195,12 @@ class NodeDetailDagPusherDevicesController {
         ;
 
         this.dtColumns = [
-            this.DTColumnBuilder.newColumn('name').withTitle('NAME'),
-            this.DTColumnBuilder.newColumn('api_username').withTitle('USERNAME'),
+            this.DTColumnBuilder.newColumn('name').withTitle('NAME').renderWith(function(data: any, type: any, full: any) {
+                return he.encode(data, { strict: true });
+            }),
+            this.DTColumnBuilder.newColumn('api_username').withTitle('USERNAME').renderWith(function(data: any, type: any, full: any) {
+                return he.encode(data, { strict: true });
+            }),
             this.DTColumnBuilder.newColumn('api_password').withTitle('PASSWORD').renderWith(function(data: any, type: any, full: any) {
                 if (data) {
                     return '<em>hidden</em>';
@@ -202,9 +208,15 @@ class NodeDetailDagPusherDevicesController {
 
                 return '';
             }),
-            this.DTColumnBuilder.newColumn('hostname').withTitle('HOSTNAME'),
-            this.DTColumnBuilder.newColumn('vsys').withTitle('VSYS').withOption('defaultContent', ''),
-            this.DTColumnBuilder.newColumn('serial').withTitle('SERIAL #').withOption('defaultContent', ''),
+            this.DTColumnBuilder.newColumn('hostname').withTitle('HOSTNAME').renderWith(function(data: any, type: any, full: any) {
+                return he.encode(data, { strict: true });
+            }),
+            this.DTColumnBuilder.newColumn('vsys').withTitle('VSYS').withOption('defaultContent', '').renderWith(function(data: any, type: any, full: any) {
+                return he.encode(data, { strict: true });
+            }),
+            this.DTColumnBuilder.newColumn('serial').withTitle('SERIAL #').withOption('defaultContent', '').renderWith(function(data: any, type: any, full: any) {
+                return he.encode(data, { strict: true });
+            }),
             this.DTColumnBuilder.newColumn(null).withTitle('').notSortable().renderWith(function(data: any, type: any, full: any) {
                 return '<span class="config-table-icon glyphicon glyphicon-remove"></span>';
             }).withOption('width', '30px')
