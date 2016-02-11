@@ -17,7 +17,12 @@
         dt-columns="vm.dtColumns" class="table table-condensed">
         <tfoot>
             <tr>
-                <td colspan="7" style="padding-right: 0;"><a tooltip-popup-delay="500" tooltip="add node" style="float: right;"><button class="btn btn-primary btn-sm" type="button" ng-click="vm.$state.go('configadd')"><span class="glyphicon glyphicon-plus"></span></button></a></td>
+                <td colspan="7" style="padding-right: 0;">
+                    <div class="btn-toolbar" style="float: right;">
+                        <button tooltip-popup-delay="500" tooltip="browse prototypes" class="btn btn-primary btn-sm" type="button" ng-click="vm.$state.go('prototypes')"><span class="glyphicon glyphicon-menu-hamburger"></span></button>
+                        <button tooltip-popup-delay="500" tooltip="add node" class="btn btn-primary btn-sm" type="button" ng-click="vm.$state.go('configadd')"><span class="glyphicon glyphicon-plus"></span></button>
+                    </div>
+                </td>
             </tr>
         </tfoot>
     </table>
