@@ -68,7 +68,12 @@ export function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterPro
       url: '/config/add',
       templateUrl: 'app/config/configadd.view.html',
       controller: 'ConfigAddController',
-      controllerAs: 'vm'
+      controllerAs: 'vm',
+      params: {
+        prototype: {
+          value: 'none'
+        }
+      }
     })
     ;
 

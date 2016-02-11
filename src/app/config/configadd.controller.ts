@@ -19,6 +19,7 @@ export class ConfigAddController {
     MinemeldConfig: IMinemeldConfigService;
     toastr: any;
     $state: angular.ui.IStateService;
+    $stateParams: angular.ui.IStateParamsService;
 
     availablePrototypes: IPrototypesDescription[] = new Array();
     availableInputs: string[];
@@ -33,11 +34,24 @@ export class ConfigAddController {
     /* @ngInject */
     constructor(MinemeldPrototype: IMinemeldPrototypeService,
                 MinemeldConfig: IMinemeldConfigService,
-                toastr: any, $state: angular.ui.IStateService) {
+                toastr: any, $state: angular.ui.IStateService,
+                $stateParams: angular.ui.IStateParamsService) {
+        var p: string;
+        var toks: string[];
+
         this.MinemeldPrototype = MinemeldPrototype;
         this.MinemeldConfig = MinemeldConfig;
         this.toastr = toastr;
         this.$state = $state;
+        this.$stateParams = $stateParams;
+
+        p = this.$stateParams['prototype'];
+        if (p != 'none') {
+            this.prototype = p;
+
+            toks = p.split('.');
+            this.name = toks[toks.length - 1] + '-' +(new Date().getTime());
+        }
 
         this.MinemeldPrototype.getPrototypeLibraries().then((result: any) => {
             var l: string;
