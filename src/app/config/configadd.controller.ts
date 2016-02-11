@@ -1,8 +1,7 @@
 /// <reference path="../../../.tmp/typings/tsd.d.ts" />
 
-import { IMinemeldConfigService, IMinemeldConfigInfo, IMinemeldConfigNode } from  '../../app/services/config';
-import { IMinemeldPrototypeService, IMinemeldPrototypeLibraryDictionary } from '../../app/services/prototype';
-import { IConfirmService } from '../../app/services/confirm';
+import { IMinemeldConfigService, IMinemeldConfigNode } from  '../../app/services/config';
+import { IMinemeldPrototypeService } from '../../app/services/prototype';
 
 interface IPrototypesDescription {
     name: string;
@@ -20,6 +19,7 @@ export class ConfigAddController {
     toastr: any;
     $state: angular.ui.IStateService;
     $stateParams: angular.ui.IStateParamsService;
+    $rootScope: any;
 
     availablePrototypes: IPrototypesDescription[] = new Array();
     availableInputs: string[];
@@ -35,10 +35,12 @@ export class ConfigAddController {
     constructor(MinemeldPrototype: IMinemeldPrototypeService,
                 MinemeldConfig: IMinemeldConfigService,
                 toastr: any, $state: angular.ui.IStateService,
-                $stateParams: angular.ui.IStateParamsService) {
+                $stateParams: angular.ui.IStateParamsService,
+                $rootScope: angular.IRootScopeService) {
         var p: string;
         var toks: string[];
 
+        this.$rootScope = $rootScope;
         this.MinemeldPrototype = MinemeldPrototype;
         this.MinemeldConfig = MinemeldConfig;
         this.toastr = toastr;
@@ -46,7 +48,7 @@ export class ConfigAddController {
         this.$stateParams = $stateParams;
 
         p = this.$stateParams['prototype'];
-        if (p != 'none') {
+        if (p !== 'none') {
             this.prototype = p;
 
             toks = p.split('.');
@@ -90,11 +92,13 @@ export class ConfigAddController {
 
         this.MinemeldConfig.refresh().then((result: any) => {
             this.availableInputs = this.MinemeldConfig.nodesConfig
-            .filter((x: IMinemeldConfigNode) => {
-                    if (x.deleted) return false;
-                return true;
-            })
-            .map((x: IMinemeldConfigNode) => { return x.name; });
+                .filter((x: IMinemeldConfigNode) => {
+                    if (x.deleted) {
+                        return false;
+                    }
+                    return true;
+                })
+                .map((x: IMinemeldConfigNode) => { return x.name; });
         }, (error: any) => {
             this.toastr.error('ERROR RETRIEVING CONFIG: ' + error.statusText);
         });
@@ -131,7 +135,7 @@ export class ConfigAddController {
             return false;
         }
 
-        if (this.name.length == 0) {
+        if (this.name.length === 0) {
             return false;
         }
 
@@ -145,8 +149,8 @@ export class ConfigAddController {
 
         if (this.availablePrototypes.filter(
             (x: IPrototypesDescription) => {
-                return x.name == this.prototype; 
-            }).length != 1) {
+                return x.name == this.prototype;
+            }).length !== 1) {
             return false;
         }
 
@@ -159,5 +163,9 @@ export class ConfigAddController {
 
     prototypeRemoved($item: IPrototypesDescription, $model: string): void {
         this.selectedPrototype = $item;
+    }
+
+    back() {
+        this.$rootScope.mmBack('config');
     }
 }
