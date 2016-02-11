@@ -4,6 +4,7 @@ import { IMinemeldPrototypeService, IMinemeldPrototypeLibrary, IMinemeldPrototyp
 
 export class PrototypedetailController {
     MinemeldPrototype: IMinemeldPrototypeService;
+    $state: angular.ui.IStateService;
 
     prototypeName: string;
     libraryName: string;
@@ -13,8 +14,11 @@ export class PrototypedetailController {
     /* @ngInject */
     constructor(MinemeldPrototype: IMinemeldPrototypeService,
                 $stateParams: angular.ui.IStateParamsService,
-                toastr: any) {
+                $state:angular.ui.IStateService,
+                    toastr: any) {
         var toks: string[];
+
+        this.$state = $state;
 
         this.MinemeldPrototype = MinemeldPrototype;
 
