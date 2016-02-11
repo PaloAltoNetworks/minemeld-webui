@@ -15,7 +15,7 @@ export class PrototypedetailController {
     constructor(MinemeldPrototype: IMinemeldPrototypeService,
                 $stateParams: angular.ui.IStateParamsService,
                 $state:angular.ui.IStateService,
-                    toastr: any) {
+                toastr: any) {
         var toks: string[];
 
         this.$state = $state;
