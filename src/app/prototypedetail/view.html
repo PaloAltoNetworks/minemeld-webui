@@ -8,6 +8,15 @@
         </h3>
     </div>
 </div>
+<div class="row" ng-if="vm.prototype.node_type||vm.prototype.development_status">
+    <div class="col-sm-12 col-md-12">
+        <h4 class="prototype-detail-top-label" ng-if="vm.prototype.node_type == 'miner'"><span class="label nodes-label-miner">{{ vm.prototype.node_type|uppercase }}</span></h4>
+        <h4 class="prototype-detail-top-label" ng-if="vm.prototype.node_type == 'output'"><span class="label nodes-label-output">{{ vm.prototype.node_type|uppercase }}</span></h4>
+        <h4 class="prototype-detail-top-label" ng-if="vm.prototype.node_type == 'processor'"><span class="label nodes-label-processor">{{ vm.prototype.node_type|uppercase }}</span></h4>
+        <h4 ng-if="vm.prototype.development_status == 'STABLE'" class="prototype-detail-top-label"><span class="label label-success">{{ vm.prototype.development_status }}</span></h4>
+        <h4 ng-if="vm.prototype.development_status != 'STABLE'" class="prototype-detail-top-label"><span class="label label-danger">{{ vm.prototype.development_status }}</span></h4>
+    </div>
+</div>
 <div class="row" ng-if="vm.library.description||vm.library.url">
     <div class="col-sm-12 col-md-12 prototypedetail-section">
         <h4>
