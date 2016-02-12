@@ -3,6 +3,8 @@
 import { IMinemeldStatus } from  '../../app/services/status';
 import { IMinemeldMetrics } from '../../app/services/metrics';
 
+declare var he:any;
+
 export class NodesController {
     mmstatus: IMinemeldStatus;
     mmmetrics: IMinemeldMetrics;
@@ -122,9 +124,9 @@ export class NodesController {
         this.dtColumns = [
             this.DTColumnBuilder.newColumn(null).withTitle('').renderWith(function(data: any, type: any, full: any) {
                 return '';
-            }).withOption('width', '5px'),
+            }).withOption('width', '5px').notSortable(),
             this.DTColumnBuilder.newColumn('name').withTitle('NAME').renderWith(function(data: any, type: any, full: any) {
-                var result: string = '<div tooltip="class ' + full.class + '" tooltip-popup-delay="500">' + data + '</div>';
+                var result: string = '<div tooltip="class ' + full.class + '" tooltip-popup-delay="500">' + he.encode(data, {strict: true}) + '</div>';
 
                 return result;
             }),

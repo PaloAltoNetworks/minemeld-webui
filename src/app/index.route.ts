@@ -2,13 +2,13 @@
 export function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider) {
   $stateProvider
     .state('login', {
-      url:'/login',
+      url: '/login',
       templateUrl: 'app/login/view.html',
       controller: 'LoginController',
       controllerAs: 'login'
     })
     .state('about', {
-      url:'/about',
+      url: '/about',
       templateUrl: 'app/about/view.html',
       controller: 'AboutController',
       controllerAs: 'vm'
@@ -52,6 +52,12 @@ export function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterPro
       controller: 'NodeDetailGraphController',
       controllerAs: 'vm'
     })
+    .state('prototypes', {
+      url: '/prototypes',
+      templateUrl: 'app/prototypes/view.html',
+      controller: 'PrototypesController',
+      controllerAs: 'vm'
+    })
     .state('prototypedetail', {
       url: '/prototypes/:libraryName/:prototypeName',
       templateUrl: 'app/prototypedetail/view.html',
@@ -68,7 +74,12 @@ export function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterPro
       url: '/config/add',
       templateUrl: 'app/config/configadd.view.html',
       controller: 'ConfigAddController',
-      controllerAs: 'vm'
+      controllerAs: 'vm',
+      params: {
+        prototype: {
+          value: 'none'
+        }
+      }
     })
     ;
 

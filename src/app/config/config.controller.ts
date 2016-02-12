@@ -4,6 +4,8 @@ import { IMinemeldConfigService, IMinemeldConfigInfo, IMinemeldConfigNode } from
 import { IConfirmService } from '../../app/services/confirm';
 import { IMinemeldSupervisor } from '../../app/services/supervisor';
 
+declare var he:any;
+
 export class ConfigController {
     toastr: any;
     $scope: angular.IScope;
@@ -225,8 +227,10 @@ export class ConfigController {
         this.dtColumns = [
             this.DTColumnBuilder.newColumn(null).withTitle('').renderWith(function(data: any, type: any, full: any) {
                 return '';
-            }).withOption('width', '5px'),
-            this.DTColumnBuilder.newColumn('name').withTitle('NAME'),
+            }).withOption('width', '5px').notSortable(),
+            this.DTColumnBuilder.newColumn('name').withTitle('NAME').renderWith(function(data: any, type: any, full: any) {
+                return he.encode(data, { strict: true });
+            }),
             this.DTColumnBuilder.newColumn(null).withTitle('POSITION').renderWith(function(data: any, type: any, full: any) {
                 var c: string;
                 var v: string;
@@ -257,7 +261,7 @@ export class ConfigController {
 
                     result = ['<ul style="margin: 0;">'];
                     result = result.concat(full.properties.inputs.map(
-                        (x: string) => { return '<li style="padding-bottom: 0px;">' + x + '</li>'; }
+                        (x: string) => { return '<li style="padding-bottom: 0px;">' + he.encode(x, {strict: true}) + '</li>'; }
                     ));
                     result.push('</ul>');
 
