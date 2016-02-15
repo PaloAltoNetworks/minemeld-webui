@@ -135,7 +135,7 @@ class NodeDetailAutofocusELInfoController extends NodeDetailInfoController {
             backdrop: 'static',
             animation: false,
             resolve: {
-                label: this.label
+                label: () => { return this.label }
             }
         });
 
