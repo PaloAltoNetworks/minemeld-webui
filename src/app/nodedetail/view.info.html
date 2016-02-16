@@ -31,7 +31,10 @@
                 </tr>
                 <tr ng-if="nodedetailinfo.nodeState.last_run">
                     <td>LAST RUN</td>
-                    <td>{{ nodedetailinfo.nodeState.last_run | date:'yyyy-MM-dd HH:mm:ss Z' }}</td>
+                    <td>
+                        <span>{{ nodedetailinfo.nodeState.last_run | date:'yyyy-MM-dd HH:mm:ss Z' }}</span>
+                        <span tooltip="run now" tooltip-popup-delay="200" ng-click="nodedetailinfo.run()" class="nodedetail-info-icon fa fa-refresh"></span>
+                    </td>
                 </tr>
                 <tr>
                     <td># INDICATORS</td>

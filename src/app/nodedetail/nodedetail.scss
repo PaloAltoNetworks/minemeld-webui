@@ -145,3 +145,13 @@
 .nodedetail-nvd3-container {
   position: relative;
 }
+
+.nodedetail-info-icon {
+  float: right;
+  margin-top: 3px;
+  color: darken($body-bg, 50%);
+}
+
+.nodedetail-info-icon:hover {
+  color: darken($body-bg, 70%);
+}
