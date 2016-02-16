@@ -7,6 +7,7 @@ export interface IMinemeldStatus {
     getSystem(): angular.IPromise<any>;
     getMinemeld(): angular.IPromise<any>;
     getConfig(): angular.IPromise<any>;
+    hup(nodename: string): angular.IPromise<any>;
 }
 
 export interface IMinemeldStatusNode {
@@ -82,6 +83,7 @@ export class MinemeldStatus implements IMinemeldStatus {
     }
 
     public getMinemeld(): angular.IPromise<any> {
+        var idf: angular.IDeferred<any>;
         var minemeld: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
         if (!this.MinemeldAuth.authorizationSet) {
@@ -127,6 +129,39 @@ export class MinemeldStatus implements IMinemeldStatus {
         });
 
         return config.get().$promise.then((result: any) => {
+            if ('result' in result) {
+                return result.result;
+            }
+
+            return new Array();
+        }, (error: any) => {
+            if (error.status === 401) {
+                this.$state.go('login');
+            }
+
+            return error;
+        });
+    }
+
+    public hup(nodename: string) {
+        var hupresult: angular.resource.IResourceClass<angular.resource.IResource<any>>;
+        var params: any = {
+            nodename: nodename
+        };
+
+        if (!this.MinemeldAuth.authorizationSet) {
+            this.$state.go('login');
+            return;
+        }
+
+        hupresult = this.$resource('/status/:nodename/hup', {}, {
+            get: {
+                method: 'GET',
+                headers: this.MinemeldAuth.getAuthorizationHeaders()
+            }
+        });
+
+        return hupresult.get(params).$promise.then((result: any) => {
             if ('result' in result) {
                 return result.result;
             }
