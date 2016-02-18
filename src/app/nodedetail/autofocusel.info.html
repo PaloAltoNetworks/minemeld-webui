@@ -29,6 +29,20 @@
                         <span ng-switch-default class="label label-warning">{{ nodedetailinfo.nodeState.stateAsString }}</span>
                     </td>
                 </tr>
+                <tr>
+                    <td>API KEY</td>
+                    <td tooltip="set API key" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setAPIKey()">
+                        <span ng-if="!nodedetailinfo.api_key"><em>Not set</span></span>
+                        <span ng-if="nodedetailinfo.api_key" class="label label-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>LABEL</td>
+                    <td tooltip="set label" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setLabel()">
+                        <span ng-if="!nodedetailinfo.label"><em>Not set</em></span>
+                        <span ng-if="nodedetailinfo.label">{{ nodedetailinfo.label }}</span>
+                    </td>
+                </tr>
                 <tr ng-if="nodedetailinfo.nodeState.last_run">
                     <td>LAST RUN</td>
                     <td>

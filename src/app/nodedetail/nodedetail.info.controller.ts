@@ -23,10 +23,10 @@ export class NodeDetailInfoController {
     nodeConfig: any;
 
     updateMinemeldStatusPromise: angular.IPromise<any>;
-    updateMinemeldStatusInterval: number = 5 * 60 * 1000;
+    updateMinemeldStatusInterval: number = 60 * 1000;
 
     updateMinemeldConfigPromise: angular.IPromise<any>;
-    updateMinemeldConfigInterval: number = 5 * 60 * 1000;
+    updateMinemeldConfigInterval: number = 60 * 1000;
 
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
@@ -55,6 +55,16 @@ export class NodeDetailInfoController {
         vm.nodeState = ns;
         vm.nodeState.indicators = ns.length;
         vm.nodeState.stateAsString = vm.mmstatus.NODE_STATES[ns.state];
+    }
+
+    public run(): void {
+        this.mmstatus.hup(this.nodename)
+            .then(() => {
+                this.toastr.success('NEW RUN FOR ' + this.nodename + ' SUCCESSFUL SCHEDULED');
+            })
+            .catch((error: any) => {
+                this.toastr.error('ERROR HUPPING NODE: ' + error.status);
+            });
     }
 
     private updateMinemeldStatus() {
