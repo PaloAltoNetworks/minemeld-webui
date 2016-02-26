@@ -157,6 +157,7 @@ directive('mmSankey', ['$state', function($state) {
                 var totalNodesValue = d3.sum(fts.nodes, function(d) {
                     return d.value;
                 });
+                totalNodesValue = Math.max(totalNodesValue, 1);
                 var kr = (max_node_radius - min_node_radius) / totalNodesValue;
 
                 sankey.nodes(fts.nodes).links(fts.links)
@@ -175,7 +176,10 @@ directive('mmSankey', ['$state', function($state) {
                     })
                     .attr("d", path)
                     .style("stroke-width", function(d) {
-                        return Math.max(1, d.dy);
+                        if (d.value == 0.1) {
+                            return 1;
+                        }
+                        return Math.min(max_node_radius*1.1, Math.max(0.1, d.dy));
                     })
                     .sort(function(a, b) {
                         return b.dy - a.dy;

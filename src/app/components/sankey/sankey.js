@@ -128,8 +128,8 @@ d3.sankey = function() {
             totalNodesValue,
             x = 0;
 
-        totalLinksValue = d3.sum(links, value);
-        totalNodesValue = d3.sum(nodes, value);
+        totalLinksValue = Math.max(d3.sum(links, value), 1);
+        totalNodesValue = Math.max(d3.sum(nodes, value), 1);
 
         while (remainingNodes.length) {
             nextNodes = [];
