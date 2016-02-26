@@ -306,7 +306,11 @@ class NodeDetailYamlIPv4IndicatorsController {
 
         this.dtColumns = [
             this.DTColumnBuilder.newColumn('indicator').withTitle('INDICATOR').withOption('width', '25%').renderWith(function(data: any, type: any, full: any) {
-                return he.encode(data, { strict: true });
+                if (data) {
+                    return he.encode(data, { strict: true });
+                }
+
+                return '';
             }),
             this.DTColumnBuilder.newColumn('direction').withTitle('DIRECTION').withOption('defaultContent', ' ')
                 .withOption('width', '130px').renderWith(function(data: any, type: any, full: any) {
@@ -346,7 +350,11 @@ class NodeDetailYamlIPv4IndicatorsController {
                     return '<span class="label ' + c + '">' + v + '</span>';
             }),
             this.DTColumnBuilder.newColumn('comment').withTitle('COMMENT').withOption('defaultContent', ' ').renderWith(function(data: any, type: any, full: any) {
-                return he.encode(data, { strict: true });
+                if (data) {
+                    return he.encode(data, { strict: true });
+                }
+
+                return '';
             }),
             this.DTColumnBuilder.newColumn(null).withTitle('').notSortable().renderWith(function(data: any, type: any, full: any) {
                 return '<span class="config-table-icon glyphicon glyphicon-remove"></span>';

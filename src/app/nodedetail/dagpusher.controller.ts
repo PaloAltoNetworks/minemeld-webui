@@ -212,10 +212,18 @@ class NodeDetailDagPusherDevicesController {
                 return he.encode(data, { strict: true });
             }),
             this.DTColumnBuilder.newColumn('vsys').withTitle('VSYS').withOption('defaultContent', '').renderWith(function(data: any, type: any, full: any) {
-                return he.encode(data, { strict: true });
+                if (data) {
+                    return he.encode(data, { strict: true });
+                }
+
+                return '';
             }),
             this.DTColumnBuilder.newColumn('serial').withTitle('SERIAL #').withOption('defaultContent', '').renderWith(function(data: any, type: any, full: any) {
-                return he.encode(data, { strict: true });
+                if (data) {
+                    return he.encode(data, { strict: true });
+                }
+
+                return '';
             }),
             this.DTColumnBuilder.newColumn(null).withTitle('').notSortable().renderWith(function(data: any, type: any, full: any) {
                 return '<span class="config-table-icon glyphicon glyphicon-remove"></span>';

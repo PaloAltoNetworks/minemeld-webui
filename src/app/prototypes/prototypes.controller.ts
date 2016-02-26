@@ -140,10 +140,10 @@ export class PrototypesController {
                 var r: string = '';
 
                 if (full.libraryDescription) {
-                    r += '<div class="m-b-xs"><strong>' + full.libraryName + '</strong> ' + full.libraryDescription + '</div>';
+                    r += '<div class="m-b-xs"><strong>' + he.encode(full.libraryName) + '</strong> ' + he.encode(full.libraryDescription) + '</div>';
                 }
                 if (full.prototypeDescription) {
-                    r += '<div><strong>' + full.libraryName + '.' + full.prototypeName + '</strong> ' + full.prototypeDescription + '</div>';
+                    r += '<div><strong>' + he.encode(full.libraryName) + '.' + he.encode(full.prototypeName) + '</strong> ' + he.encode(full.prototypeDescription) + '</div>';
                 }
 
                 return r;
