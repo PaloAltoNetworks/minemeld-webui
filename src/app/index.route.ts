@@ -81,6 +81,12 @@ export function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterPro
         }
       }
     })
+    .state('indicatoradd', {
+      url: '/indicator/add?indicator&indicatorType',
+      templateUrl: 'app/indicatoradd/view.html',
+      controller: 'IndicatorAddController',
+      controllerAs: 'vm'
+    })
     ;
 
   $urlRouterProvider.otherwise('/dashboard');
