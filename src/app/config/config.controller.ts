@@ -175,6 +175,7 @@ export class ConfigController {
         .withOption('aaSorting', [])
         .withOption('aaSortingFixed', [])
         .withOption('paging', false)
+        .withOption('stateSave', true)
         .withOption('createdRow', function(row: HTMLScriptElement, data: any, index: any) {
             var c: string;
             var fc: HTMLElement;
