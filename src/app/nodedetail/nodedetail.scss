@@ -155,3 +155,35 @@
 .nodedetail-info-icon:hover {
   color: darken($body-bg, 70%);
 }
+
+#indicatorsTable ul {
+    padding: 0;
+}
+
+#indicatorsTable ul > li {
+    list-style-type: none;
+    padding-bottom: 5px;
+    vertical-align: middle;
+}
+
+#indicatorsTable ul > li > span {
+    vertical-align: middle;
+    margin-top: -2px;
+}
+
+#indicatorsTable_wrapper label {
+    font-size: 12px;
+}
+
+#indicatorsTable_info {
+    font-size: 12px;
+}
+
+#indicatorsTable_paginate {
+    font-size: 12px;
+}
+
+#indicatorsTable th {
+    font-weight: 500;
+    font-size: 12px;
+}

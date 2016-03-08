@@ -78,7 +78,7 @@ export class NodesController {
         this.dtOptions = this.DTOptionsBuilder.fromFnPromise(function() {
             var $p: any = vm.mmstatus.getMinemeld()
                 .catch(function(error: any) {
-                    this.toastr.error('ERROR RETRIEVING MINEMELD STATUS:' + error.status);
+                    this.toastr.error('ERROR RETRIEVING MINEMELD STATUS:' + error.statusText);
                 });
 
             return $p;
@@ -86,6 +86,7 @@ export class NodesController {
         .withBootstrap()
         .withPaginationType('simple_numbers')
         .withOption('aaSorting', [])
+        .withOption('stateSave', true)
         .withOption('aaSortingFixed', [])
         .withOption('lengthMenu', [[50, -1], [50, 'All']])
         .withOption('createdRow', function(row: HTMLScriptElement, data: any) {

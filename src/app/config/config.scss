@@ -31,7 +31,7 @@
   width: 78px;
 }
 
-#nodesTable_info {
+#configTable_info {
   display: none;
 }
 
@@ -60,4 +60,36 @@
 
 .config-add-form label {
   font-weight: 500 !important;
+}
+
+#configTable ul {
+    padding: 0;
+}
+
+#configTable ul > li {
+    list-style-type: none;
+    padding-bottom: 5px;
+    vertical-align: middle;
+}
+
+#configTable ul > li > span {
+    vertical-align: middle;
+    margin-top: -2px;
+}
+
+#configTable_wrapper label {
+    font-size: 12px;
+}
+
+#configTable_info {
+    font-size: 12px;
+}
+
+#configTable_paginate {
+    font-size: 12px;
+}
+
+#configTable th {
+    font-weight: 500;
+    font-size: 12px;
 }

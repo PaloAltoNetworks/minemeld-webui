@@ -195,6 +195,7 @@ class NodeDetailYamlDomainIndicatorsController {
         })
         .withBootstrap()
         .withPaginationType('simple_numbers')
+        .withOption('stateSave', true)
         .withOption('aaSorting', [])
         .withOption('aaSortingFixed', [])
         .withOption('deferRender', true)
@@ -272,7 +273,8 @@ class NodeDetailYamlDomainIndicatorsController {
     }
 
     private saveIndicators(): angular.IPromise<any> {
-        return this.MinemeldConfig.saveDataFile(this.cfd_indicators, this.indicators)
+        return this.MinemeldConfig
+            .saveDataFile(this.cfd_indicators, this.indicators, this.nodename)
             .then((result: any) => {
                 this.toastr.success('CHANGES SAVED');
                 this.dtIndicators.reloadData();
