@@ -1,0 +1,22 @@
+<div class="modal-header">
+    <h1 class="modal-title">PROOFPOINT ET CATEGORIES</h1>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-2">
+            CATEGORIES
+        </div>
+        <div class="col-xs-10">
+            <ui-select multiple ng-model="vm.categories" theme="bootstrap" on-select="vm.hasChanged()" on-remove="vm.hasChanged()">
+                <ui-select-match placeholder="Select categories...">{{$item}}</ui-select-match>
+                <ui-select-choices repeat="category in vm.availableCategories | filter:$select.search">
+                    {{category}}
+                </ui-select-choices>
+            </ui-select>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button ng-disabled="!vm.changed" class="btn btn-primary btn-sm" type="button" ng-click="vm.save()">OK</button>
+    <button class="btn btn-warning btn-sm" type="button" ng-click="vm.cancel()">CANCEL</button>
+</div>
