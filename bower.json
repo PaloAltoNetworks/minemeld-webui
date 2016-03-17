@@ -23,7 +23,8 @@
     "components-font-awesome": "~4.4.0",
     "d3-tip": "~0.6.7",
     "ui-select": "angular-ui-select#~0.13.2",
-    "he": "~0.5.0"
+    "he": "~0.5.0",
+    "angular-ui-ace": "bower"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.2"
