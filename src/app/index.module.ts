@@ -23,6 +23,7 @@ import { MinemeldMetrics } from './services/metrics';
 import { MinemeldAuth } from './services/auth';
 import { MinemeldPrototype } from './services/prototype';
 import { MinemeldConfig } from './services/config';
+import { MinemeldValidate } from './services/validate';
 import { NodeDetailResolver } from './services/nodedetailresolver';
 import { MinemeldSupervisor } from './services/supervisor';
 import { ConfirmService } from './services/confirm';
@@ -46,6 +47,7 @@ module minemeldWebui {
     'ngResource',
     'ui.router',
     'ui.bootstrap',
+    'ui.ace',
     'toastr',
     'angular-loading-bar',
     'datatables',
@@ -84,6 +86,7 @@ module minemeldWebui {
   .service('MinemeldConfig', MinemeldConfig)
   .service('ConfirmService', ConfirmService)
   .service('MinemeldSupervisor', MinemeldSupervisor)
+  .service('MinemeldValidate', MinemeldValidate)
   .filter('megaNumber', megaNumber)
   .run(minemeldInit)
   ;
