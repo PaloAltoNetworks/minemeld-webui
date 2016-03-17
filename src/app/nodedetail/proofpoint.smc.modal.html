@@ -3,17 +3,19 @@
 </div>
 <div class="modal-body">
     <div class="row">
-        <div class="col-xs-2">
-            CATEGORIES
-        </div>
-        <div class="col-xs-10">
-            <ui-select multiple ng-model="vm.categories" theme="bootstrap" on-select="vm.hasChanged()" on-remove="vm.hasChanged()">
-                <ui-select-match placeholder="Select categories...">{{$item}}</ui-select-match>
-                <ui-select-choices repeat="category in vm.availableCategories | filter:$select.search">
-                    {{category}}
-                </ui-select-choices>
-            </ui-select>
-        </div>
+        <form class="config-add-form form-horizontal m-t-xs">
+            <div class="form-group">
+                <label class="col-xs-4 control-label">CATEGORIES</label>
+                <div class="col-xs-6">
+                    <ui-select multiple ng-model="vm.categories" theme="bootstrap" on-select="vm.hasChanged()" on-remove="vm.hasChanged()">
+                        <ui-select-match placeholder="Select categories...">{{$item}}</ui-select-match>
+                        <ui-select-choices repeat="category in vm.availableCategories | filter:$select.search">
+                            {{category}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 <div class="modal-footer">
