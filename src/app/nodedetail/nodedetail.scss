@@ -156,34 +156,40 @@
   color: darken($body-bg, 70%);
 }
 
-#indicatorsTable ul {
+#nodedetailTable ul {
     padding: 0;
 }
 
-#indicatorsTable ul > li {
+#nodedetailTable ul > li {
     list-style-type: none;
     padding-bottom: 5px;
     vertical-align: middle;
 }
 
-#indicatorsTable ul > li > span {
+#nodedetailTable ul > li > span {
     vertical-align: middle;
     margin-top: -2px;
 }
 
-#indicatorsTable_wrapper label {
+#nodedetailTable_wrapper label {
     font-size: 12px;
 }
 
-#indicatorsTable_info {
+#nodedetailTable_info {
     font-size: 12px;
 }
 
-#indicatorsTable_paginate {
+#nodedetailTable_paginate {
     font-size: 12px;
 }
 
-#indicatorsTable th {
+#nodedetailTable th {
     font-weight: 500;
     font-size: 12px;
+}
+
+.modal-ace-editor {
+    height: 200px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
