@@ -55,6 +55,9 @@
                         </div>
                     </td>
                 </tr>
+                <tr ng-if="nodedetailstats.metrics_names.length <= 1">
+                    <td colspan="4"><i>No metrics yet</i></td>
+                </tr>
             </tbody>
         </table>
     </div>
