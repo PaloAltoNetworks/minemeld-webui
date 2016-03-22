@@ -19,7 +19,7 @@ function recordedFutureRouterConfig($stateProvider: ng.ui.IStateProvider) {
 
 /** @ngInject **/
 function recordedFutureRegisterClass(NodeDetailResolver: INodeDetailResolverService) {
-    NodeDetailResolver.registerClass('minemeld.ft.recordedfuture.ThreatFeed', {
+    NodeDetailResolver.registerClass('minemeld.ft.recordedfuture.IPRiskList', {
         tabs: [{
             icon: 'fa fa-circle-o',
             tooltip: 'INFO',

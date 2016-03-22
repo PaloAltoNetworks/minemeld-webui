@@ -197,6 +197,7 @@ class NodeDetailYamlURLIndicatorsController {
         .withPaginationType('simple_numbers')
         .withOption('aaSorting', [])
         .withOption('aaSortingFixed', [])
+        .withOption('stateSave', true)
         .withOption('deferRender', true)
         .withOption('lengthMenu', [[50, 200, -1], [50, 200, 'All']])
         .withOption('createdRow', function(row: HTMLScriptElement, data: any, index: any) {
@@ -272,7 +273,8 @@ class NodeDetailYamlURLIndicatorsController {
     }
 
     private saveIndicators(): angular.IPromise<any> {
-        return this.MinemeldConfig.saveDataFile(this.cfd_indicators, this.indicators)
+        return this.MinemeldConfig
+            .saveDataFile(this.cfd_indicators, this.indicators, this.nodename)
             .then((result: any) => {
                 this.toastr.success('CHANGES SAVED');
                 this.dtIndicators.reloadData();

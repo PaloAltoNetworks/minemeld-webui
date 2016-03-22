@@ -86,6 +86,7 @@ export class PrototypesController {
         .withPaginationType('simple_numbers')
         .withOption('aaSorting', [])
         .withOption('aaSortingFixed', [])
+        .withOption('stateSave', true)
         .withOption('lengthMenu', [[50, -1], [50, 'All']])
         .withOption('createdRow', (row: HTMLScriptElement, data: any) => {
             var c: string;
