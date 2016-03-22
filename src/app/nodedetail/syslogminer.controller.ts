@@ -155,8 +155,6 @@ class syslogMinerRulesController {
     private updateMinemeldStatus(): void {
         var vm: syslogMinerRulesController = this;
 
-        console.log(vm);
-
         this.MinemeldStatus.getMinemeld()
             .then((result: any) => {
                 var ns: IMinemeldStatusNode;
@@ -188,7 +186,6 @@ class syslogMinerRulesController {
     }
 
     private destroy() {
-        console.log('destroy', this);
         if (this.updateMinemeldStatusPromise) {
             this.$interval.cancel(this.updateMinemeldStatusPromise);
         }
@@ -245,7 +242,7 @@ class syslogMinerRulesController {
             fc.setAttribute('tooltip-popup-delay', '500');
             fc.className += ' config-table-clickable';
 
-            for (j = 1; j < row.childNodes.length - 2; j++) {
+            for (j = 0; j < row.childNodes.length - 2; j++) {
                 fc = <HTMLElement>(row.childNodes[j]);
                 fc.setAttribute('ng-click', 'vm.editRule(' + index + ')');
                 fc.className += ' config-table-clickable';
