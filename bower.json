@@ -39,6 +39,13 @@
         "assets/fonts/bootstrap/glyphicons-halflings-regular.woff",
         "assets/fonts/bootstrap/glyphicons-halflings-regular.woff2"
       ]
+    },
+    "ace-builds": {
+      "main": [
+        "src-min-noconflict/ace.js",
+        "src-min-noconflict/mode-yaml.js",
+        "src-min-noconflict/theme-github.js"
+      ]
     }
   },
   "resolutions": {
