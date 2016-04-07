@@ -56,8 +56,6 @@ class syslogMinerRulesController {
 
         this.setupRulesTable();
 
-        this.updateMinemeldStatus();
-
         this.$scope.$on('$destroy', () => { this.destroy(); });
     }
 
@@ -225,6 +223,7 @@ class syslogMinerRulesController {
         })
         .withBootstrap()
         .withPaginationType('simple_numbers')
+        .withOption('fnInitComplete', () => { this.updateMinemeldStatus(); })
         .withOption('aaSorting', [])
         .withOption('aaSortingFixed', [])
         .withOption('lengthMenu', [[50, -1], [50, 'All']])
