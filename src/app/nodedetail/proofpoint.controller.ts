@@ -69,7 +69,7 @@ function proofpointRouterConfig($stateProvider: ng.ui.IStateProvider) {
 
 /** @ngInject **/
 function proofpointRegisterClass(NodeDetailResolver: INodeDetailResolverService) {
-    NodeDetailResolver.registerClass('minemeld.ft.proofpoint.ETIntelligenceIP', {
+    NodeDetailResolver.registerClass('minemeld.ft.proofpoint.EmergingThreatsIP', {
         tabs: [{
             icon: 'fa fa-circle-o',
             tooltip: 'INFO',
@@ -90,7 +90,7 @@ function proofpointRegisterClass(NodeDetailResolver: INodeDetailResolverService)
         }]
     });
 
-    NodeDetailResolver.registerClass('minemeld.ft.proofpoint.ETIntelligenceDomain', {
+    NodeDetailResolver.registerClass('minemeld.ft.proofpoint.EmergingThreatsDomain', {
         tabs: [{
             icon: 'fa fa-circle-o',
             tooltip: 'INFO',
