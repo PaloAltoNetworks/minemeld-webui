@@ -64,6 +64,17 @@ export function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterPro
       controller: 'PrototypedetailController',
       controllerAs: 'vm'
     })
+    .state('prototypeedit', {
+      url: '/prototypeedit',
+      templateUrl: 'app/prototypeedit/view.html',
+      controller: 'PrototypeEditController',
+      controllerAs: 'vm',
+      params: {
+        prototype: {
+          value: 'none'
+        }
+      }
+    })
     .state('config', {
       url: '/config',
       templateUrl: 'app/config/view.html',
