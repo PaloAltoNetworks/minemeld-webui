@@ -32,6 +32,7 @@ export interface IMinemeldPrototypeService {
     getPrototypeYaml(prototypename: string): angular.IPromise<any>;
     setPrototypeYaml(prototypename: string, pclass: string, config: string,
                      optionalParams?: IMinemeldPrototypeMetadata): angular.IPromise<any>;
+    invalidateCache(): void;
 }
 
 export class MinemeldPrototype implements IMinemeldPrototypeService {
@@ -119,12 +120,12 @@ export class MinemeldPrototype implements IMinemeldPrototypeService {
             return;
         }
 
-        prototypeYaml = this.$resource('/prototype/:prototypename'), {}, {
+        prototypeYaml = this.$resource('/prototype/:prototypename', {}, {
             get: {
                 method: 'GET',
                 headers: this.MinemeldAuth.getAuthorizationHeaders()
             }
-        };
+        });
 
         params = {
             prototypename: prototypename
@@ -149,14 +150,14 @@ export class MinemeldPrototype implements IMinemeldPrototypeService {
             return;
         }
 
-        prototypeYaml = this.$resource('/prototype/:prototypename'), {
+        prototypeYaml = this.$resource('/prototype/:prototypename', {
             prototypename: prototypename
         }, {
             post: {
                 method: 'POST',
                 headers: this.MinemeldAuth.getAuthorizationHeaders()
             }
-        };
+        });
 
         if (optionalParams) {
             prototype = angular.copy(optionalParams);
@@ -173,6 +174,10 @@ export class MinemeldPrototype implements IMinemeldPrototypeService {
 
             return {};
         });
+    }
+
+    public invalidateCache(): void {
+        this.prototypesDict = undefined;
     }
 
     private getPrototypes() {
