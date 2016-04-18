@@ -2,6 +2,9 @@
     <div class="col-sm-12 col-md-12">
         <h3 class="m-t-xs prototypedetail-title">
             {{ vm.libraryName }}.{{ vm.prototypeName }} <span class="prototypedetail-description">PROTOTYPE</span>
+            <button tooltip-popup-delay="500" tooltip="new prototype from this" type="button" class="config-action btn btn-config-action btn-sm" ng-click="vm.$state.go('prototypeadd', {prototype: vm.libraryName+'.'+vm.prototypeName})">
+                <span class="glyphicon glyphicon-paste"></span> NEW
+            </button>
             <button tooltip-popup-delay="500" tooltip="create a new node from this prototype" type="button" class="config-action btn btn-config-action btn-sm" ng-click="vm.$state.go('configadd', {prototype: vm.libraryName+'.'+vm.prototypeName})">
                 <span class="glyphicon glyphicon-duplicate"></span> CLONE
             </button>

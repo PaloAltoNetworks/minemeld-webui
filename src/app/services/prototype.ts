@@ -10,9 +10,14 @@ export interface IMinemeldPrototypeLibrary {
     };
 }
 
-export interface IMinemeldPrototype {
-    class: string;
+export interface IMinemeldPrototypeMetadata {
     description?: string;
+    nodeType?: string;
+    developmentStatus?: string;    
+}
+
+export interface IMinemeldPrototype extends IMinemeldPrototypeMetadata {
+    class: string;
     config?: any;
 }
 
@@ -24,6 +29,10 @@ export interface IMinemeldPrototypeService {
     getPrototypeLibraries(): angular.IPromise<any>;
     getPrototypeLibrary(library: string): angular.IPromise<any>;
     getPrototype(protofqdn: string): angular.IPromise<any>;
+    getPrototypeYaml(prototypename: string): angular.IPromise<any>;
+    setPrototypeYaml(prototypename: string, pclass: string, config: string,
+                     optionalParams?: IMinemeldPrototypeMetadata): angular.IPromise<any>;
+    invalidateCache(): void;
 }
 
 export class MinemeldPrototype implements IMinemeldPrototypeService {
@@ -99,6 +108,76 @@ export class MinemeldPrototype implements IMinemeldPrototypeService {
 
             return undefined;
         });
+    }
+
+
+    public getPrototypeYaml(prototypename: string) {
+        var params: any;
+        var prototypeYaml: angular.resource.IResourceClass<angular.resource.IResource<any>>;
+
+        if (!this.MinemeldAuth.authorizationSet) {
+            this.$state.go('login');
+            return;
+        }
+
+        prototypeYaml = this.$resource('/prototype/:prototypename', {}, {
+            get: {
+                method: 'GET',
+                headers: this.MinemeldAuth.getAuthorizationHeaders()
+            }
+        });
+
+        params = {
+            prototypename: prototypename
+        };
+
+        return prototypeYaml.get(params).$promise.then((result: any) => {
+            if ('result' in result) {
+                return result.result;
+            }
+
+            return {};
+        });
+    }
+
+    public setPrototypeYaml(prototypename: string, pclass: string, config: string,
+                            optionalParams?: IMinemeldPrototypeMetadata) {
+        var prototypeYaml: any;
+        var prototype: any;
+
+        if (!this.MinemeldAuth.authorizationSet) {
+            this.$state.go('login');
+            return;
+        }
+
+        prototypeYaml = this.$resource('/prototype/:prototypename', {
+            prototypename: prototypename
+        }, {
+            post: {
+                method: 'POST',
+                headers: this.MinemeldAuth.getAuthorizationHeaders()
+            }
+        });
+
+        if (optionalParams) {
+            prototype = angular.copy(optionalParams);
+        } else {
+            prototype = {}
+        }
+        prototype.class = pclass;
+        prototype.config = config;
+
+        return prototypeYaml.post({}, JSON.stringify(prototype)).$promise.then((result: any) => {
+            if ('result' in result) {
+                return result.result;
+            }
+
+            return {};
+        });
+    }
+
+    public invalidateCache(): void {
+        this.prototypesDict = undefined;
     }
 
     private getPrototypes() {
