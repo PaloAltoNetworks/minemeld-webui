@@ -12,7 +12,7 @@ import { NodeDetailInfoController } from './nodedetail/nodedetail.info.controlle
 import { NodeDetailGraphController } from './nodedetail/nodedetail.graph.controller';
 import { PrototypesController } from './prototypes/prototypes.controller';
 import { PrototypedetailController } from './prototypedetail/prototypedetail.controller';
-import { PrototypeEditController } from './prototypeedit/prototypeedit.controller';
+import { PrototypeAddController } from './prototypeadd/prototypeadd.controller';
 import { ConfigController } from './config/config.controller';
 import { ConfigAddController } from './config/configadd.controller';
 import { AboutController } from './about/about.controller';
@@ -71,7 +71,7 @@ module minemeldWebui {
   .controller('LoginController', LoginController)
   .controller('PrototypesController', PrototypesController)
   .controller('PrototypedetailController', PrototypedetailController)
-  .controller('PrototypeEditController', PrototypeEditController)
+  .controller('PrototypeAddController', PrototypeAddController)
   .controller('ConfigController', ConfigController)
   .controller('ConfigAddController', ConfigAddController)
   .controller('IndicatorAddController', IndicatorAddController)
