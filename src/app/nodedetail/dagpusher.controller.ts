@@ -4,7 +4,7 @@ import { INodeDetailResolverService } from '../../app/services/nodedetailresolve
 import { IMinemeldConfigService } from '../../app/services/config';
 import { IConfirmService } from '../../app/services/confirm';
 
-declare var he:any;
+declare var he: any;
 
 /** @ngInject */
 function dagPusherRouterConfig($stateProvider: ng.ui.IStateProvider) {
@@ -22,7 +22,7 @@ function dagPusherRouterConfig($stateProvider: ng.ui.IStateProvider) {
         ;
 }
 
-/** @ngInject **/
+/** @ngInject */
 function dagPusherRegisterClass(NodeDetailResolver: INodeDetailResolverService) {
     NodeDetailResolver.registerClass('minemeld.ft.dag.DagPusher', {
         tabs: [{
@@ -72,7 +72,7 @@ class NodeDetailDagPusherDevicesController {
 
     device_list: any[];
 
-    /** @ngInject **/
+    /** @ngInject */
     constructor(toastr: any, MinemeldConfig: IMinemeldConfigService,
                 $scope: angular.IScope, DTOptionsBuilder: any,
                 DTColumnBuilder: any, $compile: angular.ICompileService,
@@ -124,14 +124,14 @@ class NodeDetailDagPusherDevicesController {
 
         p = this.ConfirmService.show(
             'DELETE DEVICE',
-            'Are you sure you want to delete node '+ddesc+' ?'
+            'Are you sure you want to delete node ' + ddesc + ' ?'
         );
 
         p.then((result: any) => {
             this.device_list.splice(dnum, 1);
             this.saveDeviceList().catch((error: any) => {
                 this.toastr.error('ERROR REMOVING DEVICE: ' + error.statusText);
-                this.dtDevices.reloadData();                
+                this.dtDevices.reloadData();
             });
         });
     }
@@ -244,7 +244,7 @@ class DagPusherAddDeviceController {
     serial: string;
 
     valid(): boolean {
-        if (this.api_password != this.api_password2) {
+        if (this.api_password !== this.api_password2) {
             angular.element('#fgPassword1').addClass('has-error');
             angular.element('#fgPassword2').addClass('has-error');
 
@@ -268,7 +268,7 @@ class DagPusherAddDeviceController {
         return true;
     }
 
-    /** @ngInject **/
+    /** @ngInject */
     constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance) {
         this.$modalInstance = $modalInstance;
     }
@@ -295,7 +295,7 @@ class DagPusherAddDeviceController {
     }
 };
 
-console.log("Loading DagPusher");
+console.log('Loading DagPusher');
 angular.module('minemeldWebui')
     .config(dagPusherRouterConfig)
     .run(dagPusherRegisterClass)

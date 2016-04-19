@@ -180,7 +180,7 @@ class NodeDetailProofpointInfoController extends NodeDetailInfoController {
 
         mi = this.$modal.open({
             templateUrl: 'app/nodedetail/proofpoint.sac.modal.html',
-            controller: proofpointSetAuthCodeController,
+            controller: ProofpointSetAuthCodeController,
             controllerAs: 'vm',
             bindToController: true,
             backdrop: 'static',
@@ -220,7 +220,7 @@ class NodeDetailProofpointInfoController extends NodeDetailInfoController {
 
         mi = this.$modal.open({
             templateUrl: 'app/nodedetail/proofpoint.smc.modal.html',
-            controller: proofpointSetCategoriesController,
+            controller: ProofpointSetCategoriesController,
             controllerAs: 'vm',
             bindToController: true,
             backdrop: 'static',
@@ -259,7 +259,7 @@ class NodeDetailProofpointInfoController extends NodeDetailInfoController {
     }
 }
 
-class proofpointSetAuthCodeController {
+class ProofpointSetAuthCodeController {
     $modalInstance: angular.ui.bootstrap.IModalServiceInstance;
 
     token: string;
@@ -300,7 +300,7 @@ class proofpointSetAuthCodeController {
     }
 };
 
-class proofpointSetCategoriesController {
+class ProofpointSetCategoriesController {
     $modalInstance: angular.ui.bootstrap.IModalServiceInstance;
 
     categories: string[];

@@ -13,7 +13,7 @@ export interface IMinemeldPrototypeLibrary {
 export interface IMinemeldPrototypeMetadata {
     description?: string;
     nodeType?: string;
-    developmentStatus?: string;    
+    developmentStatus?: string;
 }
 
 export interface IMinemeldPrototype extends IMinemeldPrototypeMetadata {
@@ -162,7 +162,7 @@ export class MinemeldPrototype implements IMinemeldPrototypeService {
         if (optionalParams) {
             prototype = angular.copy(optionalParams);
         } else {
-            prototype = {}
+            prototype = {};
         }
         prototype.class = pclass;
         prototype.config = config;

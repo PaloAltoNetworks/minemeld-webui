@@ -83,7 +83,6 @@ export class MinemeldStatus implements IMinemeldStatus {
     }
 
     public getMinemeld(): angular.IPromise<any> {
-        var idf: angular.IDeferred<any>;
         var minemeld: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
         if (!this.MinemeldAuth.authorizationSet) {

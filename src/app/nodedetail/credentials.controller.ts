@@ -2,7 +2,6 @@
 
 import { INodeDetailResolverService } from '../../app/services/nodedetailresolver';
 import { IMinemeldConfigService } from '../../app/services/config';
-import { IConfirmService } from '../../app/services/confirm';
 import { NodeDetailInfoController } from './nodedetail.info.controller';
 import { IMinemeldStatus } from  '../../app/services/status';
 
@@ -17,7 +16,7 @@ function credentialsListConfig($stateProvider: ng.ui.IStateProvider) {
         ;
 }
 
-/** @ngInject **/
+/** @ngInject */
 function credentialsRegisterClasses(NodeDetailResolver: INodeDetailResolverService) {
     NodeDetailResolver.registerClass('minemeld.ft.auscert.MaliciousURLFeed', {
         tabs: [{
@@ -135,7 +134,7 @@ class NodeDetailCredentialsInfoController extends NodeDetailInfoController {
             backdrop: 'static',
             animation: false,
             resolve: {
-                username: () => { return this.username }
+                username: () => { return this.username; }
             }
         });
 
@@ -159,7 +158,7 @@ class CredentialsSetPasswordController {
     password2: string;
 
     valid(): boolean {
-        if (this.password != this.password2) {
+        if (this.password !== this.password2) {
             angular.element('#fgPassword1').addClass('has-error');
             angular.element('#fgPassword2').addClass('has-error');
 
@@ -175,7 +174,7 @@ class CredentialsSetPasswordController {
         return true;
     }
 
-    /** @ngInject **/
+    /** @ngInject */
     constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance) {
         this.$modalInstance = $modalInstance;
     }
@@ -206,7 +205,7 @@ class CredentialsSetUsernameController {
         return true;
     }
 
-    /** @ngInject **/
+    /** @ngInject */
     constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance, username: string) {
         this.$modalInstance = $modalInstance;
         this.username = username;
@@ -225,7 +224,7 @@ class CredentialsSetUsernameController {
     }
 };
 
-console.log("Loading Credentials");
+console.log('Loading Credentials');
 angular.module('minemeldWebui')
     .config(credentialsListConfig)
     .run(credentialsRegisterClasses)

@@ -121,7 +121,7 @@ export class NodeDetailStatsController {
                 })
             };
             if (cm.values.length > 0) {
-                if (cm.values[cm.values.length-1].y == null) {
+                if (cm.values[cm.values.length - 1].y == null) {
                     cm.values = cm.values.slice(0, -1);
                 }
             }
@@ -138,7 +138,28 @@ export class NodeDetailStatsController {
             if (nmetrics.hasOwnProperty(p)) {
                 vm.chartApi[p].updateWithData(nmetrics[p]);
             }
-        }        
+        }
+    }
+
+    chartRangeChanged(): void {
+        if (this.chartRange === '1h') {
+            this.chartDT = 3600;
+            this.chartDR = 1;
+        } else if (this.chartRange === '7d') {
+            this.chartDT = 24 * 3600 * 7;
+            this.chartDR = 6 * 3600;
+        } else if (this.chartRange === '30d') {
+            this.chartDT = 30 * 3600 * 24;
+            this.chartDR = 12 * 3600;
+        } else {
+            this.chartDT = 86400;
+            this.chartDR = 1800;
+        }
+
+        if (this.updateNodeMetricsPromise) {
+            this.$interval.cancel(this.updateNodeMetricsPromise);
+            this.updateNodeMetrics();
+        }
     }
 
     private updateNodeMetrics() {
@@ -192,27 +213,6 @@ export class NodeDetailStatsController {
         }
         if (this.updateMinemeldStatusPromise) {
             this.$interval.cancel(this.updateMinemeldStatusPromise);
-        }
-    }
-
-    private chartRangeChanged() {
-        if (this.chartRange === '1h') {
-            this.chartDT = 3600;
-            this.chartDR = 1;
-        } else if (this.chartRange === '7d') {
-            this.chartDT = 24 * 3600 * 7;
-            this.chartDR = 6 * 3600;
-        } else if (this.chartRange === '30d') {
-            this.chartDT = 30 * 3600 * 24;
-            this.chartDR = 12 * 3600;
-        } else {
-            this.chartDT = 86400;
-            this.chartDR = 1800;
-        }
-
-        if (this.updateNodeMetricsPromise) {
-            this.$interval.cancel(this.updateNodeMetricsPromise);
-            this.updateNodeMetrics();
         }
     }
 }
