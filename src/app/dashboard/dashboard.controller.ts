@@ -50,7 +50,7 @@ export class DashboardController {
             showYAxis: false,
             forceY: [],
             yAxis: {
-                tickFormat: (d, i) => { return Math.ceil(d); }
+                tickFormat: (d: number, i: any) => { return Math.ceil(d); }
             },
             showLegend: false,
             color: ['#91B7C7']
@@ -78,7 +78,7 @@ export class DashboardController {
             },
             showYAxis: false,
             yAxis: {
-                tickFormat: (d, i) => { return Math.ceil(d); }
+                tickFormat: (d: number, i: any) => { return Math.ceil(d); }
             },
             forceY: [0, 1],
             showLegend: false,
@@ -133,44 +133,7 @@ export class DashboardController {
         this.$scope.$on('$destroy', this.destroy.bind(this));
     }
 
-    private destroy() {
-        if (this.minemeldUpdatePromise) {
-            this.$interval.cancel(this.minemeldUpdatePromise);
-        }
-        if (this.minemeldMetricsUpdatePromise) {
-            this.$interval.cancel(this.minemeldMetricsUpdatePromise);
-        }
-        if (this.ntminersUpdatePromise) {
-            this.$interval.cancel(this.ntminersUpdatePromise);
-        }
-        if (this.ntoutputsUpdatePromise) {
-            this.$interval.cancel(this.ntoutputsUpdatePromise);
-        }
-    }
-
-    private updateMinemeld(): void {
-        var vm: any = this;
-
-        vm.mmstatus.getMinemeld()
-        .then(
-            function(result: any) {
-                vm.minemeld = result;
-                vm.updateMinemeldStats(vm);
-            },
-            function(error: any) {
-                vm.toastr.error('ERROR RETRIEVING MINEMELD STATUS: '+error.status);
-            }
-        )
-        .finally(function() {
-            vm.minemeldUpdatePromise = vm.$interval(
-                vm.updateMinemeld.bind(vm),
-                vm.minemeldUpdateInterval,
-                1
-            );
-        });
-    }
-
-    private updateMinemeldStats(vm: any) {
+    updateMinemeldStats(vm: any) {
         var j: number;
         var e: any;
 
@@ -227,6 +190,72 @@ export class DashboardController {
         }
     }
 
+    chartRangeChanged() {
+        if (this.chartRange === '1h') {
+            this.chartDT = 3600;
+            this.chartDR = 1;
+        } else if (this.chartRange === '7d') {
+            this.chartDT = 24 * 3600 * 7;
+            this.chartDR = 6 * 3600;
+        } else if (this.chartRange === '30d') {
+            this.chartDT = 30 * 3600 * 24;
+            this.chartDR = 12 * 3600;
+        } else {
+            this.chartDT = 86400;
+            this.chartDR = 1800;
+        }
+
+        if (this.ntminersUpdatePromise) {
+            this.$interval.cancel(this.ntminersUpdatePromise);
+            this.updateNTMinersMetrics();
+        }
+        if (this.ntoutputsUpdatePromise) {
+            this.$interval.cancel(this.ntoutputsUpdatePromise);
+            this.updateNTOutputsMetrics();
+        }
+        if (this.minemeldMetricsUpdatePromise) {
+            this.$interval.cancel(this.minemeldMetricsUpdatePromise);
+            this.updateMinemeldMetrics();
+        }
+    }
+
+    private destroy() {
+        if (this.minemeldUpdatePromise) {
+            this.$interval.cancel(this.minemeldUpdatePromise);
+        }
+        if (this.minemeldMetricsUpdatePromise) {
+            this.$interval.cancel(this.minemeldMetricsUpdatePromise);
+        }
+        if (this.ntminersUpdatePromise) {
+            this.$interval.cancel(this.ntminersUpdatePromise);
+        }
+        if (this.ntoutputsUpdatePromise) {
+            this.$interval.cancel(this.ntoutputsUpdatePromise);
+        }
+    }
+
+    private updateMinemeld(): void {
+        var vm: any = this;
+
+        vm.mmstatus.getMinemeld()
+        .then(
+            function(result: any) {
+                vm.minemeld = result;
+                vm.updateMinemeldStats(vm);
+            },
+            function(error: any) {
+                vm.toastr.error('ERROR RETRIEVING MINEMELD STATUS: ' + error.status);
+            }
+        )
+        .finally(function() {
+            vm.minemeldUpdatePromise = vm.$interval(
+                vm.updateMinemeld.bind(vm),
+                vm.minemeldUpdateInterval,
+                1
+            );
+        });
+    }
+
     private updateNTMinersMetrics() {
         var vm: any = this;
 
@@ -255,7 +284,7 @@ export class DashboardController {
                         });
                         if (metrics['length'][0].values.length > 0) {
                             tim = metrics['length'][0];
-                            if (tim.values[tim.values.length-1].y == null) {
+                            if (tim.values[tim.values.length - 1].y == null) {
                                 tim.values = tim.values.slice(0, -1);
                             }
                         }
@@ -268,7 +297,7 @@ export class DashboardController {
                         });
                         if (metrics['ar'][0].values.length > 0) {
                             tim = metrics['ar'][0];
-                            if (tim.values[tim.values.length-1].y == null) {
+                            if (tim.values[tim.values.length - 1].y == null) {
                                 tim.values = tim.values.slice(0, -1);
                             }
                         }
@@ -281,7 +310,7 @@ export class DashboardController {
                         });
                         if (metrics['ar'][1].values.length > 0) {
                             tim = metrics['ar'][1];
-                            if (tim.values[tim.values.length-1].y == null) {
+                            if (tim.values[tim.values.length - 1].y == null) {
                                 tim.values = tim.values.slice(0, -1);
                             }
                         }
@@ -301,7 +330,7 @@ export class DashboardController {
                 }
             },
             function(error: any) {
-                vm.toastr.error('ERROR RETRIEVING MINERS METRICS: '+error.status);
+                vm.toastr.error('ERROR RETRIEVING MINERS METRICS: ' + error.status);
             }
         )
         .finally(function() {
@@ -341,7 +370,7 @@ export class DashboardController {
                         });
                         if (metrics['length'][0].values.length > 0) {
                             tim = metrics['length'][0];
-                            if (tim.values[tim.values.length-1].y == null) {
+                            if (tim.values[tim.values.length - 1].y == null) {
                                 tim.values = tim.values.slice(0, -1);
                             }
                         }
@@ -354,7 +383,7 @@ export class DashboardController {
                         });
                         if (metrics['ar'][0].values.length > 0) {
                             tim = metrics['ar'][0];
-                            if (tim.values[tim.values.length-1].y == null) {
+                            if (tim.values[tim.values.length - 1].y == null) {
                                 tim.values = tim.values.slice(0, -1);
                             }
                         }
@@ -367,7 +396,7 @@ export class DashboardController {
                         });
                         if (metrics['ar'][1].values.length > 0) {
                             tim = metrics['ar'][1];
-                            if (tim.values[tim.values.length-1].y == null) {
+                            if (tim.values[tim.values.length - 1].y == null) {
                                 tim.values = tim.values.slice(0, -1);
                             }
                         }
@@ -387,7 +416,7 @@ export class DashboardController {
                 }
             },
             function(error: any) {
-                vm.toastr.error('ERROR RETRIEVING OUTPUTS METRICS: '+error.status);
+                vm.toastr.error('ERROR RETRIEVING OUTPUTS METRICS: ' + error.status);
             }
         )
         .finally(function() {
@@ -426,7 +455,7 @@ export class DashboardController {
                         });
                         if (metrics['length'][0].values.length > 0) {
                             tim = metrics['length'][0];
-                            if (tim.values[tim.values.length-1].y == null) {
+                            if (tim.values[tim.values.length - 1].y == null) {
                                 tim.values = tim.values.slice(0, -1);
                             }
                         }
@@ -441,7 +470,7 @@ export class DashboardController {
                 }
             },
             function(error: any) {
-                vm.toastr.error('ERROR RETRIEVING MINEMELD METRICS: '+error.status);
+                vm.toastr.error('ERROR RETRIEVING MINEMELD METRICS: ' + error.status);
             }
         )
         .finally(function() {
@@ -451,34 +480,5 @@ export class DashboardController {
                 1
             );
         });
-    }
-
-    private chartRangeChanged() {
-        if (this.chartRange === '1h') {
-            this.chartDT = 3600;
-            this.chartDR = 1;
-        } else if (this.chartRange === '7d') {
-            this.chartDT = 24 * 3600 * 7;
-            this.chartDR = 6 * 3600;
-        } else if (this.chartRange === '30d') {
-            this.chartDT = 30 * 3600 * 24;
-            this.chartDR = 12 * 3600;
-        } else {
-            this.chartDT = 86400;
-            this.chartDR = 1800;
-        }
-
-        if (this.ntminersUpdatePromise) {
-            this.$interval.cancel(this.ntminersUpdatePromise);
-            this.updateNTMinersMetrics();
-        }
-        if (this.ntoutputsUpdatePromise) {
-            this.$interval.cancel(this.ntoutputsUpdatePromise);
-            this.updateNTOutputsMetrics();
-        }
-        if (this.minemeldMetricsUpdatePromise) {
-            this.$interval.cancel(this.minemeldMetricsUpdatePromise);
-            this.updateMinemeldMetrics();
-        }
     }
 }

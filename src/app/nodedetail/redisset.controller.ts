@@ -31,7 +31,7 @@ function redisSetRouterConfig($stateProvider: ng.ui.IStateProvider) {
         ;
 }
 
-/** @ngInject **/
+/** @ngInject */
 function redisSetRegisterClass(NodeDetailResolver: INodeDetailResolverService) {
     NodeDetailResolver.registerClass('minemeld.ft.redis.RedisSet', {
         tabs: [{
@@ -55,7 +55,7 @@ function redisSetRegisterClass(NodeDetailResolver: INodeDetailResolverService) {
     });
 }
 
-console.log("Loading RedisSet");
+console.log('Loading RedisSet');
 angular.module('minemeldWebui')
     .config(redisSetRouterConfig)
     .run(redisSetRegisterClass)

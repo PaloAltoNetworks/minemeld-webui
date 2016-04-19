@@ -13,12 +13,12 @@ class NodeDetailsSyslogMatcherSourcesController extends NodeDetailStatsControlle
         super.renderMetrics(vm, result);
 
         for (j = 0; j < vm.metrics_names.length; j++) {
-            if (vm.metrics_names[j].indexOf('source.') == 0) {
+            if (vm.metrics_names[j].indexOf('source.') === 0) {
                 ns++;
             }
         }
 
-        vm.sources = ns != 0;
+        vm.sources = ns !== 0;
     }
 }
 
@@ -38,7 +38,7 @@ function syslogMatcherRouterConfig($stateProvider: ng.ui.IStateProvider) {
         ;
 }
 
-/** @ngInject **/
+/** @ngInject */
 function syslogMatcherRegisterClass(NodeDetailResolver: INodeDetailResolverService) {
     NodeDetailResolver.registerClass('minemeld.ft.syslog.SyslogMatcher', {
         tabs: [{
@@ -68,7 +68,7 @@ function syslogMatcherRegisterClass(NodeDetailResolver: INodeDetailResolverServi
     });
 }
 
-console.log("Loading syslog");
+console.log('Loading syslog matcher');
 angular.module('minemeldWebui')
     .config(syslogMatcherRouterConfig)
     .run(syslogMatcherRegisterClass)

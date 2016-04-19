@@ -2,45 +2,44 @@
 
 import { INodeDetailResolverService } from '../../app/services/nodedetailresolver';
 import { IMinemeldConfigService } from '../../app/services/config';
-import { IConfirmService } from '../../app/services/confirm';
 import { NodeDetailInfoController } from './nodedetail.info.controller';
 import { IMinemeldStatus } from  '../../app/services/status';
 
 class ET {
     static CATNAMES: string[] = [
-        "CnC",
-        "Bot",
-        "Spam",
-        "Drop",
-        "SpywareCnC",
-        "OnlineGaming",
-        "DriveBySrc",
-        "ChatServer",
-        "TorNode",
-        "Compromised",
-        "P2P",
-        "Proxy",
-        "IPCheck",
-        "Utility",
-        "DDoSTarget",
-        "Scanner",
-        "Brute_Forcer",
-        "FakeAV",
-        "DynDNS",
-        "Undesirable",
-        "AbusedTLD",
-        "SelfSignedSSL",
-        "Blackhole",
-        "RemoteAccessService",
-        "P2PCnC",
-        "Parking",
-        "VPN",
-        "EXE_Source",
-        "Mobile_CnC",
-        "Mobile_Spyware_CnC",
-        "Skype_SuperNode",
-        "Bitcoin_Related",
-        "DDoSAttacker"
+        'CnC',
+        'Bot',
+        'Spam',
+        'Drop',
+        'SpywareCnC',
+        'OnlineGaming',
+        'DriveBySrc',
+        'ChatServer',
+        'TorNode',
+        'Compromised',
+        'P2P',
+        'Proxy',
+        'IPCheck',
+        'Utility',
+        'DDoSTarget',
+        'Scanner',
+        'Brute_Forcer',
+        'FakeAV',
+        'DynDNS',
+        'Undesirable',
+        'AbusedTLD',
+        'SelfSignedSSL',
+        'Blackhole',
+        'RemoteAccessService',
+        'P2PCnC',
+        'Parking',
+        'VPN',
+        'EXE_Source',
+        'Mobile_CnC',
+        'Mobile_Spyware_CnC',
+        'Skype_SuperNode',
+        'Bitcoin_Related',
+        'DDoSAttacker'
     ];
 
     static numberToName(catnum: number): string {
@@ -67,7 +66,7 @@ function proofpointRouterConfig($stateProvider: ng.ui.IStateProvider) {
         ;
 }
 
-/** @ngInject **/
+/** @ngInject */
 function proofpointRegisterClass(NodeDetailResolver: INodeDetailResolverService) {
     NodeDetailResolver.registerClass('minemeld.ft.proofpoint.EmergingThreatsIP', {
         tabs: [{
@@ -138,8 +137,6 @@ class NodeDetailProofpointInfoController extends NodeDetailInfoController {
     loadSideConfig(): void {
         this.MinemeldConfig.getDataFile(this.nodename + '_side_config')
         .then((result: any) => {
-            var repr: any[];
-
             if (!result) {
                 this.authCode = undefined;
                 this.monitoredCategories = undefined;
@@ -282,7 +279,7 @@ class ProofpointSetAuthCodeController {
         return true;
     }
 
-    /** @ngInject **/
+    /** @ngInject */
     constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance) {
         this.$modalInstance = $modalInstance;
     }
@@ -333,7 +330,7 @@ class ProofpointSetCategoriesController {
     }
 }
 
-console.log("Loading Proofpoint ET");
+console.log('Loading Proofpoint ET');
 angular.module('minemeldWebui')
     .config(proofpointRouterConfig)
     .run(proofpointRegisterClass)

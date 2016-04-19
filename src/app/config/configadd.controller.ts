@@ -52,7 +52,7 @@ export class ConfigAddController {
             this.prototype = p;
 
             toks = p.split('.');
-            this.name = toks[toks.length - 1] + '-' +(new Date().getTime());
+            this.name = toks[toks.length - 1] + '-' + (new Date().getTime());
         }
 
         this.MinemeldPrototype.getPrototypeLibraries().then((result: any) => {

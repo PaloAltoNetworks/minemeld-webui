@@ -14,7 +14,7 @@ export class PrototypedetailController {
     /* @ngInject */
     constructor(MinemeldPrototype: IMinemeldPrototypeService,
                 $stateParams: angular.ui.IStateParamsService,
-                $state:angular.ui.IStateService,
+                $state: angular.ui.IStateService,
                 toastr: any) {
         this.$state = $state;
 
