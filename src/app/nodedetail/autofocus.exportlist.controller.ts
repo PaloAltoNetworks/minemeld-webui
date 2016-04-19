@@ -2,7 +2,6 @@
 
 import { INodeDetailResolverService } from '../../app/services/nodedetailresolver';
 import { IMinemeldConfigService } from '../../app/services/config';
-import { IConfirmService } from '../../app/services/confirm';
 import { NodeDetailInfoController } from './nodedetail.info.controller';
 import { IMinemeldStatus } from  '../../app/services/status';
 
@@ -17,7 +16,7 @@ function autofocusExportListConfig($stateProvider: ng.ui.IStateProvider) {
         ;
 }
 
-/** @ngInject **/
+/** @ngInject */
 function autofocusELRegisterClass(NodeDetailResolver: INodeDetailResolverService) {
     NodeDetailResolver.registerClass('minemeld.ft.autofocus.ExportList', {
         tabs: [{
@@ -135,7 +134,7 @@ class NodeDetailAutofocusELInfoController extends NodeDetailInfoController {
             backdrop: 'static',
             animation: false,
             resolve: {
-                label: () => { return this.label }
+                label: () => { return this.label; }
             }
         });
 
@@ -159,7 +158,7 @@ class AutofocusSetAPIKeyController {
     api_key2: string;
 
     valid(): boolean {
-        if (this.api_key != this.api_key2) {
+        if (this.api_key !== this.api_key2) {
             angular.element('#fgAPIKey1').addClass('has-error');
             angular.element('#fgAPIKey2').addClass('has-error');
 
@@ -175,7 +174,7 @@ class AutofocusSetAPIKeyController {
         return true;
     }
 
-    /** @ngInject **/
+    /** @ngInject */
     constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance) {
         this.$modalInstance = $modalInstance;
     }
@@ -206,7 +205,7 @@ class AutofocusSetLabelController {
         return true;
     }
 
-    /** @ngInject **/
+    /** @ngInject */
     constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance, label: string) {
         this.$modalInstance = $modalInstance;
         this.label = label;
@@ -225,7 +224,7 @@ class AutofocusSetLabelController {
     }
 };
 
-console.log("Loading Autofocus ExportList");
+console.log('Loading Autofocus ExportList');
 angular.module('minemeldWebui')
     .config(autofocusExportListConfig)
     .run(autofocusELRegisterClass)

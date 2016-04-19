@@ -31,7 +31,7 @@ export class MinemeldValidate implements IMinemeldValidateService {
     syslogMinerRule(rule: any): angular.IPromise<any> {
         var r: IMinemeldValidateResource;
 
-        if(!this.MinemeldAuth.authorizationSet) {
+        if (!this.MinemeldAuth.authorizationSet) {
             this.$state.go('login');
             return;
         }

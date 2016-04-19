@@ -4,7 +4,7 @@ import { IMinemeldConfigService, IMinemeldConfigInfo, IMinemeldConfigNode } from
 import { IConfirmService } from '../../app/services/confirm';
 import { IMinemeldSupervisor } from '../../app/services/supervisor';
 
-declare var he:any;
+declare var he: any;
 
 export class ConfigController {
     toastr: any;
@@ -56,7 +56,7 @@ export class ConfigController {
         this.MinemeldConfig.reload('running').then((result: any) => {
             this.$state.go(this.$state.current.name, {}, {reload: true});
         }, (error: any) => {
-            this.toastr.error("ERROR RELOADING CONFIG: " + error.statusText);
+            this.toastr.error('ERROR RELOADING CONFIG: ' + error.statusText);
         });
     }
 
@@ -64,7 +64,7 @@ export class ConfigController {
         this.MinemeldConfig.reload('committed').then((result: any) => {
             this.$state.go(this.$state.current.name, {}, {reload: true});
         }, (error: any) => {
-            this.toastr.error("ERROR RELOADING CONFIG: " + error.statusText);
+            this.toastr.error('ERROR RELOADING CONFIG: ' + error.statusText);
         });
     }
 
@@ -77,7 +77,7 @@ export class ConfigController {
             controllerAs: 'vm',
             bindToController: true,
             resolve: {
-                nodenum: () => { return nodenum }
+                nodenum: () => { return nodenum; }
             },
             backdrop: 'static',
             animation: false
@@ -106,12 +106,12 @@ export class ConfigController {
             controllerAs: 'vm',
             bindToController: true,
             resolve: {
-                nodenum: () => { return nodenum }
+                nodenum: () => { return nodenum; }
             },
             backdrop: 'static',
             animation: false
         });
-                 
+
         mi.result.then((result: any) => {
             if (result !== 'ok') {
                 this.toastr.error('ERROR SAVING NODE CONFIG: ' + result.statusText);
@@ -129,7 +129,7 @@ export class ConfigController {
 
         p = this.ConfirmService.show(
             'DELETE NODE',
-            'Are you sure you want to delete node '+this.nodesConfig[nodenum].name+' ?'
+            'Are you sure you want to delete node ' + this.nodesConfig[nodenum].name + ' ?'
         );
 
         p.then((result: any) => {
@@ -154,7 +154,7 @@ export class ConfigController {
                 (error: any) => { this.toastr.error('ERROR RESTARTING ENGINE: ' + error.statusText); }
             );
         }, (error: any) => {
-            if (error.status == 402) {
+            if (error.status === 402) {
                 this.toastr.error('COMMIT FAILED: ' + error.data.error.message.join(', '), '', { timeOut: 60000 });
             } else {
                 this.toastr.error('ERROR IN COMMIT: ' + error.statusText);
@@ -165,7 +165,7 @@ export class ConfigController {
     }
 
     private setupNodesTable() {
-        var vm: any = this;
+        var vm: ConfigController = this;
 
         this.dtOptions = this.DTOptionsBuilder.fromFnPromise(function() {
             return vm.getConfig();
@@ -179,12 +179,11 @@ export class ConfigController {
         .withOption('createdRow', function(row: HTMLScriptElement, data: any, index: any) {
             var c: string;
             var fc: HTMLElement;
-            var j: number;
 
             if (data.deleted === true) {
                 row.style.display = 'none';
                 return;
-            }            
+            }
 
             row.className += ' config-table-row';
 
@@ -197,7 +196,7 @@ export class ConfigController {
             }
 
             fc = <HTMLElement>(row.childNodes[0]);
-            fc.className += ' '+c;
+            fc.className += ' ' + c;
 
             fc = <HTMLElement>(row.childNodes[4]);
             fc.setAttribute('ng-click', 'vm.configureInputs(' + index + ')');
@@ -235,7 +234,7 @@ export class ConfigController {
             this.DTColumnBuilder.newColumn(null).withTitle('POSITION').renderWith(function(data: any, type: any, full: any) {
                 var c: string;
                 var v: string;
-    
+
                 if ((!full.properties.inputs) || (full.properties.inputs.length === 0)) {
                     c = 'nodes-label-miner';
                     v = 'MINER';
@@ -289,7 +288,7 @@ export class ConfigController {
 
                 return '<span class="label ' + c + '">' + m + '</span>';
             }),
-            this.DTColumnBuilder.newColumn(null).withTitle('').notSortable().renderWith(function(data: any, type, full) {
+            this.DTColumnBuilder.newColumn(null).withTitle('').notSortable().renderWith(function(data: any, type: any, full: any) {
                 return '<span class="config-table-icon glyphicon glyphicon-remove"></span>';
             }).withOption('width', '30px')
         ];
@@ -394,7 +393,10 @@ export class ConfigureInputsController {
         this.inputs = angular.copy(this.nodeConfig.properties.inputs);
         this.availableInputs = this.MinemeldConfig.nodesConfig
             .filter((x: IMinemeldConfigNode) => {
-                if (x.deleted) return false;
+                if (x.deleted) {
+                    return false;
+                }
+
                 return true;
             })
             .map((x: IMinemeldConfigNode) => { return x.name; });

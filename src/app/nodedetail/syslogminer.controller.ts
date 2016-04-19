@@ -9,7 +9,7 @@ import { IMinemeldStatus, IMinemeldStatusNode } from '../../app/services/status'
 declare var he: any;
 declare var YAML: any;
 
-class syslogMinerRulesController {
+class SyslogMinerRulesController {
     MinemeldConfig: IMinemeldConfigService;
     toastr: any;
     DTOptionsBuilder: any;
@@ -33,7 +33,7 @@ class syslogMinerRulesController {
     updateMinemeldStatusPromise: angular.IPromise<any>;
     updateMinemeldStatusInterval: number = 5 * 60 * 1000;
 
-    /** @ngInject **/
+    /** @ngInject */
     constructor(toastr: any, MinemeldConfig: IMinemeldConfigService,
                 DTOptionsBuilder: any, DTColumnBuilder: any,
                 $compile: angular.ICompileService, $scope: angular.IScope,
@@ -68,7 +68,7 @@ class syslogMinerRulesController {
 
         mi = this.$modal.open({
             templateUrl: 'app/nodedetail/syslogminer.edit.modal.html',
-            controller: syslogMinerEditRuleController,
+            controller: SyslogMinerEditRuleController,
             controllerAs: 'vm',
             bindToController: true,
             backdrop: 'static',
@@ -77,7 +77,7 @@ class syslogMinerRulesController {
             resolve: {
                 title: () => { return 'ADD RULE'; },
                 rule: () => { return undefined; },
-                rule_names: () => { return this.rules_list.map((x) => { return x.name.toUpperCase(); }); }
+                rule_names: () => { return this.rules_list.map((x: any) => { return x.name.toUpperCase(); }); }
             }
         });
 
@@ -86,7 +86,7 @@ class syslogMinerRulesController {
             this.saveRulesList().catch((error: any) => {
                     this.toastr.error('ERROR ADDING RULE: ' + error.statusText);
                     this.dtRules.reloadData();
-                }); 
+                });
         });
     }
 
@@ -95,7 +95,7 @@ class syslogMinerRulesController {
 
         mi = this.$modal.open({
             templateUrl: 'app/nodedetail/syslogminer.edit.modal.html',
-            controller: syslogMinerEditRuleController,
+            controller: SyslogMinerEditRuleController,
             controllerAs: 'vm',
             bindToController: true,
             backdrop: 'static',
@@ -104,10 +104,10 @@ class syslogMinerRulesController {
             resolve: {
                 title: () => { return 'EDIT RULE'; },
                 rule: () => { return this.rules_list[rulen]; },
-                rule_names: () => { 
+                rule_names: () => {
                     return this.rules_list
-                        .map((x) => { return x.name.toUpperCase(); })
-                        .filter((x) => { return x != this.rules_list[rulen].name.toUpperCase(); }); 
+                        .map((x: any) => { return x.name.toUpperCase(); })
+                        .filter((x: any) => { return x !== this.rules_list[rulen].name.toUpperCase(); });
                 }
             }
         });
@@ -122,7 +122,7 @@ class syslogMinerRulesController {
                     this.dtRules.reloadData();
                 });
 
-            if (oldname != result.name) {
+            if (oldname !== result.name) {
                 metric = name.replace(/[^a-zA-Z0-9_-]/g, '_');
                 angular.element('#' + metric).attr('id', metric);
                 this.updateMinemeldStatus();
@@ -138,7 +138,7 @@ class syslogMinerRulesController {
 
         p = this.ConfirmService.show(
             'DELETE INDICATOR',
-            'Are you sure you want to delete indicator '+n+' ?'
+            'Are you sure you want to delete indicator ' + n + ' ?'
         );
 
         p.then((result: any) => {
@@ -151,7 +151,7 @@ class syslogMinerRulesController {
     }
 
     private updateMinemeldStatus(): void {
-        var vm: syslogMinerRulesController = this;
+        var vm: SyslogMinerRulesController = this;
 
         this.MinemeldStatus.getMinemeld()
             .then((result: any) => {
@@ -199,7 +199,7 @@ class syslogMinerRulesController {
     }
 
     private setupRulesTable(): void {
-        var vm: syslogMinerRulesController = this;
+        var vm: SyslogMinerRulesController = this;
 
         this.dtOptions = this.DTOptionsBuilder.fromFnPromise(function() {
             return vm.MinemeldConfig.getDataFile(vm.cfd_rules_list).then((result: any) => {
@@ -230,9 +230,9 @@ class syslogMinerRulesController {
         .withOption('createdRow', function(row: HTMLScriptElement, data: any, index: any) {
             var fc: HTMLElement;
             var j: number;
-            
+
             row.className += ' config-table-row';
-            
+
             fc = <HTMLElement>(row.childNodes[4]);
             fc.setAttribute('ng-click', 'vm.removeRule(' + index + ')');
             fc.style.textAlign = 'center';
@@ -287,7 +287,7 @@ class syslogMinerRulesController {
                 }
 
                 if (data.fields) {
-                    result.push(' ' + data.fields.length + ' fields'); 
+                    result.push(' ' + data.fields.length + ' fields');
                 }  else {
                     result.push('0 fields');
                 }
@@ -304,7 +304,7 @@ class syslogMinerRulesController {
     }
 }
 
-class syslogMinerEditRuleController {
+class SyslogMinerEditRuleController {
     $modalInstance: angular.ui.bootstrap.IModalServiceInstance;
     MinemeldValidate: IMinemeldValidateService;
     toastr: any;
@@ -321,7 +321,7 @@ class syslogMinerEditRuleController {
 
     editorChanged: any;
 
-    /** @ngInject **/
+    /** @ngInject */
     constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance,
                 title: string, rule: any, rule_names: string[],
                 MinemeldValidate: IMinemeldValidateService, toastr: any) {
@@ -336,8 +336,8 @@ class syslogMinerEditRuleController {
             this.name = rule.name;
             this.nameReadOnly = true;
 
-            angular.forEach(rule, (value, key) => {
-                if ((key == 'name') || (key == 'comment')) {
+            angular.forEach(rule, (value: any, key: any) => {
+                if ((key === 'name') || (key === 'comment')) {
                     return;
                 }
                 trule[key] = value;
@@ -380,27 +380,26 @@ class syslogMinerEditRuleController {
             result = false;
         }
 
-        if (this.name && this.rule_names.indexOf(this.name.toUpperCase()) != -1) {
+        if (this.name && this.rule_names.indexOf(this.name.toUpperCase()) !== -1) {
             angular.element('#fgRuleName').addClass('has-error');
             result = false;
         } else {
             angular.element('#fgRuleName').removeClass('has-error');
         }
 
-        if ((!this.definition) || (this.definition.length == 0)) {
+        if ((!this.definition) || (this.definition.length === 0)) {
             result = false;
         }
 
         try {
             if (this.definition) {
                 rule = YAML.parse(this.definition);
-                if (typeof(rule) != "object") {
-                    throw "definition is not a valid object";
+                if (typeof(rule) !== 'object') {
+                    throw 'definition is not a valid object';
                 }
                 angular.element('#ruleDefinition').removeClass('has-error');
             }
-        }
-        catch (err) {
+        } catch (err) {
             angular.element('#ruleDefinition').addClass('has-error');
 
             result = false;
@@ -423,7 +422,7 @@ class syslogMinerEditRuleController {
             .then((result: any) => {
                 this.validated = true;
             }, (error: any) => {
-                if (error.status == 400) {
+                if (error.status === 400) {
                     this.toastr.error('ERROR VALIDATING RULE: ' + error.data.error.message);
                 } else {
                     this.toastr.error('ERROR VALIDATING RULE: ' + error.statusText);
@@ -454,13 +453,13 @@ function syslogMinerRouterConfig($stateProvider: ng.ui.IStateProvider) {
     $stateProvider
         .state('nodedetail.syslogminerrules', {
             templateUrl: 'app/nodedetail/syslogminer.rules.html',
-            controller: syslogMinerRulesController,
+            controller: SyslogMinerRulesController,
             controllerAs: 'vm'
         })
         ;
 }
 
-/** @ngInject **/
+/** @ngInject */
 function syslogMinerRegisterClass(NodeDetailResolver: INodeDetailResolverService) {
     NodeDetailResolver.registerClass('minemeld.ft.syslog.SyslogMiner', {
         tabs: [{
@@ -490,7 +489,7 @@ function syslogMinerRegisterClass(NodeDetailResolver: INodeDetailResolverService
     });
 }
 
-console.log("Loading syslog miner");
+console.log('Loading syslog miner');
 angular.module('minemeldWebui')
     .config(syslogMinerRouterConfig)
     .run(syslogMinerRegisterClass)

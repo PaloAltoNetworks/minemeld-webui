@@ -87,7 +87,7 @@ export class NodeDetailGraphController {
                         }
                     }
                 }
-            } while ((clength != members.length) || (tobeadded.length != 0));
+            } while ((clength !== members.length) || (tobeadded.length !== 0));
 
             vm.nodes = nodes;
         }, function(error: any) {

@@ -3,7 +3,7 @@
 import { IMinemeldStatus } from  '../../app/services/status';
 import { IMinemeldMetrics } from '../../app/services/metrics';
 
-declare var he:any;
+declare var he: any;
 
 export class NodesController {
     mmstatus: IMinemeldStatus;
@@ -105,7 +105,7 @@ export class NodesController {
             }
 
             fc = <HTMLElement>(row.childNodes[0]);
-            fc.className += ' '+c;
+            fc.className += ' ' + c;
 
             for (var j = 0; j < row.childNodes.length; j++) {
                 fc = <HTMLElement>(row.childNodes[j]);
@@ -134,7 +134,7 @@ export class NodesController {
             this.DTColumnBuilder.newColumn(null).withTitle('POSITION').renderWith(function(data: any, type: any, full: any) {
                 var c: string;
                 var v: string;
-    
+
                 if (full.inputs.length === 0) {
                     c = 'nodes-label-miner';
                     v = 'MINER';
@@ -162,15 +162,15 @@ export class NodesController {
                 return '<span class="label ' + c + '">' + m + '</span>';
             }),
             this.DTColumnBuilder.newColumn('length').withTitle('INDICATORS'),
-            this.DTColumnBuilder.newColumn('statistics').withTitle('ADD/REM/AO').notSortable().renderWith(function(data: any, type, full) {
+            this.DTColumnBuilder.newColumn('statistics').withTitle('ADD/REM/AO').notSortable().renderWith(function(data: any, type: any, full: any) {
                 var stats: string[] = ['<ul>'];
                 var s: number;
 
                 s = 0;
-                if(data.added) {
+                if (data.added) {
                     s = data.added;
                 }
-                stats.push('<li>ADDED: ' + s+ '</li>');
+                stats.push('<li>ADDED: ' + s + '</li>');
 
                 s  = 0;
                 if (data.aged_out) {
@@ -187,7 +187,7 @@ export class NodesController {
 
                 return stats.join('');
             }),
-            this.DTColumnBuilder.newColumn('statistics').withTitle('UPDATES').notSortable().renderWith(function(data: any, type, full) {
+            this.DTColumnBuilder.newColumn('statistics').withTitle('UPDATES').notSortable().renderWith(function(data: any, type: any, full: any) {
                 var stats: string[] = ['<ul>'];
                 var s: number;
 
@@ -201,7 +201,7 @@ export class NodesController {
                 if (data['update.processed']) {
                     s = data['update.processed'];
                 }
-                stats.push('<li>PROCESSED: ' + s+ '</li>');
+                stats.push('<li>PROCESSED: ' + s + '</li>');
 
                 s = 0;
                 if  (data['update.tx']) {
@@ -213,7 +213,7 @@ export class NodesController {
 
                 return stats.join('');
             }),
-            this.DTColumnBuilder.newColumn('statistics').withTitle('WITHDRAWS').notSortable().renderWith(function(data: any, type, full) {
+            this.DTColumnBuilder.newColumn('statistics').withTitle('WITHDRAWS').notSortable().renderWith(function(data: any, type: any, full: any) {
                 var stats: string[] = ['<ul>'];
                 var s: number;
 
@@ -227,7 +227,7 @@ export class NodesController {
                 if (data['withdraw.processed']) {
                     s = data['withdraw.processed'];
                 }
-                stats.push('<li>PROCESSED: '  + s+ '</li>');
+                stats.push('<li>PROCESSED: '  + s + '</li>');
 
                 s = 0;
                 if (data['withdraw.tx']) {
@@ -239,7 +239,7 @@ export class NodesController {
 
                 return stats.join('');
             }),
-            this.DTColumnBuilder.newColumn(null).withTitle('').notSortable().renderWith(function(data: any, type, full) {
+            this.DTColumnBuilder.newColumn(null).withTitle('').notSortable().renderWith(function(data: any, type: any, full: any) {
                 return '<span class="nodes-table-chevron glyphicon glyphicon-chevron-right"></span>';
             }).withOption('width', '30px')
         ];

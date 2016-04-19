@@ -94,7 +94,7 @@ export class IndicatorAddController {
         });
     }
 
-    private typeSelected(item, model) {
+    typeSelected(item: number, model: any) {
         var newnodes: string[];
 
         this.currAvailableNodes = this.availableNodes[item];
@@ -110,7 +110,7 @@ export class IndicatorAddController {
         this.nodes = newnodes;
     }
 
-    private save() {
+    save() {
         var rindicator: any = {
             indicator: this.indicator,
             type: this.$type
@@ -138,11 +138,11 @@ export class IndicatorAddController {
         this.$state.go('nodes');
     }
 
-    private back() {
+    back() {
         this.$rootScope.mmBack('nodes');
     }
 
-    private valid(): boolean {
+    valid(): boolean {
         if (!this.indicator) {
             return false;
         }
@@ -157,7 +157,7 @@ export class IndicatorAddController {
             return false;
         }
 
-        if (!this.nodes || this.nodes.length == 0) {
+        if (!this.nodes || this.nodes.length === 0) {
             return false;
         }
 
@@ -171,12 +171,12 @@ export class IndicatorAddController {
         var result: number;
 
         toks = addr.split('.');
-        if (toks.length != 4) {
+        if (toks.length !== 4) {
             return -1;
         }
 
         result = 0;
-        for (j = toks.length-1; j >= 0; j--) {
+        for (j = toks.length - 1; j >= 0; j--) {
             tn = parseInt(toks[j], 10);
             if (isNaN(tn)) {
                 return -1;
@@ -185,7 +185,7 @@ export class IndicatorAddController {
                 return -1;
             }
 
-            result += tn * (1 << 8*j);
+            result += tn * (1 << 8 * j);
         }
 
         return result;
@@ -197,7 +197,7 @@ export class IndicatorAddController {
         var nmbits: number;
         var t0, t1: number;
 
-        if (!this.$type || this.$type != 'IPv4') {
+        if (!this.$type || this.$type !== 'IPv4') {
             return true;
         }
 
@@ -206,7 +206,7 @@ export class IndicatorAddController {
             return false;
         }
 
-        if (addresses.length == 2) {
+        if (addresses.length === 2) {
             t0 = this.validateIPv4(addresses[0]);
             if (t0 < 0) {
                 return false;
@@ -225,7 +225,7 @@ export class IndicatorAddController {
             return false;
         }
 
-        if (toks.length == 2) {
+        if (toks.length === 2) {
             nmbits = parseInt(toks[1], 10);
             if (isNaN(nmbits)) {
                 return false;

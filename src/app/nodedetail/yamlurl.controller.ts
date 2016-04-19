@@ -2,11 +2,10 @@
 
 import { INodeDetailResolverService } from '../../app/services/nodedetailresolver';
 import { IMinemeldConfigService } from '../../app/services/config';
-import { NodeDetailStatsController } from './nodedetail.stats.controller';
 import { IConfirmService } from '../../app/services/confirm';
 import { YamlConfigureCommentController, YamlConfigureShareLevelController } from './yamlmodals.controller';
 
-declare var he:any;
+declare var he: any;
 
 class NodeDetailYamlURLIndicatorsController {
     MinemeldConfig: IMinemeldConfigService;
@@ -28,7 +27,7 @@ class NodeDetailYamlURLIndicatorsController {
 
     indicators: any[];
 
-    /** @ngInject **/
+    /** @ngInject */
     constructor(toastr: any, MinemeldConfig: IMinemeldConfigService,
                 $scope: angular.IScope, DTOptionsBuilder: any,
                 DTColumnBuilder: any, $compile: angular.ICompileService,
@@ -76,7 +75,7 @@ class NodeDetailYamlURLIndicatorsController {
 
         p = this.ConfirmService.show(
             'DELETE INDICATOR',
-            'Are you sure you want to delete indicator '+i+' ?'
+            'Are you sure you want to delete indicator ' + i + ' ?'
         );
 
         p.then((result: any) => {
@@ -158,7 +157,7 @@ class NodeDetailYamlURLIndicatorsController {
         });
 
         mi.result.then((result: any) => {
-            if (!result || result.length == 0) {
+            if (!result || result.length === 0) {
                 if (this.indicators[nodenum].comment) {
                     delete this.indicators[nodenum].comment;
                 }
@@ -243,20 +242,20 @@ class NodeDetailYamlURLIndicatorsController {
                 .withOption('defaultContent', ' ').withOption('width', '130px').renderWith(function(data: any, type: any, full: any) {
                     var c: string;
                     var v: string;
-        
-                    if (data == 'yellow') {
+
+                    if (data === 'yellow') {
                         c = 'label-warning';
                         v = 'YELLOW';
-                    } else if (data == 'red') {
+                    } else if (data === 'red') {
                         c = 'label-danger';
                         v = 'RED';
-                    } else if (data == 'green') {
+                    } else if (data === 'green') {
                         c = 'label-success';
                         v = 'GREEN';
                     } else {
                         return '';
                     }
-    
+
                     return '<span class="label ' + c + '">' + v + '</span>';
             }),
             this.DTColumnBuilder.newColumn('comment').withTitle('COMMENT').withOption('defaultContent', ' ').renderWith(function(data: any, type: any, full: any) {
@@ -295,7 +294,7 @@ class YamlURLAddIndicatorController {
         { value: 'outbound' }
     ];
 
-    /** @ngInject **/
+    /** @ngInject */
     constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance) {
         this.$modalInstance = $modalInstance;
     }
@@ -348,7 +347,7 @@ function yamlURLRouterConfig($stateProvider: ng.ui.IStateProvider) {
         ;
 }
 
-/** @ngInject **/
+/** @ngInject */
 function yamlURLRegisterClass(NodeDetailResolver: INodeDetailResolverService) {
     NodeDetailResolver.registerClass('minemeld.ft.local.YamlURLFT', {
         tabs: [{
@@ -378,7 +377,7 @@ function yamlURLRegisterClass(NodeDetailResolver: INodeDetailResolverService) {
     });
 }
 
-console.log("Loading yamlurl");
+console.log('Loading yamlurl');
 angular.module('minemeldWebui')
     .config(yamlURLRouterConfig)
     .run(yamlURLRegisterClass)

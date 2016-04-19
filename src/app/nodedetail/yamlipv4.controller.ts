@@ -2,11 +2,10 @@
 
 import { INodeDetailResolverService } from '../../app/services/nodedetailresolver';
 import { IMinemeldConfigService } from '../../app/services/config';
-import { NodeDetailStatsController } from './nodedetail.stats.controller';
 import { IConfirmService } from '../../app/services/confirm';
 import { YamlConfigureCommentController, YamlConfigureShareLevelController } from './yamlmodals.controller';
 
-declare var he:any;
+declare var he: any;
 
 class ConfigureDirectionController {
     origDirection: string;
@@ -20,7 +19,7 @@ class ConfigureDirectionController {
         { value: 'outbound' }
     ];
 
-    /** @ngInject **/
+    /** @ngInject */
     constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance,
                 indicator: string, direction: string) {
         this.$modalInstance = $modalInstance;
@@ -58,7 +57,7 @@ class NodeDetailYamlIPv4IndicatorsController {
 
     indicators: any[];
 
-    /** @ngInject **/
+    /** @ngInject */
     constructor(toastr: any, MinemeldConfig: IMinemeldConfigService,
                 $scope: angular.IScope, DTOptionsBuilder: any,
                 DTColumnBuilder: any, $compile: angular.ICompileService,
@@ -106,7 +105,7 @@ class NodeDetailYamlIPv4IndicatorsController {
 
         p = this.ConfirmService.show(
             'DELETE INDICATOR',
-            'Are you sure you want to delete indicator '+i+' ?'
+            'Are you sure you want to delete indicator ' + i + ' ?'
         );
 
         p.then((result: any) => {
@@ -148,9 +147,9 @@ class NodeDetailYamlIPv4IndicatorsController {
             backdrop: 'static',
             animation: false
         });
-                 
+
         mi.result.then((result: any) => {
-            if(!result) {
+            if (!result) {
                 if (this.indicators[nodenum].direction) {
                     delete this.indicators[nodenum].direction;
                 }
@@ -228,7 +227,7 @@ class NodeDetailYamlIPv4IndicatorsController {
         });
 
         mi.result.then((result: any) => {
-            if (!result || result.length == 0) {
+            if (!result || result.length === 0) {
                 if (this.indicators[nodenum].comment) {
                     delete this.indicators[nodenum].comment;
                 }
@@ -318,10 +317,10 @@ class NodeDetailYamlIPv4IndicatorsController {
                     var c: string;
                     var v: string;
 
-                    if (data == 'inbound') {
+                    if (data === 'inbound') {
                         c = 'label-info';
                         v = 'INBOUND';
-                    } else if (data == 'outbound') {
+                    } else if (data === 'outbound') {
                         c = 'label-primary';
                         v = 'OUTBOUND';
                     } else {
@@ -334,20 +333,20 @@ class NodeDetailYamlIPv4IndicatorsController {
                 .withOption('defaultContent', ' ').withOption('width', '130px').renderWith(function(data: any, type: any, full: any) {
                     var c: string;
                     var v: string;
-        
-                    if (data == 'yellow') {
+
+                    if (data === 'yellow') {
                         c = 'label-warning';
                         v = 'YELLOW';
-                    } else if (data == 'red') {
+                    } else if (data === 'red') {
                         c = 'label-danger';
                         v = 'RED';
-                    } else if (data == 'green') {
+                    } else if (data === 'green') {
                         c = 'label-success';
                         v = 'GREEN';
                     } else {
                         return '';
                     }
-    
+
                     return '<span class="label ' + c + '">' + v + '</span>';
             }),
             this.DTColumnBuilder.newColumn('comment').withTitle('COMMENT').withOption('defaultContent', ' ').renderWith(function(data: any, type: any, full: any) {
@@ -386,7 +385,7 @@ class YamlIPv4AddIndicatorController {
         { value: 'outbound' }
     ];
 
-    /** @ngInject **/
+    /** @ngInject */
     constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance) {
         this.$modalInstance = $modalInstance;
     }
@@ -398,7 +397,7 @@ class YamlIPv4AddIndicatorController {
         if (this.share_level) {
             result.share_level = this.share_level;
         }
-        if ((this.direction == 'inbound') || (this.direction == 'outbound')) {
+        if ((this.direction === 'inbound') || (this.direction === 'outbound')) {
             result.direction = this.direction;
         }
         if (this.comment) {
@@ -433,12 +432,12 @@ class YamlIPv4AddIndicatorController {
         var result: number;
 
         toks = addr.split('.');
-        if (toks.length != 4) {
+        if (toks.length !== 4) {
             return -1;
         }
 
         result = 0;
-        for (j = toks.length-1; j >= 0; j--) {
+        for (j = toks.length - 1; j >= 0; j--) {
             tn = parseInt(toks[j], 10);
             if (isNaN(tn)) {
                 return -1;
@@ -447,7 +446,7 @@ class YamlIPv4AddIndicatorController {
                 return -1;
             }
 
-            result += tn * (1 << 8*j);
+            result += tn * (1 << 8 * j);
         }
 
         return result;
@@ -464,7 +463,7 @@ class YamlIPv4AddIndicatorController {
             return false;
         }
 
-        if (addresses.length == 2) {
+        if (addresses.length === 2) {
             t0 = this.validateIPv4(addresses[0]);
             if (t0 < 0) {
                 return false;
@@ -483,7 +482,7 @@ class YamlIPv4AddIndicatorController {
             return false;
         }
 
-        if (toks.length == 2) {
+        if (toks.length === 2) {
             nmbits = parseInt(toks[1], 10);
             if (isNaN(nmbits)) {
                 return false;
@@ -508,7 +507,7 @@ function yamlIPv4RouterConfig($stateProvider: ng.ui.IStateProvider) {
         ;
 }
 
-/** @ngInject **/
+/** @ngInject */
 function yamlIPv4RegisterClass(NodeDetailResolver: INodeDetailResolverService) {
     NodeDetailResolver.registerClass('minemeld.ft.local.YamlIPv4FT', {
         tabs: [{
@@ -538,7 +537,7 @@ function yamlIPv4RegisterClass(NodeDetailResolver: INodeDetailResolverService) {
     });
 }
 
-console.log("Loading yamlipv4");
+console.log('Loading yamlipv4');
 angular.module('minemeldWebui')
     .config(yamlIPv4RouterConfig)
     .run(yamlIPv4RegisterClass)

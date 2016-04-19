@@ -70,9 +70,8 @@ export class MinemeldConfig implements IMinemeldConfigService {
 
     refresh() {
         var r: angular.resource.IResourceClass<angular.resource.IResource<any>>;
-        var params: any = {};
 
-        if(!this.MinemeldAuth.authorizationSet) {
+        if (!this.MinemeldAuth.authorizationSet) {
             this.$state.go('login');
             return;
         }
@@ -102,7 +101,7 @@ export class MinemeldConfig implements IMinemeldConfigService {
 
             return this.nodesConfig;
         }, (error: any) => {
-            if (error.status == 500) {
+            if (error.status === 500) {
                 return this.reload();
             }
 
@@ -118,7 +117,7 @@ export class MinemeldConfig implements IMinemeldConfigService {
         var r: angular.resource.IResourceClass<angular.resource.IResource<any>>;
         var params: any = {};
 
-        if(!this.MinemeldAuth.authorizationSet) {
+        if (!this.MinemeldAuth.authorizationSet) {
             this.$state.go('login');
             return;
         }
@@ -130,19 +129,19 @@ export class MinemeldConfig implements IMinemeldConfigService {
             }
         });
 
-        if(config) {
+        if (config) {
             params.c = config;
         }
 
         return r.get(params).$promise.then((result: any) => {
             return this.refresh();
-        });        
+        });
     }
 
     commit() {
         var r: IMinemeldConfigResource;
 
-        if(!this.MinemeldAuth.authorizationSet) {
+        if (!this.MinemeldAuth.authorizationSet) {
             this.$state.go('login');
             return;
         }
@@ -160,7 +159,7 @@ export class MinemeldConfig implements IMinemeldConfigService {
     saveNodeConfig(noden: number): angular.IPromise<any> {
         var r: IMinemeldConfigResource;
 
-        if(!this.MinemeldAuth.authorizationSet) {
+        if (!this.MinemeldAuth.authorizationSet) {
             this.$state.go('login');
             return;
         }
@@ -212,7 +211,7 @@ export class MinemeldConfig implements IMinemeldConfigService {
     deleteNode(noden: number): angular.IPromise<any> {
         var r: IMinemeldConfigResource;
 
-        if(!this.MinemeldAuth.authorizationSet) {
+        if (!this.MinemeldAuth.authorizationSet) {
             this.$state.go('login');
             return;
         }
@@ -225,19 +224,19 @@ export class MinemeldConfig implements IMinemeldConfigService {
                 headers: this.MinemeldAuth.getAuthorizationHeaders()
             }
         }));
-                
+
         return r.del({ version: this.nodesConfig[noden].version }).$promise
         .then((result: any) => {
             return result.result;
         }).then((result: any) => {
             this.changed = true;
-        });        
+        });
     }
 
     getDataFile(datafilename: string): angular.IPromise<any> {
         var r: IMinemeldConfigResource;
 
-        if(!this.MinemeldAuth.authorizationSet) {
+        if (!this.MinemeldAuth.authorizationSet) {
             this.$state.go('login');
             return;
         }
@@ -250,12 +249,12 @@ export class MinemeldConfig implements IMinemeldConfigService {
                 headers: this.MinemeldAuth.getAuthorizationHeaders()
             }
         }));
-               
+
         return r.get().$promise
         .then((result: any) => {
             return result.result;
         }, (error: any) => {
-            if (error.status == 400) {
+            if (error.status === 400) {
                 return null;
             }
 
@@ -267,7 +266,7 @@ export class MinemeldConfig implements IMinemeldConfigService {
         var r: IMinemeldConfigResource;
         var params: any = {};
 
-        if(!this.MinemeldAuth.authorizationSet) {
+        if (!this.MinemeldAuth.authorizationSet) {
             this.$state.go('login');
             return;
         }
@@ -295,7 +294,7 @@ export class MinemeldConfig implements IMinemeldConfigService {
         var r: IMinemeldConfigResource;
         var params: any = {};
 
-        if(!this.MinemeldAuth.authorizationSet) {
+        if (!this.MinemeldAuth.authorizationSet) {
             this.$state.go('login');
             return;
         }
@@ -316,6 +315,6 @@ export class MinemeldConfig implements IMinemeldConfigService {
         return r.post(params, JSON.stringify(data)).$promise
             .then((result: any) => {
                 return result.result;
-            });        
+            });
     }
 }

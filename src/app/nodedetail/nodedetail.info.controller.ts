@@ -95,7 +95,7 @@ export class NodeDetailInfoController {
         vm.mmstatus.getConfig()
         .then(function(result: any) {
             vm.nodeConfig = result.nodes[vm.nodename];
-            if (vm.nodeConfig.config && (Object.keys(vm.nodeConfig.config).length == 0)) {
+            if (vm.nodeConfig.config && (Object.keys(vm.nodeConfig.config).length === 0)) {
                 vm.nodeConfig.config = null;
             }
         }, function(error: any) {
@@ -108,7 +108,7 @@ export class NodeDetailInfoController {
                 1
             );
         })
-        ;        
+        ;
     }
 
     private destroy() {

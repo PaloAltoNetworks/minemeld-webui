@@ -25,7 +25,7 @@ export class LoginController {
     }
 
     public submit() {
-        var r: angular.resource.IResourceClass<angular.resource.IResource<any>>;;
+        var r: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
         this.checking = true;
         r = this.$resource('/status/minemeld', {}, {
@@ -44,7 +44,7 @@ export class LoginController {
                 this.$state.go('dashboard');
             }, (error: any) => {
                 this.checking = false;
-                this.toastr.error("ERROR CHECKING CREDENTIALS: " + error.statusText);
+                this.toastr.error('ERROR CHECKING CREDENTIALS: ' + error.statusText);
             });
     }
 }

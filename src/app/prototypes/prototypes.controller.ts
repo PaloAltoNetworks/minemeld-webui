@@ -52,6 +52,10 @@ export class PrototypesController {
                         }
                         curlibrary = result[l];
 
+                        if (!curlibrary || !curlibrary.prototypes) {
+                            continue;
+                        }
+
                         for (p in curlibrary.prototypes) {
                             if (!curlibrary.prototypes.hasOwnProperty(p)) {
                                 continue;

@@ -8,7 +8,7 @@ export class YamlConfigureShareLevelController {
 
     share_level: string;
 
-    /** @ngInject **/
+    /** @ngInject */
     constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance,
                 indicator: string, share_level: string) {
         this.$modalInstance = $modalInstance;
@@ -34,7 +34,7 @@ export class YamlConfigureCommentController {
 
     comment: string;
 
-    /** @ngInject **/
+    /** @ngInject */
     constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance,
                 indicator: string, comment: string) {
         this.$modalInstance = $modalInstance;

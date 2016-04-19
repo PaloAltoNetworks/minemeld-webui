@@ -2,7 +2,6 @@
 
 import { INodeDetailResolverService } from '../../app/services/nodedetailresolver';
 import { IMinemeldConfigService } from '../../app/services/config';
-import { IConfirmService } from '../../app/services/confirm';
 import { NodeDetailInfoController } from './nodedetail.info.controller';
 import { IMinemeldStatus } from  '../../app/services/status';
 
@@ -17,7 +16,7 @@ function recordedFutureRouterConfig($stateProvider: ng.ui.IStateProvider) {
         ;
 }
 
-/** @ngInject **/
+/** @ngInject */
 function recordedFutureRegisterClass(NodeDetailResolver: INodeDetailResolverService) {
     NodeDetailResolver.registerClass('minemeld.ft.recordedfuture.IPRiskList', {
         tabs: [{
@@ -126,7 +125,7 @@ class RecorededFutureSetTokenController {
         return true;
     }
 
-    /** @ngInject **/
+    /** @ngInject */
     constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance) {
         this.$modalInstance = $modalInstance;
     }
@@ -144,7 +143,7 @@ class RecorededFutureSetTokenController {
     }
 };
 
-console.log("Loading RecordedFuture");
+console.log('Loading RecordedFuture');
 angular.module('minemeldWebui')
     .config(recordedFutureRouterConfig)
     .run(recordedFutureRegisterClass)
