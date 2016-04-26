@@ -26,10 +26,10 @@ git clone https://github.com/PaloAltoNetworks/minemeld-webui.git
 cd minemeld-webui
 ```
 
-Install gulp, bower and TSD
+Install gulp, bower and typings
 
 ```
-npm install -g gulp tsd bower@1.6.5
+npm install -g gulp typings bower
 ```
 
 Install the package dev deps
@@ -44,10 +44,10 @@ Install the bower deps
 bower install
 ```
 
-Install the TSD type files
+Install typings type files
 
 ````
-tsd install
+typings install
 ```
 
 Build the WebUI in the dist subdirectory
