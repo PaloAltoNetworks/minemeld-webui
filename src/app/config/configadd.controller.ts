@@ -1,4 +1,4 @@
-/// <reference path="../../../.tmp/typings/tsd.d.ts" />
+/// <reference path="../../../typings/main.d.ts" />
 
 import { IMinemeldConfigService, IMinemeldConfigNode } from  '../../app/services/config';
 import { IMinemeldPrototypeService } from '../../app/services/prototype';

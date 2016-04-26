@@ -1,4 +1,4 @@
-/// <reference path="../../../.tmp/typings/tsd.d.ts" />
+/// <reference path="../../../typings/main.d.ts" />
 
 export interface IConfirmService {
     show(title: string, msg: string): angular.IPromise<any>;
