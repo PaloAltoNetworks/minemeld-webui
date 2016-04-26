@@ -1,4 +1,4 @@
-/// <reference path="../../../.tmp/typings/tsd.d.ts" />
+/// <reference path="../../../typings/main.d.ts" />
 
 import { IMinemeldPrototypeService, IMinemeldPrototypeLibrary, IMinemeldPrototype, IMinemeldPrototypeMetadata } from '../../app/services/prototype';
 

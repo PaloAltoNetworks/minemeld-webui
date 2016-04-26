@@ -1,4 +1,4 @@
-/// <reference path="../../../.tmp/typings/tsd.d.ts" />
+/// <reference path="../../../typings/main.d.ts" />
 
 import { INodeDetailResolverService } from '../../app/services/nodedetailresolver';
 import { NodeDetailStatsController } from './nodedetail.stats.controller';

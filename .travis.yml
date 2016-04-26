@@ -15,7 +15,7 @@ env:
 before_script:
   - npm install -g bower
   - bower install
-  - tsd install
+  - typings install
 
 script:
   - gulp build

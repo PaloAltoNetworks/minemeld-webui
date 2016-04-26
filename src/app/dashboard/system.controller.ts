@@ -1,4 +1,4 @@
-/// <reference path="../../../.tmp/typings/tsd.d.ts" />
+/// <reference path="../../../typings/main.d.ts" />
 
 import { IMinemeldStatus } from  '../../app/services/status';
 import { IMinemeldSupervisor } from '../../app/services/supervisor';

@@ -2,5 +2,10 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs"
-  }
+  },
+  "exclude": [
+    "bower_components",
+    "node_modules",
+    "typings"
+  ]
 }
