@@ -40,6 +40,13 @@
         "assets/fonts/bootstrap/glyphicons-halflings-regular.woff2"
       ]
     },
+    "angular-datatables": {
+      "main": [
+        "dist/angular-datatables.js",
+        "dist/plugins/bootstrap/angular-datatables.bootstrap.js",
+        "dist/plugins/bootstrap/datatables.bootstrap.min.css"
+      ]
+    },
     "ace-builds": {
       "main": [
         "src-min-noconflict/ace.js",
