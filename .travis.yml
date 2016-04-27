@@ -13,10 +13,10 @@ env:
   - CXX=g++-4.8
 
 before_script:
-  - npm install -g bower nsp
-  - nsp check
+  - "export PATH=$(npm bin):$PATH"
   - bower install
   - typings install
+  - nsp check
 
 script:
   - gulp build

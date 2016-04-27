@@ -4,7 +4,7 @@
   "dependencies": {},
   "scripts": {
     "test": "gulp test",
-    "preinstall": "lockdown"
+    "postinstall": "node_modules/.bin/lockdown"
   },
   "devDependencies": {
     "awesome-typescript-loader": "~0.14.0",
