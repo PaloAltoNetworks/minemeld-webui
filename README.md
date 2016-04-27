@@ -26,16 +26,16 @@ git clone https://github.com/PaloAltoNetworks/minemeld-webui.git
 cd minemeld-webui
 ```
 
-Install gulp, bower and typings
-
-```
-npm install -g gulp typings bower
-```
-
 Install the package dev deps
 
 ```
 npm install
+```
+
+Add local node modules to the PATH
+
+```
+export PATH=$(npm bin):$PATH
 ```
 
 Install the bower deps
@@ -48,6 +48,12 @@ Install typings type files
 
 ````
 typings install
+```
+
+Check for known security issues on node packages
+
+```
+nsp check
 ```
 
 Build the WebUI in the dist subdirectory
