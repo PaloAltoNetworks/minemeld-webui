@@ -13,7 +13,8 @@ env:
   - CXX=g++-4.8
 
 before_script:
-  - npm install -g bower
+  - npm install -g bower nsp
+  - nsp check
   - bower install
   - typings install
 
