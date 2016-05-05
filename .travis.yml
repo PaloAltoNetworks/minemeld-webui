@@ -14,7 +14,7 @@ env:
 
 before_script:
   - "export PATH=$(npm bin):$PATH"
-  - bower install
+  - bower install --strict-shrinkwrap
   - typings install
   - nsp check
 
