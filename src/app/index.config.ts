@@ -1,5 +1,9 @@
 /** @ngInject */
-export function config($logProvider: ng.ILogProvider, toastrConfig: any, cfpLoadingBarProvider: any) {
+export function config($logProvider: ng.ILogProvider, $compileProvider: angular.ICompileProvider,
+                       toastrConfig: any, cfpLoadingBarProvider: any) {
+  // https://code.angularjs.org/1.5.5/docs/guide/production
+  $compileProvider.debugInfoEnabled(false);
+
   // enable log
   $logProvider.debugEnabled(true);
 
