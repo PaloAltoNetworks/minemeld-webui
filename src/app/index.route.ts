@@ -98,6 +98,12 @@ export function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterPro
       controller: 'IndicatorAddController',
       controllerAs: 'vm'
     })
+    .state('logs', {
+      url: '/logs',
+      templateUrl: 'app/logs/view.html',
+      controller: 'LogsController',
+      controllerAs: 'vm'
+    })
     ;
 
   $urlRouterProvider.otherwise('/dashboard');

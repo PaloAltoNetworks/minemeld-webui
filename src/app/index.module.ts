@@ -17,6 +17,7 @@ import { ConfigController } from './config/config.controller';
 import { ConfigAddController } from './config/configadd.controller';
 import { AboutController } from './about/about.controller';
 import { IndicatorAddController } from './indicatoradd/indicatoradd.controller';
+import { LogsController } from './logs/logs.controller';
 import { appNavbar } from '../app/components/navbar/navbar.directive';
 import { LoginController } from './login/login.controller';
 import { MinemeldStatus } from './services/status';
@@ -28,6 +29,8 @@ import { MinemeldValidate } from './services/validate';
 import { NodeDetailResolver } from './services/nodedetailresolver';
 import { MinemeldSupervisor } from './services/supervisor';
 import { ConfirmService } from './services/confirm';
+import { MinemeldEvents } from './services/events';
+import { MinemeldTraced } from './services/traced';
 import { megaNumber } from './filters/megaNumber';
 import { minemeldOptions } from '../app/components/options/options.directive';
 import { nodeConfig } from '../app/components/nodeconfig/nodeconfig.directive';
@@ -76,6 +79,7 @@ module minemeldWebui {
   .controller('ConfigAddController', ConfigAddController)
   .controller('IndicatorAddController', IndicatorAddController)
   .controller('AboutController', AboutController)
+  .controller('LogsController', LogsController)
   .directive('minemeldOptions', minemeldOptions)
   .directive('nodeConfig', nodeConfig)
   .directive('appNavbar', appNavbar)
@@ -89,6 +93,8 @@ module minemeldWebui {
   .service('ConfirmService', ConfirmService)
   .service('MinemeldSupervisor', MinemeldSupervisor)
   .service('MinemeldValidate', MinemeldValidate)
+  .service('MinemeldEvents', MinemeldEvents)
+  .service('MinemeldTraced', MinemeldTraced)
   .filter('megaNumber', megaNumber)
   .run(minemeldInit)
   ;
