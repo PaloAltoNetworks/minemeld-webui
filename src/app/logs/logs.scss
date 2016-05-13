@@ -1,0 +1,51 @@
+#logs-table {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    background: #fff;
+}
+
+#logs-table-header {
+    border-top: 1px solid $table-border-color;
+    border-bottom: 2px solid $table-border-color;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px;
+    margin-top: 10px;
+}
+
+.logs-entry {
+    background: #fff;
+    border-bottom: 1px solid $table-border-color;
+    padding: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 100%;
+}
+
+.logs-entry i {
+    font-size: 11px;
+    color: lighten(#000, 55%);
+}
+
+.logs-entry-msg {
+    color: #fff;
+    background: $panw-green;
+    padding: 5px;
+    font-weight: 500;
+    font-size: 12px;
+}
+
+.logs-entry-timestamp {
+    color: lighten(#000, 55%);
+}
+
+.logs-entry-field {
+    padding: 2px 5px;
+    background: lighten(#000, 90%);
+    border-radius: .2em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

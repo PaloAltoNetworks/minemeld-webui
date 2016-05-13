@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="col-sm-12 col-md-12">
+    <form ng-keyup="$event.keyCode == 13 && vm.submitQuery()" class="form-horizontal has-feedback m-b-xs">
+        <input type="text" ng-model="vm.query" class="form-control" placeholder="Search">
+        <i class="glyphicon glyphicon-search form-control-feedback"></i>
+    </form>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12 col-md-12">
+    <div id="logs-table-header">
+      LOGS
+    </div>
+    <div id="logs-table">
+      <div ng-if="vm.msgTop" class="logs-entry-msg">{{ vm.msgTop }}</div>
+      <div class="logs-entry" ng-repeat="log in vm.logs">
+        <span class="logs-entry-timestamp">{{ log.timestamp | date:'d/M/yyyy HH:mm:ss Z' }}</span>
+        <span class="logs-entry-field">{{ log.parsed.source }}</span>
+        <span class="logs-entry-field">{{ log.parsed.log.op }}</span>
+        <span class="logs-entry-field">{{ log.parsed.log.indicator }}</span>
+        <i>{{ log.log }}</i>
+      </div>
+      <div ng-if="vm.msgBottom" class="logs-entry-msg">{{ vm.msgBottom }}</div>
+    </div>
+  </div>
+</div>
