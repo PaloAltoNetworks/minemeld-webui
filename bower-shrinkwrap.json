@@ -14,6 +14,9 @@
   "https://github.com/ajaxorg/ace-builds.git": {
     "1.2.3": "e94cb3c7ffccfb2e565cc857f07a988c0989e527"
   },
+  "https://github.com/amvtek/EventSource.git": {
+    "0.9.7": "32c3cfc08b2a3a84a6533063fee823e62987000f"
+  },
   "https://github.com/angular-ui/angular-ui-router-bower.git": {
     "0.2.18": "2b8d5241b4c631ca2aef079bb96690b213eff449"
   },
