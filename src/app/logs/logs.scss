@@ -25,9 +25,16 @@
     width: 100%;
 }
 
-.logs-entry i {
+.logs-entry:hover {
+    background-color: darken($body-bg, 5%);
+    cursor: pointer;
+}
+
+.logs-entry-kv {
     font-size: 11px;
     color: lighten(#000, 55%);
+    padding-right: 2px;
+    font-style: italic;
 }
 
 .logs-entry-msg {
@@ -38,14 +45,37 @@
     font-size: 12px;
 }
 
+.logs-entry-msg a {
+    color: #fff;
+    cursor: pointer;
+}
+
 .logs-entry-timestamp {
     color: lighten(#000, 55%);
 }
 
 .logs-entry-field {
     padding: 2px 5px;
-    background: lighten(#000, 90%);
     border-radius: .2em;
     white-space: nowrap;
     text-overflow: ellipsis;
+}
+.logs-entry-field:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.logs-entry-source {
+    color: darken(#788AA3, 20%);
+    background: lighten(#788AA3, 30%);
+}
+
+.logs-entry-op {
+    color: darken(#92B6B1, 30%);
+    background: lighten(#92B6B1, 20%);
+}
+
+.logs-entry-indicator {
+    color: darken(#B2C9AB, 40%);
+    background: lighten(#B2C9AB, 10%);
 }

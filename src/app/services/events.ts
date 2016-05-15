@@ -84,10 +84,8 @@ export class MinemeldEvents implements IMinemeldEvents {
         var j: number = this.subscriptions.length;
         var csub: ISubscription;
 
-        console.log('unsubscribe', _id);
         while (j--) {
             if (this.subscriptions[j]._id === _id) {
-                console.log('unsubscribe found');
                 csub = this.subscriptions[j];
                 this.subscriptions.splice(j, 1);
                 this.deleteEventSource(csub.subType, csub.topic);
@@ -176,7 +174,6 @@ export class MinemeldEvents implements IMinemeldEvents {
             return;
         }
 
-        console.log('calling close on', ruri);
         this.event_sources[ruri].close();
         delete this.event_sources[ruri];
     }

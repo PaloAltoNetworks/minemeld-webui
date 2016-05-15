@@ -7,6 +7,8 @@ declare var he: any;
 interface IRunningQuery {
     direction: string;
     qid: string;
+    numLinesRequested: number;
+    numLinesReceived: number;
 }
 
 export class LogsController {
@@ -15,9 +17,10 @@ export class LogsController {
 
     msgTop: string;
     msgBottom: string;
+    showMore: boolean = true;
 
     logs: any[] = [];
-    query: string;
+    query: string = '';
 
     runningQuery: IRunningQuery;
 
@@ -27,6 +30,7 @@ export class LogsController {
     $table: angular.IAugmentedJQuery;
 
     lastScroll: number = 0;
+    lastScrollTime: number;
 
     /* @ngInject */
     constructor(MinemeldTraced: IMinemeldTraced, $scope: angular.IScope) {
@@ -41,7 +45,10 @@ export class LogsController {
         this.$window.resize();
 
         this.boundScrollHandler = this.tableScrollHandler.bind(this);
-        this.$table.scroll(this.boundScrollHandler);
+        this.$table.on('mousewheel', this.boundScrollHandler);
+        // this.$table.scroll(this.boundScrollHandler);
+
+        this.resetMessages();
 
         this.$scope.$on('$destroy', this.destroy.bind(this));
 
@@ -58,27 +65,33 @@ export class LogsController {
         this.doQuery('bottom');
     }
 
+    addToQuery($event: BaseJQueryEventObject) {
+        this.query += ' ' + $event.target.textContent;
+
+        $event.stopPropagation();
+    }
+
+    viewEntry($index: number) {
+        console.log('viewEntry', $index);
+    }
+
+
+    private resetMessages(): void {
+        this.msgBottom = undefined;
+        this.msgTop = undefined;
+    }
+
+    private resetQuery(): void {
+        this.runningQuery = undefined;
+        this.resetMessages();
+    }
+
     private resizeTable(): void {
         var th, wh: number;
 
         wh = this.$window.height();
         th = wh - this.$table.offset().top - 20;
         this.$table.outerHeight(th);
-    }
-
-    private tableScrollHandler(): void {
-        var scrollPerc: number;
-
-        scrollPerc = this.$table.scrollTop() / this.$table[0].scrollHeight;
-
-        if (scrollPerc > this.lastScroll && scrollPerc > 0.8) {
-            this.doQuery('bottom');
-        }
-        if (scrollPerc < this.lastScroll && scrollPerc < 0.1) {
-            this.doQuery('top');
-        }
-
-        this.lastScroll = scrollPerc;
     }
 
     private doQuery(direction: string) {
@@ -94,6 +107,7 @@ export class LogsController {
 
         if (direction === 'bottom') {
             this.msgBottom = 'LOADING ...';
+            this.msgTop = undefined;
 
             if (this.logs.length > 0) {
                 timestamp = this.logs[this.logs.length - 1].timestamp;
@@ -106,6 +120,10 @@ export class LogsController {
             numLines = 100;
         } else {
             this.msgTop = 'LOADING ...';
+            this.msgBottom = undefined;
+
+            this.logs.splice(0, this.logs.length);
+
             timestamp = (new Date()).getTime();
             counter = 0;
 
@@ -116,7 +134,9 @@ export class LogsController {
 
         this.runningQuery = {
             qid: qid,
-            direction: direction
+            direction: direction,
+            numLinesRequested: numLines,
+            numLinesReceived: 0
         };
 
         this.MinemeldTraced.query(qid, {
@@ -129,10 +149,48 @@ export class LogsController {
         });
     }
 
+    private tableScrollHandler(e: any): void {
+        var scrollPerc: number;
+        var delta: number;
+        var curTime: number;
+
+        curTime = (new Date()).getTime();
+        scrollPerc = this.$table.scrollTop() / this.$table[0].scrollHeight;
+
+        console.log(curTime - this.lastScrollTime);
+        if (this.lastScrollTime && (curTime - this.lastScrollTime) < 200) {
+            this.lastScrollTime = curTime;
+            this.lastScroll = scrollPerc;
+            return;
+        }
+
+        if (e.originalEvent.wheelDelta) {
+            delta = e.originalEvent.wheelDelta;
+        } else if (e.originalEvent.detail) {
+            delta = e.originalEvent.detail;
+        }
+
+        console.log(delta, scrollPerc, this.lastScroll);
+
+        if (scrollPerc !== this.lastScroll) {
+            this.lastScrollTime = curTime;
+            this.lastScroll = scrollPerc;
+            return;
+        }
+
+        if (scrollPerc > 0.8 && delta < 0) {
+            this.doQuery('bottom');
+        } else if (scrollPerc === 0 && delta > 0) {
+            this.doQuery('top');
+        }
+
+        this.lastScroll = scrollPerc;
+        this.lastScrollTime = curTime;
+    }
+
     private queryData(qid: string, data: any) {
         var msg: string;
         var eh, tst: number;
-        var j: number;
 
         if (data.msg) {
             msg = data.msg;
@@ -141,13 +199,21 @@ export class LogsController {
             }
 
             if (this.runningQuery.direction === 'bottom') {
-                this.msgBottom = msg;
+                console.log(msg);
+                this.$scope.$apply(() => {
+                    this.msgBottom = msg;
+                    console.log('a', msg);
+                });
             } else {
-                this.msgTop = msg;
+                this.$scope.$apply(() => {
+                    this.msgTop = msg;
+                    console.log('a', msg);
+                });
             }
 
             if (data.msg === '<EOQ>') {
-                this.runningQuery = undefined;
+                this.showMore = (this.runningQuery.numLinesReceived === this.runningQuery.numLinesRequested);
+                this.resetQuery();
             }
 
             return;
@@ -164,33 +230,18 @@ export class LogsController {
                 this.$table.scrollTop(tst - eh);
             }
         } else {
-            // XXX this is stupid, we should do a better job at searching
-            for (j = 0; j < this.logs.length; j++) {
-                if (this.logs[j].timestamp < data.timestamp) {
-                    break;
-                }
-                if (this.logs[j].counter < data.counter) {
-                    break;
-                }
-
-                if (this.logs[j].timestamp === data.timestamp) {
-                    if (this.logs[j].counter === data.counter) {
-                        return;
-                    }
-                }
-            }
-
-            this.logs.splice(j, 0, data);
+            this.logs.push(data);
             if (this.logs.length > 200) {
                 this.logs.pop();
             }
         }
+        this.runningQuery.numLinesReceived += 1;
     }
 
     private queryError(qid: string, error: any) {
         console.log('queryError', qid, error);
         if (this.runningQuery.qid === qid) {
-            this.runningQuery = undefined;
+            this.resetQuery();
         }
     }
 

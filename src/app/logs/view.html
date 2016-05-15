@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-sm-12 col-md-12">
     <form ng-keyup="$event.keyCode == 13 && vm.submitQuery()" class="form-horizontal has-feedback m-b-xs">
-        <input type="text" ng-model="vm.query" class="form-control" placeholder="Search">
+        <input ng-disabled="vm.runningQuery" type="text" ng-model="vm.query" class="form-control" placeholder="Search">
         <i class="glyphicon glyphicon-search form-control-feedback"></i>
     </form>
   </div>
@@ -12,15 +12,18 @@
       LOGS
     </div>
     <div id="logs-table">
+      <div ng-if="!vm.runningQuery" class="logs-entry-msg text-center">Scroll up for latest entries. Or click <a ng-click="vm.doQuery('top')"><b>here</b></a></div>
       <div ng-if="vm.msgTop" class="logs-entry-msg">{{ vm.msgTop }}</div>
-      <div class="logs-entry" ng-repeat="log in vm.logs">
+      <div class="logs-entry" ng-repeat="log in vm.logs track by $index" ng-click="vm.viewEntry($index)">
         <span class="logs-entry-timestamp">{{ log.timestamp | date:'d/M/yyyy HH:mm:ss Z' }}</span>
-        <span class="logs-entry-field">{{ log.parsed.source }}</span>
-        <span class="logs-entry-field">{{ log.parsed.log.op }}</span>
-        <span class="logs-entry-field">{{ log.parsed.log.indicator }}</span>
-        <i>{{ log.log }}</i>
+        <span class="logs-entry-field logs-entry-source" ng-click="vm.addToQuery($event)">{{ log.parsed.source }}</span>
+        <span class="logs-entry-field logs-entry-op" ng-click="vm.addToQuery($event)">{{ log.parsed.log.op }}</span>
+        <span class="logs-entry-field logs-entry-indicator" ng-click="vm.addToQuery($event)">{{ log.parsed.log.indicator }}</span>
+        <span class="logs-entry-kv" ng-repeat="(k, v) in log.parsed.log.value"><b>{{ k }}:</b> {{ v }}</span>
+        <span ng-if="log.parsed.log.source_node" class="logs-entry-kv"><b>source_node:</b> {{ log.parsed.log.source_node }}</span>
       </div>
       <div ng-if="vm.msgBottom" class="logs-entry-msg">{{ vm.msgBottom }}</div>
+      <div ng-if="!vm.runningQuery && vm.showMore" class="logs-entry-msg text-center">Scroll down for more. Or click <a ng-click="vm.doQuery('bottom')"><b>here</b></a></div>
     </div>
   </div>
 </div>
