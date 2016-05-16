@@ -66,7 +66,8 @@ export class MinemeldTraced implements IMinemeldTraced {
     }
 
     closeAll(): void {
-        angular.forEach(this.queries, (query: IMinemeldTracedQueryOptionsInt) => {
+        angular.forEach(this.queries, (query: IMinemeldTracedQueryOptionsInt, qid: string) => {
+            this.killQuery(qid);
             this.MinemeldEvents.unsubscribe(query.subscriptionID);
         });
         this.queries = {};
@@ -110,7 +111,6 @@ export class MinemeldTraced implements IMinemeldTraced {
             }
         }
 
-        console.log(params);
         qResource = this.$resource('/traced/query', {}, {
             get: {
                 method: 'GET',
@@ -119,6 +119,24 @@ export class MinemeldTraced implements IMinemeldTraced {
         });
 
         return qResource.get(params).$promise;
+    }
+
+    private killQuery(qid: string): any {
+        var qResource: angular.resource.IResourceClass<angular.resource.IResource<any>>;
+
+        if (!this.MinemeldAuth.authorizationSet) {
+            this.$state.go('login');
+            return;
+        }
+
+        qResource = this.$resource('/traced/query/' + qid + '/kill', {}, {
+            get: {
+                method: 'GET',
+                headers: this.MinemeldAuth.getAuthorizationHeaders()
+            }
+        });
+
+        return qResource.get().$promise;
     }
 
     private subscriptionOpen(t: string, qid: string, data: any) {

@@ -68,6 +68,16 @@ export class LogsController {
         this.doQuery('bottom');
     }
 
+    cancelQuery(): void {
+        if (!this.runningQuery) {
+            return;
+        }
+
+        this.MinemeldTraced.closeAll();
+        this.showMore = true;
+        this.resetQuery();
+    }
+
     addToQuery($event: BaseJQueryEventObject) {
         this.query += ' ' + $event.target.textContent;
 
@@ -278,15 +288,15 @@ class LogsEntryViewController {
                 entries: any[], index: number) {
         this.$modalInstance = $modalInstance;
         this.$scope = $scope;
-        
+
         this.entries = entries;
-        
+
         this.boundKeyUp = this.keyUp.bind(this);
         angular.element(document).on('keyup', this.boundKeyUp);
- 
+
         this.setIndex(index);
     }
-    
+
     editorLoaded(editor_: any): void {
         editor_.setShowInvisibles(false);
         editor_.$blockScrolling = Infinity;
@@ -304,28 +314,28 @@ class LogsEntryViewController {
         this.curEntry = this.entries[index];
         this.curLogJSON = JSON.stringify(this.curEntry.parsed, null, '    ');
     }
-    
+
     setNext() {
         if (this.index === this.entries.length - 1) {
             return;
         }
-        
+
         this.setIndex(this.index + 1);
     }
-    
+
     setPrev() {
         if (this.index === 0) {
             return;
         }
-        
+
         this.setIndex(this.index - 1);
     }
-    
+
     keyUp($event: any) {
         if ('ace_text-input' === document.activeElement.className) {
             return;
         }
-        
+
         if ($event.keyCode === 39) {
             this.$scope.$apply(() => {
                 this.setNext();

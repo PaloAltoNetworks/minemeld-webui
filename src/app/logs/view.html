@@ -1,8 +1,11 @@
 <div class="row">
   <div class="col-sm-12 col-md-12">
     <form ng-keyup="$event.keyCode == 13 && vm.submitQuery()" class="form-horizontal has-feedback m-b-xs">
+      <div class="input-group">
         <input ng-disabled="vm.runningQuery" type="text" ng-model="vm.query" class="form-control" placeholder="Search">
-        <i class="glyphicon glyphicon-search form-control-feedback"></i>
+        <div ng-if="!vm.runningQuery" class="input-group-addon logs-search-icon" ng-click="vm.submitQuery()"><i class="glyphicon glyphicon-search"></i></div>
+        <div ng-if="vm.runningQuery" class="input-group-addon logs-search-icon" ng-click="vm.cancelQuery()"><i class="glyphicon glyphicon-remove"></i></div>
+      </div>
     </form>
   </div>
 </div>
