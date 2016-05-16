@@ -289,6 +289,7 @@ class LogsEntryViewController {
     
     editorLoaded(editor_: any): void {
         editor_.setShowInvisibles(false);
+        editor_.$blockScrolling = Infinity;
 
         angular.element('.ace_text-input').on('focus', (event: any) => {
             angular.element(event.currentTarget.parentNode).addClass('ace-focus');
@@ -321,8 +322,6 @@ class LogsEntryViewController {
     }
     
     keyUp($event: any) {
-        console.log(document.activeElement.className);
-
         if ('ace_text-input' === document.activeElement.className) {
             return;
         }
