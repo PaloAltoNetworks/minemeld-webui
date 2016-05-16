@@ -79,3 +79,11 @@
     color: darken(#B2C9AB, 40%);
     background: lighten(#B2C9AB, 10%);
 }
+
+.logs-entry-view-log {
+    height: 400px !important;
+}
+
+.logs-entry-view-counter {
+    color: lighten(#000, 55%);
+}

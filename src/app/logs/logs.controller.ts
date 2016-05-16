@@ -14,6 +14,7 @@ interface IRunningQuery {
 export class LogsController {
     MinemeldTraced: IMinemeldTraced;
     $scope: angular.IScope;
+    $modal: angular.ui.bootstrap.IModalService;
 
     msgTop: string;
     msgBottom: string;
@@ -33,9 +34,11 @@ export class LogsController {
     lastScrollTime: number;
 
     /* @ngInject */
-    constructor(MinemeldTraced: IMinemeldTraced, $scope: angular.IScope) {
+    constructor(MinemeldTraced: IMinemeldTraced, $scope: angular.IScope,
+                $modal: angular.ui.bootstrap.IModalService) {
         this.MinemeldTraced = MinemeldTraced;
         this.$scope = $scope;
+        this.$modal = $modal;
 
         this.$window = angular.element(window);
         this.$table = angular.element('#logs-table');
@@ -72,7 +75,19 @@ export class LogsController {
     }
 
     viewEntry($index: number) {
-        console.log('viewEntry', $index);
+        this.$modal.open({
+            templateUrl: 'app/logs/logentry.view.modal.html',
+            controller: LogsEntryViewController,
+            controllerAs: 'vm',
+            bindToController: true,
+            backdrop: 'static',
+            animation: false,
+            size: 'lg',
+            resolve: {
+                index: () => { return $index; },
+                entries: () => { return this.logs; }
+            }
+        });
     }
 
 
@@ -157,7 +172,6 @@ export class LogsController {
         curTime = (new Date()).getTime();
         scrollPerc = this.$table.scrollTop() / this.$table[0].scrollHeight;
 
-        console.log(curTime - this.lastScrollTime);
         if (this.lastScrollTime && (curTime - this.lastScrollTime) < 200) {
             this.lastScrollTime = curTime;
             this.lastScroll = scrollPerc;
@@ -169,8 +183,6 @@ export class LogsController {
         } else if (e.originalEvent.detail) {
             delta = e.originalEvent.detail;
         }
-
-        console.log(delta, scrollPerc, this.lastScroll);
 
         if (scrollPerc !== this.lastScroll) {
             this.lastScrollTime = curTime;
@@ -199,15 +211,12 @@ export class LogsController {
             }
 
             if (this.runningQuery.direction === 'bottom') {
-                console.log(msg);
                 this.$scope.$apply(() => {
                     this.msgBottom = msg;
-                    console.log('a', msg);
                 });
             } else {
                 this.$scope.$apply(() => {
                     this.msgTop = msg;
-                    console.log('a', msg);
                 });
             }
 
@@ -249,5 +258,91 @@ export class LogsController {
         this.MinemeldTraced.closeAll();
         this.$window.off('resize', this.boundResizeTable);
         this.$table.off('scroll', this.boundScrollHandler);
+    }
+}
+
+class LogsEntryViewController {
+    $modalInstance: angular.ui.bootstrap.IModalServiceInstance;
+    entries: any[];
+    $scope: angular.IScope;
+
+    boundKeyUp: any;
+
+    index: number;
+    curEntry: any;
+    curLogJSON: string;
+
+    /** @ngInject */
+    constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance,
+                $scope: angular.IScope,
+                entries: any[], index: number) {
+        this.$modalInstance = $modalInstance;
+        this.$scope = $scope;
+        
+        this.entries = entries;
+        
+        this.boundKeyUp = this.keyUp.bind(this);
+        angular.element(document).on('keyup', this.boundKeyUp);
+ 
+        this.setIndex(index);
+    }
+    
+    editorLoaded(editor_: any): void {
+        editor_.setShowInvisibles(false);
+
+        angular.element('.ace_text-input').on('focus', (event: any) => {
+            angular.element(event.currentTarget.parentNode).addClass('ace-focus');
+        });
+        angular.element('.ace_text-input').on('blur', (event: any) => {
+            angular.element(event.currentTarget.parentNode).removeClass('ace-focus');
+        });
+    }
+
+    setIndex(index: number) {
+        this.index = index;
+        this.curEntry = this.entries[index];
+        this.curLogJSON = JSON.stringify(this.curEntry.parsed, null, '    ');
+    }
+    
+    setNext() {
+        if (this.index === this.entries.length - 1) {
+            return;
+        }
+        
+        this.setIndex(this.index + 1);
+    }
+    
+    setPrev() {
+        if (this.index === 0) {
+            return;
+        }
+        
+        this.setIndex(this.index - 1);
+    }
+    
+    keyUp($event: any) {
+        console.log(document.activeElement.className);
+
+        if ('ace_text-input' === document.activeElement.className) {
+            return;
+        }
+        
+        if ($event.keyCode === 39) {
+            this.$scope.$apply(() => {
+                this.setNext();
+            });
+            return;
+        }
+        if ($event.keyCode === 37) {
+            this.$scope.$apply(() => {
+                this.setPrev();
+            });
+            return;
+        }
+    }
+
+    dismiss(): void {
+        angular.element(document).off('keyup', this.boundKeyUp);
+        this.$modalInstance.dismiss();
     }
 }
