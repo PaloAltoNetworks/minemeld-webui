@@ -1,0 +1,43 @@
+<div class="modal-header">
+    <h1 class="modal-title">LOG DETAIL</h1>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-2 text-right">TIMESTAMP</div>
+        <div class="col-xs-8">{{ vm.curEntry.timestamp | date:'d/M/yyyy HH:mm:ss Z' }} <span class="logs-entry-view-counter">#{{ vm.curEntry.counter }}</span></div>
+    </div>
+    <div ng-if="vm.curEntry.parsed.source" class="row m-t-xs">
+        <div class="col-xs-2 text-right">SOURCE</div>
+        <div class="col-xs-8">{{ vm.curEntry.parsed.source }}</div>
+    </div>
+    <div ng-if="vm.curEntry.parsed.log_type" class="row m-t-xs">
+        <div class="col-xs-2 text-right">TYPE</div>
+        <div class="col-xs-8">{{ vm.curEntry.parsed.log_type }} <span ng-if="vm.curEntry.parsed.log.op">/ {{ vm.curEntry.parsed.log.op }}</span></div>
+    </div>
+    <div ng-if="vm.curEntry.parsed.log.source_node" class="row m-t-xs">
+        <div class="col-xs-2 text-right">SENDER</div>
+        <div class="col-xs-8">{{ vm.curEntry.parsed.log.source_node }}</div>
+    </div>
+    <div ng-if="vm.curEntry.parsed.log.indicator" class="row m-t-xs">
+        <div class="col-xs-2 text-right">INDICATOR</div>
+        <div class="col-xs-8">{{ vm.curEntry.parsed.log.indicator }}</div>
+    </div>
+    <div class="row m-t-xs">
+        <div class="col-xs-2 text-right">VALUE</div>
+        <div class="col-xs-8">
+            <div class="modal-ace-editor logs-entry-view-log" ng-model="vm.curLogJSON" ng-readonly="true" ui-ace="{
+                        useWrapMode : true,
+                        showGutter: true,
+                        theme:'github',
+                        mode: 'json',
+                        firstLineNumber: 1,
+                        onLoad: vm.editorLoaded
+            }"></div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button ng-disabled="vm.index === 0" class="pull-left btn btn-primary btn-sm" type="button" ng-click="vm.setPrev()">&lt;</button>
+    <button ng-disabled="vm.index === (vm.entries.length - 1)" class="pull-left btn btn-primary btn-sm" type="button" ng-click="vm.setNext()">&gt;</button>
+    <button class="btn btn-primary btn-sm" type="button" ng-click="vm.dismiss()">DISMISS</button>
+</div>
