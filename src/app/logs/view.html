@@ -19,9 +19,9 @@
       <div ng-if="vm.msgTop" class="logs-entry-msg">{{ vm.msgTop }}</div>
       <div class="logs-entry" ng-repeat="log in vm.logs track by $index" ng-click="vm.viewEntry($index)">
         <span class="logs-entry-timestamp">{{ log.timestamp | date:'d/M/yyyy HH:mm:ss Z' }}</span>
-        <span class="logs-entry-field logs-entry-source" ng-click="vm.addToQuery($event)">{{ log.parsed.source }}</span>
-        <span class="logs-entry-field logs-entry-op" ng-click="vm.addToQuery($event)">{{ log.parsed.log.op }}</span>
-        <span class="logs-entry-field logs-entry-indicator" ng-click="vm.addToQuery($event)">{{ log.parsed.log.indicator }}</span>
+        <span data-qclass="source" class="logs-entry-field logs-entry-source" ng-click="vm.addToQuery($event)">{{ log.parsed.source }}</span>
+        <span data-qclass="op" class="logs-entry-field logs-entry-op" ng-click="vm.addToQuery($event)">{{ log.parsed.log.op }}</span>
+        <span data-qclass="indicator" class="logs-entry-field logs-entry-indicator" ng-click="vm.addToQuery($event)">{{ log.parsed.log.indicator }}</span>
         <span class="logs-entry-kv" ng-repeat="(k, v) in log.parsed.log.value"><b>{{ k }}:</b> {{ v }}</span>
         <span ng-if="log.parsed.log.source_node" class="logs-entry-kv"><b>source_node:</b> {{ log.parsed.log.source_node }}</span>
       </div>

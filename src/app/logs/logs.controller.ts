@@ -15,13 +15,14 @@ export class LogsController {
     MinemeldTraced: IMinemeldTraced;
     $scope: angular.IScope;
     $modal: angular.ui.bootstrap.IModalService;
+    $state: angular.ui.IStateService;
 
     msgTop: string;
     msgBottom: string;
     showMore: boolean = true;
 
     logs: any[] = [];
-    query: string = '';
+    query: string;
 
     runningQuery: IRunningQuery;
 
@@ -35,10 +36,14 @@ export class LogsController {
 
     /* @ngInject */
     constructor(MinemeldTraced: IMinemeldTraced, $scope: angular.IScope,
-                $modal: angular.ui.bootstrap.IModalService) {
+                $modal: angular.ui.bootstrap.IModalService, $state: angular.ui.IStateService,
+                $stateParams: angular.ui.IStateParamsService) {
         this.MinemeldTraced = MinemeldTraced;
         this.$scope = $scope;
         this.$modal = $modal;
+        this.$state = $state;
+
+        this.query = $stateParams['q'];
 
         this.$window = angular.element(window);
         this.$table = angular.element('#logs-table');
@@ -79,7 +84,14 @@ export class LogsController {
     }
 
     addToQuery($event: BaseJQueryEventObject) {
-        this.query += ' ' + $event.target.textContent;
+        var qclass: string;
+
+        if (!this.query) {
+            this.query = '';
+        }
+
+        qclass = $event.target.attributes['data-qclass'].value;
+        this.query += ' ' + qclass + ':' + $event.target.textContent;
 
         $event.stopPropagation();
     }
@@ -312,7 +324,11 @@ class LogsEntryViewController {
     setIndex(index: number) {
         this.index = index;
         this.curEntry = this.entries[index];
-        this.curLogJSON = JSON.stringify(this.curEntry.parsed, null, '    ');
+        if (this.curEntry.parsed.log.value) {
+            this.curLogJSON = JSON.stringify(this.curEntry.parsed.log.value, null, '    ');
+        } else {
+            this.curLogJSON = '';
+        }
     }
 
     setNext() {

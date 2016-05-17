@@ -2,6 +2,11 @@
     <div class="col-sm-12 col-md-12">
         <h3 class="m-t-xs nodedetail-title">
             {{ nodedetail.nodename }} <span class="nodedetail-description">NODE</span>
+            <button tooltip-popup-delay="500" tooltip="go to logs" type="button" 
+                    class="config-action btn btn-config-action btn-sm"
+                    ng-click="nodedetail.$state.go('logs', {q: 'source:'+nodedetail.nodename})">
+                <span class="glyphicon glyphicon-list"></span> LOGS
+            </button>
         </h3>
     </div>
 </div>

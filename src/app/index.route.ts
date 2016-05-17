@@ -99,7 +99,7 @@ export function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterPro
       controllerAs: 'vm'
     })
     .state('logs', {
-      url: '/logs',
+      url: '/logs?q',
       templateUrl: 'app/logs/view.html',
       controller: 'LogsController',
       controllerAs: 'vm'
