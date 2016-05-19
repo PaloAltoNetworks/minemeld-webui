@@ -148,7 +148,7 @@ export class LogsController {
 
             if (this.logs.length > 0) {
                 timestamp = this.logs[this.logs.length - 1].timestamp;
-                counter = this.logs[this.logs.length - 1].counter - 1;
+                counter = this.logs[this.logs.length - 1].counter;
             } else {
                 timestamp = (new Date()).getTime();
                 counter = 0;
