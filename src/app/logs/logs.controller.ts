@@ -19,6 +19,7 @@ export class LogsController {
 
     msgTop: string;
     msgBottom: string;
+    showLoader: boolean;
     showMore: boolean = true;
 
     logs: any[] = [];
@@ -143,7 +144,8 @@ export class LogsController {
         }
 
         if (direction === 'bottom') {
-            this.msgBottom = 'LOADING ...';
+            this.msgBottom = 'Loading ...';
+            this.showLoader = true;
             this.msgTop = undefined;
 
             if (this.logs.length > 0) {
@@ -156,7 +158,8 @@ export class LogsController {
 
             numLines = 100;
         } else {
-            this.msgTop = 'LOADING ...';
+            this.msgTop = 'Loading ...';
+            this.showLoader = true;
             this.msgBottom = undefined;
 
             this.logs.splice(0, this.logs.length);
@@ -212,7 +215,7 @@ export class LogsController {
             return;
         }
 
-        if (scrollPerc > 0.8 && delta < 0) {
+        if (scrollPerc > 0.8 && delta < 0 && this.showMore) {
             this.doQuery('bottom');
         } else if (scrollPerc === 0 && delta > 0) {
             this.doQuery('top');
@@ -229,22 +232,24 @@ export class LogsController {
         if (data.msg) {
             msg = data.msg;
             if (data.msg === '<EOQ>') {
-                msg = undefined;
+                this.$scope.$apply(() => {
+                    this.showMore = (this.runningQuery.numLinesReceived === this.runningQuery.numLinesRequested);
+                    this.resetQuery();
+                });
+                return;
             }
 
             if (this.runningQuery.direction === 'bottom') {
                 this.$scope.$apply(() => {
                     this.msgBottom = msg;
+                    // present continuous -> we need a loader
+                    this.showLoader = msg.indexOf('ing') !== -1;
                 });
             } else {
                 this.$scope.$apply(() => {
                     this.msgTop = msg;
+                    this.showLoader = msg.indexOf('ing') !== -1;
                 });
-            }
-
-            if (data.msg === '<EOQ>') {
-                this.showMore = (this.runningQuery.numLinesReceived === this.runningQuery.numLinesRequested);
-                this.resetQuery();
             }
 
             return;
