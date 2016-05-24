@@ -16,7 +16,7 @@
     </div>
     <div id="logs-table">
       <div ng-if="!vm.runningQuery" class="logs-entry-msg text-center">Scroll up for latest entries. Or click <a ng-click="vm.doQuery('top')"><b>here</b></a></div>
-      <div ng-if="vm.msgTop" class="logs-entry-msg">{{ vm.msgTop }}</div>
+      <div ng-if="vm.msgTop" class="logs-entry-msg"><img ng-if="vm.showLoader" src="assets/images/loader-white-mini.gif"/> {{ vm.msgTop }}</div>
       <div class="logs-entry" ng-repeat="log in vm.logs track by $index" ng-click="vm.viewEntry($index)">
         <span class="logs-entry-timestamp">{{ log.timestamp | date:'d/M/yyyy HH:mm:ss Z' }}</span>
         <span data-qclass="source" class="logs-entry-field logs-entry-source" ng-click="vm.addToQuery($event)">{{ log.parsed.source }}</span>
@@ -25,8 +25,9 @@
         <span class="logs-entry-kv" ng-repeat="(k, v) in log.parsed.log.value"><b>{{ k }}:</b> {{ v }}</span>
         <span ng-if="log.parsed.log.source_node" class="logs-entry-kv"><b>source_node:</b> {{ log.parsed.log.source_node }}</span>
       </div>
-      <div ng-if="vm.msgBottom" class="logs-entry-msg">{{ vm.msgBottom }}</div>
+      <div ng-if="vm.msgBottom" class="logs-entry-msg"><img ng-if="vm.showLoader" src="assets/images/loader-white-mini.gif"/> {{ vm.msgBottom }}</div>
       <div ng-if="!vm.runningQuery && vm.showMore" class="logs-entry-msg text-center">Scroll down for more. Or click <a ng-click="vm.doQuery('bottom')"><b>here</b></a></div>
+      <div ng-if="!vm.runningQuery && !vm.showMore" class="logs-entry-msg text-center">No more lines available</a></div>
     </div>
   </div>
 </div>
