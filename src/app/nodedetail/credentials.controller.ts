@@ -26,6 +26,22 @@ function credentialsListConfig($stateProvider: ng.ui.IStateProvider) {
                 }
             }
         })
+        .state('nodedetail.tmtinfo', {
+            templateUrl: 'app/nodedetail/credentials.info.html',
+            controller: NodeDetailCredentialsInfoController,
+            controllerAs: 'nodedetailinfo',
+            params: {
+                usernameEnabled: {
+                    value: false
+                },
+                secretName: {
+                    value: 'API KEY'
+                },
+                secretField: {
+                    value: 'api_key'
+                }
+            }
+        })
         ;
 }
 
@@ -48,7 +64,7 @@ function credentialsRegisterClasses(NodeDetailResolver: INodeDetailResolverServi
             icon: 'fa fa-asterisk',
             tooltip: 'GRAPH',
             state: 'nodedetail.graph',
-                active: false
+            active: false
         }]
     });
 
@@ -69,7 +85,7 @@ function credentialsRegisterClasses(NodeDetailResolver: INodeDetailResolverServi
             icon: 'fa fa-asterisk',
             tooltip: 'GRAPH',
             state: 'nodedetail.graph',
-                active: false
+            active: false
         }]
     });
 
@@ -78,7 +94,7 @@ function credentialsRegisterClasses(NodeDetailResolver: INodeDetailResolverServi
             icon: 'fa fa-circle-o',
             tooltip: 'INFO',
             state: 'nodedetail.anomaliinfo',
-            active: false,
+            active: false
         },
         {
             icon: 'fa fa-area-chart',
@@ -90,7 +106,28 @@ function credentialsRegisterClasses(NodeDetailResolver: INodeDetailResolverServi
             icon: 'fa fa-asterisk',
             tooltip: 'GRAPH',
             state: 'nodedetail.graph',
-                active: false
+            active: false
+        }]
+    });
+
+    NodeDetailResolver.registerClass('minemeld.ft.tmt.DTIAPI', {
+        tabs: [{
+            icon: 'fa fa-circle-o',
+            tooltip: 'INFO',
+            state: 'nodedetail.tmtinfo',
+            active: false
+        },
+        {
+            icon: 'fa fa-area-chart',
+            tooltip: 'STATS',
+            state: 'nodedetail.stats',
+            active: false
+        },
+        {
+            icon: 'fa fa-asterisk',
+            tooltip: 'GRAPH',
+            state: 'nodedetail.graph',
+            active: false
         }]
     });
 }
@@ -101,6 +138,7 @@ class NodeDetailCredentialsInfoController extends NodeDetailInfoController {
     username: string;
     $modal: angular.ui.bootstrap.IModalService;
 
+    usernameEnabled: boolean = true;
     secretName: string = 'PASSWORD';
     secretField: string = 'password';
 
@@ -116,11 +154,12 @@ class NodeDetailCredentialsInfoController extends NodeDetailInfoController {
         this.MinemeldConfig = MinemeldConfig;
         this.$modal = $modal;
 
+        if (typeof($stateParams['usernameEnabled']) !== 'undefined') {
+            this.usernameEnabled = $stateParams['usernameEnabled'];
+        }
         if ($stateParams['secretName']) {
-            console.log($stateParams['secretName']);
             this.secretName = $stateParams['secretName'];
         }
-        console.log(this.secretName);
         if ($stateParams['secretField']) {
             this.secretField = $stateParams['secretField'];
         }
@@ -143,7 +182,7 @@ class NodeDetailCredentialsInfoController extends NodeDetailInfoController {
                 this.secret = undefined;
             }
 
-            if (result.username) {
+            if (this.usernameEnabled && result.username) {
                 this.username = result.username;
             } else {
                 this.username = undefined;
@@ -161,7 +200,7 @@ class NodeDetailCredentialsInfoController extends NodeDetailInfoController {
         if (this.secret) {
             side_config[this.secretField] = this.secret;
         }
-        if (this.username) {
+        if (this.username && this.usernameEnabled) {
             side_config.username = this.username;
         }
 
@@ -193,14 +232,18 @@ class NodeDetailCredentialsInfoController extends NodeDetailInfoController {
             return this.saveSideConfig();
         })
         .then((result: any) => {
-            this.toastr.success(this.secretName+' SET');
+            this.toastr.success(this.secretName + ' SET');
         }, (error: any) => {
-            this.toastr.error('ERROR SETTING '+this.secretName+': ' + error.status);
+            this.toastr.error('ERROR SETTING ' + this.secretName + ': ' + error.status);
         });
     }
 
     setUsername(): void {
         var mi: angular.ui.bootstrap.IModalServiceInstance;
+
+        if (!this.usernameEnabled) {
+            return;
+        }
 
         mi = this.$modal.open({
             templateUrl: 'app/nodedetail/credentials.su.modal.html',
