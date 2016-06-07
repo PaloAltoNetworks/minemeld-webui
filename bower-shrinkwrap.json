@@ -81,6 +81,9 @@
   "https://github.com/moment/moment.git": {
     "2.10.6": "446ce77eb08c5c862d7b0b11ef1d2e884d12e3d7"
   },
+  "https://github.com/nodeca/js-yaml.git": {
+    "3.6.1": "c76b837cacc69de6b86a0781db31a9bb7a193875"
+  },
   "https://github.com/novus/nvd3.git": {
     "1.8.2": "f6c337cfd18b57ba89ccff850b8bc7ce4eafc223"
   },
