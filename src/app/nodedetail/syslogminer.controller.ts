@@ -7,7 +7,7 @@ import { IMinemeldValidateService } from '../../app/services/validate';
 import { IMinemeldStatus, IMinemeldStatusNode } from '../../app/services/status';
 
 declare var he: any;
-declare var YAML: any;
+declare var jsyaml: any;
 
 class SyslogMinerRulesController {
     MinemeldConfig: IMinemeldConfigService;
@@ -343,7 +343,7 @@ class SyslogMinerEditRuleController {
                 trule[key] = value;
             });
 
-            this.definition = YAML.stringify(trule);
+            this.definition = jsyaml.safeDump(trule);
 
             this.comment = rule.comment;
         }
@@ -393,7 +393,7 @@ class SyslogMinerEditRuleController {
 
         try {
             if (this.definition) {
-                rule = YAML.parse(this.definition);
+                rule = jsyaml.safeLoad(this.definition);
                 if (typeof(rule) !== 'object') {
                     throw 'definition is not a valid object';
                 }
@@ -411,7 +411,7 @@ class SyslogMinerEditRuleController {
     validate(): void {
         var rule: any;
 
-        rule = YAML.parse(this.definition);
+        rule = jsyaml.safeLoad(this.definition);
         rule.name = this.name;
 
         if (this.comment) {
@@ -434,7 +434,7 @@ class SyslogMinerEditRuleController {
     save() {
         var result: any;
 
-        result = YAML.parse(this.definition);
+        result = jsyaml.safeLoad(this.definition);
         result.name = this.name;
         if (this.comment) {
             result.comment = this.comment;

@@ -2,7 +2,7 @@
 
 import { IMinemeldPrototypeService, IMinemeldPrototypeLibrary, IMinemeldPrototype, IMinemeldPrototypeMetadata } from '../../app/services/prototype';
 
-declare var YAML: any;
+declare var jsyaml: any;
 
 export class PrototypeAddController {
     MinemeldPrototype: IMinemeldPrototypeService;
@@ -108,7 +108,7 @@ export class PrototypeAddController {
 
         try {
             if (this.config) {
-                config = YAML.parse(this.config);
+                config = jsyaml.safeLoad(this.config);
                 if (typeof(config) !== 'object') {
                     throw 'config is not a valid object';
                 }
