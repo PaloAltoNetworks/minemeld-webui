@@ -62,8 +62,10 @@ Build the WebUI in the dist subdirectory
 gulp build
 ```
 
-Or test the app
+## TESTING
+
+Use the following command to serve and test your local version of the WebUI during development:
 
 ```
-gulp serve
+gulp serve https://<IP of MineMeld VM>
 ```
