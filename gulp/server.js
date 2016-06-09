@@ -2,6 +2,7 @@
 
 var path = require('path');
 var gulp = require('gulp');
+var args = require('yargs').argv;
 var conf = require('./conf');
 
 var browserSync = require('browser-sync');
@@ -26,7 +27,10 @@ function browserSyncInit(baseDir, browser) {
     routes: routes
   };
 
-  server.middleware = proxyMiddleware(['/status', '/metrics', '/prototype', '/config', '/supervisor', '/feeds', '/validate', '/traced'], {target: 'http://192.168.55.153', secure: false});
+  server.middleware = proxyMiddleware(
+    ['/status', '/metrics', '/prototype', '/config', '/supervisor', '/feeds', '/validate', '/traced'],
+    {target: args.url, secure: false}
+  );
 
   browserSync.instance = browserSync.init({
     startPath: '/',
