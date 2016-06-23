@@ -44,6 +44,7 @@ export class PrototypesController {
                     var l, p: string;
                     var curlibrary, curprototype: any;
                     var nt: string;
+                    var author: string;
                     var rprotos: any = [];
 
                     for (l in result) {
@@ -67,13 +68,19 @@ export class PrototypesController {
                                 nt = curprototype.node_type;
                             }
 
+                            author = undefined;
+                            if (curprototype.author) {
+                                author = curprototype.author;
+                            }
+
                             rprotos.push({
                                 name: l + '.' + p,
                                 prototypeName: p,
                                 libraryName: l,
                                 nodeType: nt,
                                 libraryDescription: curlibrary.description,
-                                prototypeDescription: curprototype.description
+                                prototypeDescription: curprototype.description,
+                                author: author
                             });
                         }
                     }
@@ -119,7 +126,15 @@ export class PrototypesController {
 
         this.dtColumns = [
             this.DTColumnBuilder.newColumn('name').withTitle('NAME').renderWith(function(data: any, type: any, full: any) {
-                return he.encode(data, { strict: true });
+                var r: string;
+
+                r = '<div>' + he.encode(data, { strict: true }) + '</div>';
+
+                if (full.author) {
+                    r += '<div class="prototypes-author">' + he.encode(full.author.toUpperCase(), { strict: true }) + '</div>';
+                }
+
+                return r;
             }),
             this.DTColumnBuilder.newColumn('nodeType').withTitle('TYPE').renderWith(function(data: any, type: any, full: any) {
                 var c: string;
