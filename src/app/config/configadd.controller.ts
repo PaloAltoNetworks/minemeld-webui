@@ -59,6 +59,7 @@ export class ConfigAddController {
             var l: string;
             var p: string;
             var nt: string;
+            var curproto: IPrototypesDescription;
 
             for (l in result) {
                 if (!result.hasOwnProperty(l)) {
@@ -75,7 +76,7 @@ export class ConfigAddController {
                         nt = result[l].prototypes[p].node_type.toUpperCase();
                     }
 
-                    this.availablePrototypes.push({
+                    curproto = {
                         name: l + '.' + p,
                         libraryName: l,
                         prototypeName: p,
@@ -83,7 +84,12 @@ export class ConfigAddController {
                         prototypeDescription: result[l].prototypes[p].description,
                         developmentStatus: result[l].prototypes[p].development_status,
                         nodeType: nt
-                    });
+                    };
+                    this.availablePrototypes.push(curproto);
+
+                    if (this.prototype && (this.prototype == curproto.name)) {
+                        this.prototypeSelected(curproto, 'dummy');
+                    }
                 }
             }
         }, (error: any) => {
@@ -162,6 +168,14 @@ export class ConfigAddController {
 
     prototypeSelected($item: IPrototypesDescription, $model: string): void {
         this.selectedPrototype = $item;
+
+        if ($item.nodeType == 'OUTPUT') {
+            this.output = false;
+        } else if ($item.nodeType == 'MINER') {
+            this.output = true;
+        } else if ($item.nodeType == 'PROCESSOR') {
+            this.output = true;
+        }
     }
 
     prototypeRemoved($item: IPrototypesDescription, $model: string): void {
