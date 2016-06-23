@@ -14,6 +14,7 @@ export interface IMinemeldPrototypeMetadata {
     description?: string;
     nodeType?: string;
     developmentStatus?: string;
+    author?: string;
 }
 
 export interface IMinemeldPrototype extends IMinemeldPrototypeMetadata {
