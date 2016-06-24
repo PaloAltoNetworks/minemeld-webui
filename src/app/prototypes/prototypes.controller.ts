@@ -127,8 +127,16 @@ export class PrototypesController {
         this.dtColumns = [
             this.DTColumnBuilder.newColumn('name').withTitle('NAME').renderWith(function(data: any, type: any, full: any) {
                 var r: string;
+                var iconclass: string;
 
-                r = '<div>' + he.encode(data, { strict: true }) + '</div>';
+                if (full.author) {
+                    iconclass = 'mm-community';
+                    if (full.author == 'Palo Alto Networks') {
+                        iconclass = 'mm-panw-front';
+                    }
+                }
+
+                r = '<div><i class="' + iconclass + '"></i> ' + he.encode(data, { strict: true }) + '</div>';
 
                 if (full.author) {
                     r += '<div class="prototypes-author">' + he.encode(full.author.toUpperCase(), { strict: true }) + '</div>';
