@@ -127,16 +127,22 @@ export class PrototypesController {
         this.dtColumns = [
             this.DTColumnBuilder.newColumn('name').withTitle('NAME').renderWith(function(data: any, type: any, full: any) {
                 var r: string;
-                var iconclass: string;
+                var iconclass, labelclass: string;
+
+                iconclass = 'glyphicon glyphicon-user';
+                labelclass = 'prototypes-label-unk';
 
                 if (full.author) {
                     iconclass = 'mm-community';
+                    labelclass = 'prototypes-label-community';
                     if (full.author == 'Palo Alto Networks') {
                         iconclass = 'mm-panw-front';
+                        labelclass = 'prototypes-label-panw';
                     }
                 }
 
-                r = '<div><i class="' + iconclass + '"></i> ' + he.encode(data, { strict: true }) + '</div>';
+                r = '<div><span class="label ' + labelclass + ' mm-label"><i class="' + iconclass + '"></i></span> ';
+                r += he.encode(data, { strict: true }) + '</div>';
 
                 if (full.author) {
                     r += '<div class="prototypes-author">' + he.encode(full.author.toUpperCase(), { strict: true }) + '</div>';
