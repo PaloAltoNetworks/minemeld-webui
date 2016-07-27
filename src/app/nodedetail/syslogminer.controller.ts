@@ -248,7 +248,7 @@ class SyslogMinerRulesController {
             }
 
             fc = <HTMLElement>(row.childNodes[row.childNodes.length - 2]);
-            fc.setAttribute('id', data.name.replace(/[^a-zA-Z0-9_-]/g, '_'));
+            fc.setAttribute('id', data.name.replace(/[^a-zA-Z0-9_]/g, '_'));
 
             vm.$compile(angular.element(row).contents())(vm.$scope);
         })
