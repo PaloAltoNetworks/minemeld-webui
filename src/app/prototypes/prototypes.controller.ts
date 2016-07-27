@@ -135,9 +135,9 @@ export class PrototypesController {
                 if (full.author) {
                     iconclass = 'mm-community';
                     labelclass = 'prototypes-label-community';
-                    if (full.author == 'Palo Alto Networks') {
-                        iconclass = 'mm-panw-front';
-                        labelclass = 'prototypes-label-panw';
+                    if (full.author == 'MineMeld Core Team') {
+                        iconclass = 'mm-minemeld';
+                        labelclass = 'prototypes-label-minemeld';
                     }
                 }
 
