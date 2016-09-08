@@ -30,17 +30,18 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>API KEY</td>
-                    <td tooltip="set API key" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setAPIKey()">
-                        <span ng-if="!nodedetailinfo.api_key"><em>Not set</em></span>
-                        <span ng-if="nodedetailinfo.api_key" class="label label-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></span>
+                    <td>URL</td>
+                    <td tooltip="set URL" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setUrl()">
+                        <span ng-if="!nodedetailinfo.url"><em>Not set</em></span>
+                        <span ng-if="nodedetailinfo.url">{{ nodedetailinfo.url }}</span>
                     </td>
                 </tr>
                 <tr>
-                    <td>LABEL</td>
-                    <td tooltip="set label" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setLabel()">
-                        <span ng-if="!nodedetailinfo.label"><em>Not set</em></span>
-                        <span ng-if="nodedetailinfo.label">{{ nodedetailinfo.label }}</span>
+                    <td>VERIFY CERT</td>
+                    <td tooltip="toggle Cert Verification" class="nodedetail-info-clickable" ng-click="nodedetailinfo.toggleCertificateVerification()">
+                        <span ng-if="nodedetailinfo.verify_cert === undefined" class="label label-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></span>
+                        <span ng-if="nodedetailinfo.verify_cert !== undefined && !nodedetailinfo.verify_cert" class="label label-default"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></span>
+                        <span ng-if="nodedetailinfo.verify_cert" class="label label-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></span>
                     </td>
                 </tr>
                 <tr ng-if="nodedetailinfo.nodeState.last_run">
