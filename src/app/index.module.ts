@@ -36,7 +36,6 @@ import { minemeldOptions } from '../app/components/options/options.directive';
 import { nodeConfig } from '../app/components/nodeconfig/nodeconfig.directive';
 import { prototypeTooltip } from'../app/components/prototypetooltip/prototypetooltip.directive';
 
-declare var malarkey: any;
 declare var moment: moment.MomentStatic;
 
 module minemeldWebui {

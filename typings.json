@@ -2,18 +2,17 @@
   "name": "minemeldWebui",
   "version": false,
   "ambientDependencies": {
-    "angular-animate": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular-animate.d.ts#bb051830df88f5a55dcf06b7fe85bf6b62cc97f2",
-    "angular-cookies": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular-cookies.d.ts#bb051830df88f5a55dcf06b7fe85bf6b62cc97f2",
-    "angular-sanitize": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular-sanitize.d.ts#bb051830df88f5a55dcf06b7fe85bf6b62cc97f2",
-    "jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#bb051830df88f5a55dcf06b7fe85bf6b62cc97f2",
-    "angular-resource": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular-resource.d.ts#bb051830df88f5a55dcf06b7fe85bf6b62cc97f2",
-    "angular-ui-router": "github:DefinitelyTyped/DefinitelyTyped/angular-ui-router/angular-ui-router.d.ts#bb051830df88f5a55dcf06b7fe85bf6b62cc97f2",
-    "angular-ui-bootstrap": "github:DefinitelyTyped/DefinitelyTyped/angular-ui-bootstrap/angular-ui-bootstrap.d.ts#bb051830df88f5a55dcf06b7fe85bf6b62cc97f2",
-    "angular": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular.d.ts#bb051830df88f5a55dcf06b7fe85bf6b62cc97f2",
-    "angular-mocks": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular-mocks.d.ts#bb051830df88f5a55dcf06b7fe85bf6b62cc97f2",
-    "jasmine": "github:DefinitelyTyped/DefinitelyTyped/jasmine/jasmine.d.ts#bb051830df88f5a55dcf06b7fe85bf6b62cc97f2",
-    "karma-jasmine": "github:DefinitelyTyped/DefinitelyTyped/karma-jasmine/karma-jasmine.d.ts#bb051830df88f5a55dcf06b7fe85bf6b62cc97f2",
-    "moment": "github:DefinitelyTyped/DefinitelyTyped/moment/moment.d.ts#bb051830df88f5a55dcf06b7fe85bf6b62cc97f2",
-    "moment-node": "github:DefinitelyTyped/DefinitelyTyped/moment/moment-node.d.ts#bb051830df88f5a55dcf06b7fe85bf6b62cc97f2"
+    "angular-animate": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular-animate.d.ts#17f7f965f515e7085e085b42f7137c06f50f70e9",
+    "angular-cookies": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular-cookies.d.ts#17f7f965f515e7085e085b42f7137c06f50f70e9",
+    "angular-sanitize": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular-sanitize.d.ts#17f7f965f515e7085e085b42f7137c06f50f70e9",
+    "jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#17f7f965f515e7085e085b42f7137c06f50f70e9",
+    "angular-resource": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular-resource.d.ts#17f7f965f515e7085e085b42f7137c06f50f70e9",
+    "angular-ui-router": "github:DefinitelyTyped/DefinitelyTyped/angular-ui-router/angular-ui-router.d.ts#17f7f965f515e7085e085b42f7137c06f50f70e9",
+    "angular-ui-bootstrap": "github:DefinitelyTyped/DefinitelyTyped/angular-ui-bootstrap/angular-ui-bootstrap.d.ts#17f7f965f515e7085e085b42f7137c06f50f70e9",
+    "angular": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular.d.ts#17f7f965f515e7085e085b42f7137c06f50f70e9",
+    "angular-mocks": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular-mocks.d.ts#17f7f965f515e7085e085b42f7137c06f50f70e9",
+    "jasmine": "github:DefinitelyTyped/DefinitelyTyped/jasmine/jasmine.d.ts#17f7f965f515e7085e085b42f7137c06f50f70e9",
+    "karma-jasmine": "github:DefinitelyTyped/DefinitelyTyped/karma-jasmine/karma-jasmine.d.ts#17f7f965f515e7085e085b42f7137c06f50f70e9",
+    "moment": "github:DefinitelyTyped/DefinitelyTyped/moment/moment.d.ts#17f7f965f515e7085e085b42f7137c06f50f70e9"
   }
 }
