@@ -89,6 +89,7 @@ export class NodesController {
         })
         .withBootstrap()
         .withPaginationType('simple_numbers')
+        .withOption('order', [[2, 'asc'], [1, 'asc']])
         .withOption('aaSorting', [])
         .withOption('stateSave', true)
         .withOption('aaSortingFixed', [])

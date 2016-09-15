@@ -172,6 +172,7 @@ export class ConfigController {
         })
         .withBootstrap()
         .withPaginationType('simple_numbers')
+        .withOption('order', [[2, 'asc'], [1, 'asc']])
         .withOption('aaSorting', [])
         .withOption('aaSortingFixed', [])
         .withOption('paging', false)
