@@ -3,7 +3,7 @@
 import { INodeDetailResolverService } from '../../app/services/nodedetailresolver';
 import { IMinemeldConfigService } from '../../app/services/config';
 import { NodeDetailInfoController } from './nodedetail.info.controller';
-import { IMinemeldStatus } from  '../../app/services/status';
+import { IMinemeldStatusService } from  '../../app/services/status';
 
 /** @ngInject */
 function autofocusExportListConfig($stateProvider: ng.ui.IStateProvider) {
@@ -41,28 +41,28 @@ function autofocusELRegisterClass(NodeDetailResolver: INodeDetailResolverService
 }
 
 class NodeDetailAutofocusELInfoController extends NodeDetailInfoController {
-    MinemeldConfig: IMinemeldConfigService;
+    MinemeldConfigService: IMinemeldConfigService;
     api_key: string;
     label: string;
     $modal: angular.ui.bootstrap.IModalService;
 
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
-        MinemeldStatus: IMinemeldStatus,
+        MinemeldStatusService: IMinemeldStatusService,
         moment: moment.MomentStatic, $scope: angular.IScope,
         $compile: angular.ICompileService, $state: angular.ui.IStateService,
-        $stateParams: angular.ui.IStateParamsService, MinemeldConfig: IMinemeldConfigService,
+        $stateParams: angular.ui.IStateParamsService, MinemeldConfigService: IMinemeldConfigService,
         $modal: angular.ui.bootstrap.IModalService) {
-        this.MinemeldConfig = MinemeldConfig;
+        this.MinemeldConfigService = MinemeldConfigService;
         this.$modal = $modal;
 
-        super(toastr, $interval, MinemeldStatus, moment, $scope, $compile, $state, $stateParams);
+        super(toastr, $interval, MinemeldStatusService, moment, $scope, $compile, $state, $stateParams);
 
         this.loadSideConfig();
     }
 
     loadSideConfig(): void {
-        this.MinemeldConfig.getDataFile(this.nodename + '_side_config')
+        this.MinemeldConfigService.getDataFile(this.nodename + '_side_config')
         .then((result: any) => {
             if (result.api_key) {
                 this.api_key = result.api_key;
@@ -92,7 +92,7 @@ class NodeDetailAutofocusELInfoController extends NodeDetailInfoController {
             side_config.label = this.label;
         }
 
-        return this.MinemeldConfig.saveDataFile(
+        return this.MinemeldConfigService.saveDataFile(
             this.nodename + '_side_config',
             side_config,
             this.nodename

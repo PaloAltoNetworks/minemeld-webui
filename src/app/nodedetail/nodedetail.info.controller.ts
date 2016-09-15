@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldStatus, IMinemeldStatusNode } from  '../../app/services/status';
+import { IMinemeldStatusService, IMinemeldStatusNode } from  '../../app/services/status';
 
 interface INGMinemeldStatusNode extends IMinemeldStatusNode {
     indicators: number;
@@ -8,7 +8,7 @@ interface INGMinemeldStatusNode extends IMinemeldStatusNode {
 }
 
 export class NodeDetailInfoController {
-    mmstatus: IMinemeldStatus;
+    mmstatus: IMinemeldStatusService;
     moment: moment.MomentStatic;
     toastr: any;
     $interval: angular.IIntervalService;
@@ -30,12 +30,12 @@ export class NodeDetailInfoController {
 
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
-        MinemeldStatus: IMinemeldStatus,
+        MinemeldStatusService: IMinemeldStatusService,
         moment: moment.MomentStatic, $scope: angular.IScope,
         $compile: angular.ICompileService, $state: angular.ui.IStateService,
         $stateParams: angular.ui.IStateParamsService) {
         this.toastr = toastr;
-        this.mmstatus = MinemeldStatus;
+        this.mmstatus = MinemeldStatusService;
         this.$interval = $interval;
         this.moment = moment;
         this.$scope = $scope;

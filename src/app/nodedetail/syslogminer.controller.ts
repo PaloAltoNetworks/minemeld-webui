@@ -4,13 +4,13 @@ import { INodeDetailResolverService } from '../../app/services/nodedetailresolve
 import { IMinemeldConfigService } from '../../app/services/config';
 import { IConfirmService } from '../../app/services/confirm';
 import { IMinemeldValidateService } from '../../app/services/validate';
-import { IMinemeldStatus, IMinemeldStatusNode } from '../../app/services/status';
+import { IMinemeldStatusService, IMinemeldStatusNode } from '../../app/services/status';
 
 declare var he: any;
 declare var jsyaml: any;
 
 class SyslogMinerRulesController {
-    MinemeldConfig: IMinemeldConfigService;
+    MinemeldConfigService: IMinemeldConfigService;
     toastr: any;
     DTOptionsBuilder: any;
     DTColumnBuilder: any;
@@ -18,7 +18,7 @@ class SyslogMinerRulesController {
     $compile: angular.ICompileService;
     $modal: angular.ui.bootstrap.IModalService;
     ConfirmService: IConfirmService;
-    MinemeldStatus: IMinemeldStatus;
+    MinemeldStatusService: IMinemeldStatusService;
     $interval: angular.IIntervalService;
 
     dtOptions: any;
@@ -34,13 +34,13 @@ class SyslogMinerRulesController {
     updateMinemeldStatusInterval: number = 5 * 60 * 1000;
 
     /** @ngInject */
-    constructor(toastr: any, MinemeldConfig: IMinemeldConfigService,
+    constructor(toastr: any, MinemeldConfigService: IMinemeldConfigService,
                 DTOptionsBuilder: any, DTColumnBuilder: any,
                 $compile: angular.ICompileService, $scope: angular.IScope,
                 $modal: angular.ui.bootstrap.IModalService,
-                MinemeldStatus: IMinemeldStatus, $interval: angular.IIntervalService,
+                MinemeldStatusService: IMinemeldStatusService, $interval: angular.IIntervalService,
                 ConfirmService: IConfirmService) {
-        this.MinemeldConfig = MinemeldConfig;
+        this.MinemeldConfigService = MinemeldConfigService;
         this.toastr = toastr;
         this.DTColumnBuilder = DTColumnBuilder;
         this.DTOptionsBuilder = DTOptionsBuilder;
@@ -48,7 +48,7 @@ class SyslogMinerRulesController {
         this.$scope = $scope;
         this.$modal = $modal;
         this.ConfirmService = ConfirmService;
-        this.MinemeldStatus = MinemeldStatus;
+        this.MinemeldStatusService = MinemeldStatusService;
         this.$interval = $interval;
 
         this.nodename = $scope.$parent['nodedetail']['nodename'];
@@ -153,7 +153,7 @@ class SyslogMinerRulesController {
     private updateMinemeldStatus(): void {
         var vm: SyslogMinerRulesController = this;
 
-        this.MinemeldStatus.getMinemeld()
+        this.MinemeldStatusService.getMinemeld()
             .then((result: any) => {
                 var ns: IMinemeldStatusNode;
 
@@ -190,7 +190,7 @@ class SyslogMinerRulesController {
     }
 
     private saveRulesList(): angular.IPromise<any> {
-        return this.MinemeldConfig
+        return this.MinemeldConfigService
             .saveDataFile(this.cfd_rules_list, this.rules_list, this.nodename)
             .then((result: any) => {
                 this.toastr.success('CHANGES SAVED');
@@ -202,7 +202,7 @@ class SyslogMinerRulesController {
         var vm: SyslogMinerRulesController = this;
 
         this.dtOptions = this.DTOptionsBuilder.fromFnPromise(function() {
-            return vm.MinemeldConfig.getDataFile(vm.cfd_rules_list).then((result: any) => {
+            return vm.MinemeldConfigService.getDataFile(vm.cfd_rules_list).then((result: any) => {
                 vm.changed = false;
 
                 if (result === null) {
@@ -306,7 +306,7 @@ class SyslogMinerRulesController {
 
 class SyslogMinerEditRuleController {
     $modalInstance: angular.ui.bootstrap.IModalServiceInstance;
-    MinemeldValidate: IMinemeldValidateService;
+    MinemeldValidateService: IMinemeldValidateService;
     toastr: any;
 
     title: string;
@@ -324,7 +324,7 @@ class SyslogMinerEditRuleController {
     /** @ngInject */
     constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance,
                 title: string, rule: any, rule_names: string[],
-                MinemeldValidate: IMinemeldValidateService, toastr: any) {
+                MinemeldValidateService: IMinemeldValidateService, toastr: any) {
         var trule: any;
 
         this.title = title;
@@ -353,7 +353,7 @@ class SyslogMinerEditRuleController {
         }
 
         this.$modalInstance = $modalInstance;
-        this.MinemeldValidate = MinemeldValidate;
+        this.MinemeldValidateService = MinemeldValidateService;
         this.toastr = toastr;
 
         this.editorChanged = () => {
@@ -418,7 +418,7 @@ class SyslogMinerEditRuleController {
             rule.comment = this.comment;
         }
 
-        this.MinemeldValidate.syslogMinerRule(rule)
+        this.MinemeldValidateService.syslogMinerRule(rule)
             .then((result: any) => {
                 this.validated = true;
             }, (error: any) => {

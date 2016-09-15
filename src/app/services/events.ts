@@ -1,8 +1,6 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldAuth } from './auth';
-
-export interface IMinemeldEvents {
+export interface IMinemeldEventsService {
     subscribeQueryEvents(query: string, callback: any): number;
     unsubscribe(subscription: number): void;
 }
@@ -40,12 +38,11 @@ export interface ISubscriptionsCallbacks {
 
 declare var pfEventSource: IEventSource;
 
-export class MinemeldEvents implements IMinemeldEvents {
+export class MinemeldEventsService implements IMinemeldEventsService {
     authorizationSet: boolean = false;
     authorizationString: string;
 
     $state: angular.ui.IStateService;
-    MinemeldAuth: IMinemeldAuth;
 
     subscriptions: ISubscription[] = [];
     last_id: number = -1;
@@ -53,18 +50,11 @@ export class MinemeldEvents implements IMinemeldEvents {
     event_sources: { [topic: string]: IEventSource } = {};
 
     /* @ngInject */
-    constructor($state: angular.ui.IStateService,
-                MinemeldAuth: IMinemeldAuth) {
+    constructor($state: angular.ui.IStateService) {
         this.$state = $state;
-        this.MinemeldAuth = MinemeldAuth;
     }
 
     subscribeQueryEvents(query: string, callbacks: ISubscriptionsCallbacks): number {
-        if (!this.MinemeldAuth.authorizationSet) {
-            this.$state.go('login');
-            return;
-        }
-
         this.last_id += 1;
 
         var sub: ISubscription = {
@@ -139,14 +129,13 @@ export class MinemeldEvents implements IMinemeldEvents {
             return;
         }
 
-        headers = this.MinemeldAuth.getAuthorizationHeaders();
+        headers = {};
         headers['Accept'] = 'text/event-stream';
         headers['Cache-Control'] = 'no-cache';
         headers['X-Requested-With'] = 'XMLHttpRequest';
 
         new_es = new pfEventSource('/status/events/' + ruri, {
-            getArgs: null,
-            xhrHeaders: headers
+            getArgs: null
         });
 
         new_es.onmessage = (e: any) => { this.onMessage(subtype, event, e); };

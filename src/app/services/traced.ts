@@ -1,7 +1,7 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldAuth } from './auth';
-import { IMinemeldEvents } from './events';
+import { IMineMeldAPIService } from './minemeldapi';
+import { IMinemeldEventsService } from './events';
 
 export interface IMinemeldTracedQueryOptions {
     query?: string;
@@ -17,7 +17,7 @@ interface IMinemeldTracedQueryOptionsInt extends IMinemeldTracedQueryOptions {
     queryStarted?: boolean;
 }
 
-export interface IMinemeldTraced {
+export interface IMinemeldTracedService {
     query(qid: string, options?: IMinemeldTracedQueryOptions);
     generateQueryID(): string;
     closeAll(): void;
@@ -31,22 +31,19 @@ interface IMinemeldTracedQueryParams {
     nl?: number;
 }
 
-export class MinemeldTraced implements IMinemeldTraced {
-    $resource: angular.resource.IResourceService;
+export class MinemeldTracedService implements IMinemeldTracedService {
     $state: angular.ui.IStateService;
-    MinemeldAuth: IMinemeldAuth;
-    MinemeldEvents: IMinemeldEvents;
+    MinemeldEventsService: IMinemeldEventsService;
+    MineMeldAPIService: IMineMeldAPIService;
 
     queries: { [qid: string]: IMinemeldTracedQueryOptionsInt };
 
     /* @ngInject */
-    constructor($resource: angular.resource.IResourceService,
-                $state: angular.ui.IStateService,
-                MinemeldAuth: IMinemeldAuth, MinemeldEvents: IMinemeldEvents) {
-        this.$resource = $resource;
+    constructor($state: angular.ui.IStateService,
+                MineMeldAPIService: IMineMeldAPIService, MinemeldEventsService: IMinemeldEventsService) {
         this.$state = $state;
-        this.MinemeldAuth = MinemeldAuth;
-        this.MinemeldEvents = MinemeldEvents;
+        this.MineMeldAPIService = MineMeldAPIService;
+        this.MinemeldEventsService = MinemeldEventsService;
 
         this.queries = {};
     }
@@ -57,7 +54,7 @@ export class MinemeldTraced implements IMinemeldTraced {
         this.queries[qid] = options;
 
         this.queries[qid].queryStarted = false;
-        sid = this.MinemeldEvents.subscribeQueryEvents(qid, {
+        sid = this.MinemeldEventsService.subscribeQueryEvents(qid, {
             onopen: this.subscriptionOpen.bind(this),
             onmessage: this.queryMessage.bind(this),
             onerror: this.queryError.bind(this)
@@ -68,7 +65,7 @@ export class MinemeldTraced implements IMinemeldTraced {
     closeAll(): void {
         angular.forEach(this.queries, (query: IMinemeldTracedQueryOptionsInt, qid: string) => {
             this.killQuery(qid);
-            this.MinemeldEvents.unsubscribe(query.subscriptionID);
+            this.MinemeldEventsService.unsubscribe(query.subscriptionID);
         });
         this.queries = {};
     }
@@ -88,11 +85,6 @@ export class MinemeldTraced implements IMinemeldTraced {
         var params: IMinemeldTracedQueryParams;
         var qResource: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
-        if (!this.MinemeldAuth.authorizationSet) {
-            this.$state.go('login');
-            return;
-        }
-
         params = {
             uuid: qid
         };
@@ -111,10 +103,9 @@ export class MinemeldTraced implements IMinemeldTraced {
             }
         }
 
-        qResource = this.$resource('/traced/query', {}, {
+        qResource = this.MineMeldAPIService.getAPIResource('/traced/query', {}, {
             get: {
-                method: 'GET',
-                headers: this.MinemeldAuth.getAuthorizationHeaders()
+                method: 'GET'
             }
         });
 
@@ -124,15 +115,9 @@ export class MinemeldTraced implements IMinemeldTraced {
     private killQuery(qid: string): any {
         var qResource: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
-        if (!this.MinemeldAuth.authorizationSet) {
-            this.$state.go('login');
-            return;
-        }
-
-        qResource = this.$resource('/traced/query/' + qid + '/kill', {}, {
+        qResource = this.MineMeldAPIService.getAPIResource('/traced/query/' + qid + '/kill', {}, {
             get: {
-                method: 'GET',
-                headers: this.MinemeldAuth.getAuthorizationHeaders()
+                method: 'GET'
             }
         });
 
@@ -156,7 +141,7 @@ export class MinemeldTraced implements IMinemeldTraced {
         q.queryStarted = true;
 
         this.sendQuery(qid, q).catch((error: any) => {
-            this.MinemeldEvents.unsubscribe(q.subscriptionID);
+            this.MinemeldEventsService.unsubscribe(q.subscriptionID);
             delete this.queries[qid];
 
             if (q.onerror) {
@@ -182,7 +167,7 @@ export class MinemeldTraced implements IMinemeldTraced {
         }
 
         if (data.msg && data.msg === '<EOQ>') {
-            this.MinemeldEvents.unsubscribe(q.subscriptionID);
+            this.MinemeldEventsService.unsubscribe(q.subscriptionID);
             delete this.queries[qid];
         }
     }

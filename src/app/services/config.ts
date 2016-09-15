@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldAuth } from './auth';
+import { IMineMeldAPIService } from './minemeldapi';
 
 export interface IMinemeldConfigInfo {
     fabric: boolean;
@@ -39,9 +39,7 @@ interface IMinemeldConfigResource extends angular.resource.IResourceClass<angula
     post(params: any, postdata: any);
 }
 
-export class MinemeldConfig implements IMinemeldConfigService {
-    static $inject = ['$resource', '$state', '$q', 'MinemeldAuth'];
-
+export class MinemeldConfigService implements IMinemeldConfigService {
     deletedNode: IMinemeldConfigNode = {
         'name': '',
         'properties': {},
@@ -53,33 +51,25 @@ export class MinemeldConfig implements IMinemeldConfigService {
     nodesConfig: IMinemeldConfigNode[];
     changed: boolean;
 
-    $resource: angular.resource.IResourceService;
-    MinemeldAuth: IMinemeldAuth;
     $state: angular.ui.IStateService;
     $q: angular.IQService;
+    MineMeldAPIService: IMineMeldAPIService;
 
-    constructor($resource: angular.resource.IResourceService,
-                $state: angular.ui.IStateService,
+    /** @ngInject */
+    constructor($state: angular.ui.IStateService,
                 $q: angular.IQService,
-                MinemeldAuth: IMinemeldAuth) {
-        this.$resource = $resource;
-        this.MinemeldAuth = MinemeldAuth;
+                MineMeldAPIService: IMineMeldAPIService) {
         this.$state = $state;
         this.$q = $q;
+        this.MineMeldAPIService = MineMeldAPIService;
     }
 
     refresh() {
         var r: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
-        if (!this.MinemeldAuth.authorizationSet) {
-            this.$state.go('login');
-            return;
-        }
-
-        r = this.$resource('/config/full', {}, {
+        r = this.MineMeldAPIService.getAPIResource('/config/full', {}, {
             get: {
-                method: 'GET',
-                headers: this.MinemeldAuth.getAuthorizationHeaders()
+                method: 'GET'
             }
         });
 
@@ -100,16 +90,6 @@ export class MinemeldConfig implements IMinemeldConfigService {
             this.nodesConfig = nodesConfig;
 
             return this.nodesConfig;
-        }, (error: any) => {
-            if (error.status === 500) {
-                return this.reload();
-            }
-
-            this.configInfo = undefined;
-            this.changed = false;
-            this.nodesConfig = [];
-
-            throw error;
         });
     }
 
@@ -117,15 +97,9 @@ export class MinemeldConfig implements IMinemeldConfigService {
         var r: angular.resource.IResourceClass<angular.resource.IResource<any>>;
         var params: any = {};
 
-        if (!this.MinemeldAuth.authorizationSet) {
-            this.$state.go('login');
-            return;
-        }
-
-        r = this.$resource('/config/reload', {}, {
+        r = this.MineMeldAPIService.getAPIResource('/config/reload', {}, {
             get: {
-                method: 'GET',
-                headers: this.MinemeldAuth.getAuthorizationHeaders()
+                method: 'GET'
             }
         });
 
@@ -141,15 +115,9 @@ export class MinemeldConfig implements IMinemeldConfigService {
     commit() {
         var r: IMinemeldConfigResource;
 
-        if (!this.MinemeldAuth.authorizationSet) {
-            this.$state.go('login');
-            return;
-        }
-
-        r = <IMinemeldConfigResource>(this.$resource('/config/commit', {}, {
+        r = <IMinemeldConfigResource>(this.MineMeldAPIService.getAPIResource('/config/commit', {}, {
             post: {
-                method: 'POST',
-                headers: this.MinemeldAuth.getAuthorizationHeaders()
+                method: 'POST'
             }
         }));
 
@@ -159,17 +127,11 @@ export class MinemeldConfig implements IMinemeldConfigService {
     saveNodeConfig(noden: number): angular.IPromise<any> {
         var r: IMinemeldConfigResource;
 
-        if (!this.MinemeldAuth.authorizationSet) {
-            this.$state.go('login');
-            return;
-        }
-
-        r = <IMinemeldConfigResource>(this.$resource('/config/node/:noden', {
+        r = <IMinemeldConfigResource>(this.MineMeldAPIService.getAPIResource('/config/node/:noden', {
             noden: noden
         }, {
             put: {
-                method: 'PUT',
-                headers: this.MinemeldAuth.getAuthorizationHeaders()
+                method: 'PUT'
             }
         }));
 
@@ -185,21 +147,15 @@ export class MinemeldConfig implements IMinemeldConfigService {
         var r: IMinemeldConfigResource;
         var config: IMinemeldConfigNode;
 
-        if (!this.MinemeldAuth.authorizationSet) {
-            this.$state.go('login');
-             return;
-        }
-
         config = {
             name: name,
             properties: properties,
             version: this.configInfo.version
         };
 
-        r = <IMinemeldConfigResource>(this.$resource('/config/node', {}, {
+        r = <IMinemeldConfigResource>(this.MineMeldAPIService.getAPIResource('/config/node', {}, {
             post: {
-                method: 'POST',
-                headers: this.MinemeldAuth.getAuthorizationHeaders()
+                method: 'POST'
             }
         }));
 
@@ -211,17 +167,11 @@ export class MinemeldConfig implements IMinemeldConfigService {
     deleteNode(noden: number): angular.IPromise<any> {
         var r: IMinemeldConfigResource;
 
-        if (!this.MinemeldAuth.authorizationSet) {
-            this.$state.go('login');
-            return;
-        }
-
-        r = <IMinemeldConfigResource>(this.$resource('/config/node/:noden', {
+        r = <IMinemeldConfigResource>(this.MineMeldAPIService.getAPIResource('/config/node/:noden', {
             noden: noden
         }, {
             del: {
-                method: 'DELETE',
-                headers: this.MinemeldAuth.getAuthorizationHeaders()
+                method: 'DELETE'
             }
         }));
 
@@ -236,17 +186,11 @@ export class MinemeldConfig implements IMinemeldConfigService {
     getDataFile(datafilename: string): angular.IPromise<any> {
         var r: IMinemeldConfigResource;
 
-        if (!this.MinemeldAuth.authorizationSet) {
-            this.$state.go('login');
-            return;
-        }
-
-        r = <IMinemeldConfigResource>(this.$resource('/config/data/:datafilename', {
+        r = <IMinemeldConfigResource>(this.MineMeldAPIService.getAPIResource('/config/data/:datafilename', {
             datafilename: datafilename
         }, {
             get: {
-                method: 'GET',
-                headers: this.MinemeldAuth.getAuthorizationHeaders()
+                method: 'GET'
             }
         }));
 
@@ -266,17 +210,11 @@ export class MinemeldConfig implements IMinemeldConfigService {
         var r: IMinemeldConfigResource;
         var params: any = {};
 
-        if (!this.MinemeldAuth.authorizationSet) {
-            this.$state.go('login');
-            return;
-        }
-
-        r = <IMinemeldConfigResource>(this.$resource('/config/data/:datafilename', {
+        r = <IMinemeldConfigResource>(this.MineMeldAPIService.getAPIResource('/config/data/:datafilename', {
             datafilename: datafilename
         }, {
                 put: {
-                    method: 'PUT',
-                    headers: this.MinemeldAuth.getAuthorizationHeaders()
+                    method: 'PUT'
                 }
         }));
 
@@ -294,17 +232,11 @@ export class MinemeldConfig implements IMinemeldConfigService {
         var r: IMinemeldConfigResource;
         var params: any = {};
 
-        if (!this.MinemeldAuth.authorizationSet) {
-            this.$state.go('login');
-            return;
-        }
-
-        r = <IMinemeldConfigResource>(this.$resource('/config/data/:datafilename/append', {
+        r = <IMinemeldConfigResource>(this.MineMeldAPIService.getAPIResource('/config/data/:datafilename/append', {
             datafilename: datafilename
         }, {
                 post: {
-                    method: 'POST',
-                    headers: this.MinemeldAuth.getAuthorizationHeaders()
+                    method: 'POST'
                 }
         }));
 

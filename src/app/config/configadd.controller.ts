@@ -14,8 +14,8 @@ interface IPrototypesDescription {
 }
 
 export class ConfigAddController {
-    MinemeldPrototype: IMinemeldPrototypeService;
-    MinemeldConfig: IMinemeldConfigService;
+    MinemeldPrototypeService: IMinemeldPrototypeService;
+    MinemeldConfigService: IMinemeldConfigService;
     toastr: any;
     $state: angular.ui.IStateService;
     $stateParams: angular.ui.IStateParamsService;
@@ -32,8 +32,8 @@ export class ConfigAddController {
     selectedPrototype: IPrototypesDescription;
 
     /* @ngInject */
-    constructor(MinemeldPrototype: IMinemeldPrototypeService,
-                MinemeldConfig: IMinemeldConfigService,
+    constructor(MinemeldPrototypeService: IMinemeldPrototypeService,
+                MinemeldConfigService: IMinemeldConfigService,
                 toastr: any, $state: angular.ui.IStateService,
                 $stateParams: angular.ui.IStateParamsService,
                 $rootScope: angular.IRootScopeService) {
@@ -41,8 +41,8 @@ export class ConfigAddController {
         var toks: string[];
 
         this.$rootScope = $rootScope;
-        this.MinemeldPrototype = MinemeldPrototype;
-        this.MinemeldConfig = MinemeldConfig;
+        this.MinemeldPrototypeService = MinemeldPrototypeService;
+        this.MinemeldConfigService = MinemeldConfigService;
         this.toastr = toastr;
         this.$state = $state;
         this.$stateParams = $stateParams;
@@ -55,7 +55,7 @@ export class ConfigAddController {
             this.name = toks[toks.length - 1] + '-' + (new Date().getTime());
         }
 
-        this.MinemeldPrototype.getPrototypeLibraries().then((result: any) => {
+        this.MinemeldPrototypeService.getPrototypeLibraries().then((result: any) => {
             var l: string;
             var p: string;
             var nt: string;
@@ -96,8 +96,8 @@ export class ConfigAddController {
             this.toastr.error('ERROR RETRIEVING PROTOTYPES: ' + error.statusText);
         });
 
-        this.MinemeldConfig.refresh().then((result: any) => {
-            this.availableInputs = this.MinemeldConfig.nodesConfig
+        this.MinemeldConfigService.refresh().then((result: any) => {
+            this.availableInputs = this.MinemeldConfigService.nodesConfig
                 .filter((x: IMinemeldConfigNode) => {
                     if (x.deleted) {
                         return false;
@@ -111,7 +111,7 @@ export class ConfigAddController {
     }
 
     save(): void {
-        this.MinemeldConfig.addNode(
+        this.MinemeldConfigService.addNode(
             this.name,
             {
                 inputs: this.inputs,

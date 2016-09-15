@@ -1,4 +1,6 @@
-import { IMinemeldAuth } from '../../services/auth';
+/// <reference path="../../../../typings/main.d.ts" />
+
+import { IMineMeldAPIService } from '../../services/minemeldapi';
 
 /** @ngInject */
 export function appNavbar(): ng.IDirective {
@@ -18,16 +20,22 @@ export function appNavbar(): ng.IDirective {
 
 /** @ngInject */
 export class NavbarController {
-  MinemeldAuth: IMinemeldAuth;
+  MineMeldAPIService: IMineMeldAPIService;
   $state: angular.ui.IStateService;
+  $cookies: angular.cookies.ICookiesService;
 
-  constructor(MinemeldAuth: IMinemeldAuth, $state: angular.ui.IStateService) {
-    this.MinemeldAuth = MinemeldAuth;
+  constructor(MineMeldAPIService: IMineMeldAPIService,
+              $state: angular.ui.IStateService,
+              $cookies: angular.cookies.ICookiesService) {
+    this.MineMeldAPIService = MineMeldAPIService;
     this.$state = $state;
+    this.$cookies = $cookies;
   }
 
   logout() {
-    this.MinemeldAuth.logOut();
-    this.$state.go('login');
+    this.MineMeldAPIService.logOut().finally(() => {
+      this.$cookies.remove('mm-session');
+      this.$state.go('login');
+    });
   }
 }

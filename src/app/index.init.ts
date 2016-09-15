@@ -1,8 +1,10 @@
-import { IMinemeldAuth }  from './services/auth';
+import { IMineMeldAPIService } from './services/minemeldapi';
 
 /** @ngInject */
-export function minemeldInit(MinemeldAuth: IMinemeldAuth, $state: angular.ui.IStateService,
-                             $rootScope: any) {
+export function minemeldInit($state: angular.ui.IStateService,
+                             $rootScope: any,
+                             $cookies: angular.cookies.ICookiesService,
+                             MineMeldAPIService: IMineMeldAPIService) {
     document.getElementById('loader').style.display = 'none';
 
     $rootScope.mmBack = (state?: string) => {
@@ -20,10 +22,7 @@ export function minemeldInit(MinemeldAuth: IMinemeldAuth, $state: angular.ui.ISt
             state: fromState,
             params: fromParams
         };
-    });
 
-    if (!MinemeldAuth.authorizationSet) {
-        $state.go('login');
-        return;
-    }
+        MineMeldAPIService.cancelAPICalls();
+    });
 }

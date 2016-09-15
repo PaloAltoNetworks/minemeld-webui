@@ -1,13 +1,13 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldStatus } from  '../../app/services/status';
+import { IMinemeldStatusService } from  '../../app/services/status';
 import { IMinemeldConfigService } from '../../app/services/config';
 
 export class IndicatorAddController {
     toastr: any;
     $scope: angular.IScope;
-    MinemeldStatus: IMinemeldStatus;
-    MinemeldConfig: IMinemeldConfigService;
+    MinemeldStatusService: IMinemeldStatusService;
+    MinemeldConfigService: IMinemeldConfigService;
     $rootScope: any;
     $state: angular.ui.IStateService;
 
@@ -35,21 +35,21 @@ export class IndicatorAddController {
     /* @ngInject */
     constructor($stateParams: angular.ui.IStateParamsService,
                 $scope: angular.IScope, toastr: any,
-                MinemeldStatus: IMinemeldStatus,
+                MinemeldStatusService: IMinemeldStatusService,
                 $rootScope: angular.IRootScopeService,
-                MinemeldConfig: IMinemeldConfigService,
+                MinemeldConfigService: IMinemeldConfigService,
                 $state: angular.ui.IStateService) {
         this.toastr = toastr;
         this.$scope = $scope;
-        this.MinemeldStatus = MinemeldStatus;
-        this.MinemeldConfig = MinemeldConfig;
+        this.MinemeldStatusService = MinemeldStatusService;
+        this.MinemeldConfigService = MinemeldConfigService;
         this.$rootScope = $rootScope;
         this.$state = $state;
 
         this.indicator = $stateParams['indicator'];
         this.$type = $stateParams['indicatorType'];
 
-        this.MinemeldStatus.getConfig().then((response: any) => {
+        this.MinemeldStatusService.getConfig().then((response: any) => {
             var nodes: any[] = response.nodes;
             var tnodes: string[] = [];
 
@@ -127,7 +127,7 @@ export class IndicatorAddController {
         angular.forEach(this.nodes, (node: string) => {
             var cfd_name = node + '_indicators';
 
-            this.MinemeldConfig.appendDataFile(cfd_name, rindicator, node)
+            this.MinemeldConfigService.appendDataFile(cfd_name, rindicator, node)
                 .then((result: any) => {
                     this.toastr.success('INDICATOR ADDED TO ' + node);
                 }, (error: any) => {

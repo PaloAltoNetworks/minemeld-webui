@@ -20,17 +20,17 @@ import { IndicatorAddController } from './indicatoradd/indicatoradd.controller';
 import { LogsController } from './logs/logs.controller';
 import { appNavbar } from '../app/components/navbar/navbar.directive';
 import { LoginController } from './login/login.controller';
-import { MinemeldStatus } from './services/status';
-import { MinemeldMetrics } from './services/metrics';
-import { MinemeldAuth } from './services/auth';
-import { MinemeldPrototype } from './services/prototype';
-import { MinemeldConfig } from './services/config';
-import { MinemeldValidate } from './services/validate';
+import { MineMeldAPIService } from './services/minemeldapi';
+import { MinemeldStatusService } from './services/status';
+import { MinemeldMetricsService } from './services/metrics';
+import { MinemeldPrototypeService } from './services/prototype';
+import { MinemeldConfigService } from './services/config';
+import { MinemeldValidateService } from './services/validate';
 import { NodeDetailResolver } from './services/nodedetailresolver';
-import { MinemeldSupervisor } from './services/supervisor';
+import { MinemeldSupervisorService } from './services/supervisor';
 import { ConfirmService } from './services/confirm';
-import { MinemeldEvents } from './services/events';
-import { MinemeldTraced } from './services/traced';
+import { MinemeldEventsService } from './services/events';
+import { MinemeldTracedService } from './services/traced';
 import { megaNumber } from './filters/megaNumber';
 import { minemeldOptions } from '../app/components/options/options.directive';
 import { nodeConfig } from '../app/components/nodeconfig/nodeconfig.directive';
@@ -83,17 +83,17 @@ module minemeldWebui {
   .directive('nodeConfig', nodeConfig)
   .directive('appNavbar', appNavbar)
   .directive('prototypeTooltip', prototypeTooltip)
-  .service('MinemeldStatus', MinemeldStatus)
-  .service('MinemeldMetrics', MinemeldMetrics)
+  .service('MineMeldAPIService', MineMeldAPIService)
+  .service('MinemeldStatusService', MinemeldStatusService)
+  .service('MinemeldMetricsService', MinemeldMetricsService)
   .service('NodeDetailResolver', NodeDetailResolver)
-  .service('MinemeldAuth', MinemeldAuth)
-  .service('MinemeldPrototype', MinemeldPrototype)
-  .service('MinemeldConfig', MinemeldConfig)
+  .service('MinemeldPrototypeService', MinemeldPrototypeService)
+  .service('MinemeldConfigService', MinemeldConfigService)
   .service('ConfirmService', ConfirmService)
-  .service('MinemeldSupervisor', MinemeldSupervisor)
-  .service('MinemeldValidate', MinemeldValidate)
-  .service('MinemeldEvents', MinemeldEvents)
-  .service('MinemeldTraced', MinemeldTraced)
+  .service('MinemeldSupervisorService', MinemeldSupervisorService)
+  .service('MinemeldValidateService', MinemeldValidateService)
+  .service('MinemeldEventsService', MinemeldEventsService)
+  .service('MinemeldTracedService', MinemeldTracedService)
   .filter('megaNumber', megaNumber)
   .run(minemeldInit)
   ;

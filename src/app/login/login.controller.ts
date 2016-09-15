@@ -1,4 +1,4 @@
-import { IMinemeldAuth } from  '../../app/services/auth';
+import { IMineMeldAPIService } from  '../../app/services/minemeldapi';
 
 /** @ngInject */
 export class LoginController {
@@ -7,44 +7,28 @@ export class LoginController {
 
     checking: boolean = false;
 
-    $resource: angular.resource.IResourceService;
     toastr: any;
     $state: angular.ui.IStateService;
-    MinemeldAuth: IMinemeldAuth;
-    $cookies: angular.cookies.ICookiesService;
+    MineMeldAPIService: IMineMeldAPIService;
 
     constructor($state: angular.ui.IStateService,
-                MinemeldAuth: IMinemeldAuth,
-                toastr: any, $resource: angular.resource.IResourceService,
-                $cookies: angular.cookies.ICookiesService) {
-        this.$resource = $resource;
+                MineMeldAPIService: IMineMeldAPIService,
+                toastr: any) {
         this.toastr = toastr;
         this.$state = $state;
-        this.MinemeldAuth = MinemeldAuth;
-        this.$cookies = $cookies;
+        this.MineMeldAPIService = MineMeldAPIService;
     }
 
     public submit() {
-        var r: angular.resource.IResourceClass<angular.resource.IResource<any>>;
-
         this.checking = true;
-        r = this.$resource('/status/minemeld', {}, {
-            get: {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Basic ' + window.btoa(this.username + ':' + this.password)
-                }
-            }
-        });
-        r.get().$promise
+        this.MineMeldAPIService.logIn(this.username, this.password)
             .then((result: any) => {
-                this.$cookies.put('mmar', btoa(this.username + ':' + this.password));
-                this.MinemeldAuth.setAuthorization(this.username, this.password);
                 this.checking = false;
                 this.$state.go('dashboard');
             }, (error: any) => {
                 this.checking = false;
                 this.toastr.error('ERROR CHECKING CREDENTIALS: ' + error.statusText);
+                this.password = '';
             });
     }
 }

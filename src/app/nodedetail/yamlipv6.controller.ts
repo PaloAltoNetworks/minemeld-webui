@@ -38,7 +38,7 @@ class ConfigureDirectionController {
 }
 
 class NodeDetailYamlIPv6IndicatorsController {
-    MinemeldConfig: IMinemeldConfigService;
+    MinemeldConfigService: IMinemeldConfigService;
     toastr: any;
     $scope: angular.IScope;
     DTOptionsBuilder: any;
@@ -58,12 +58,12 @@ class NodeDetailYamlIPv6IndicatorsController {
     indicators: any[];
 
     /** @ngInject */
-    constructor(toastr: any, MinemeldConfig: IMinemeldConfigService,
+    constructor(toastr: any, MinemeldConfigService: IMinemeldConfigService,
                 $scope: angular.IScope, DTOptionsBuilder: any,
                 DTColumnBuilder: any, $compile: angular.ICompileService,
                 $modal: angular.ui.bootstrap.IModalService,
                 ConfirmService: IConfirmService) {
-        this.MinemeldConfig = MinemeldConfig;
+        this.MinemeldConfigService = MinemeldConfigService;
         this.$scope = $scope;
         this.toastr = toastr;
         this.DTColumnBuilder = DTColumnBuilder;
@@ -243,7 +243,7 @@ class NodeDetailYamlIPv6IndicatorsController {
         var vm: NodeDetailYamlIPv6IndicatorsController = this;
 
         this.dtOptions = this.DTOptionsBuilder.fromFnPromise(function() {
-            return vm.MinemeldConfig.getDataFile(vm.cfd_indicators).then((result: any) => {
+            return vm.MinemeldConfigService.getDataFile(vm.cfd_indicators).then((result: any) => {
                 vm.changed = false;
 
                 if (result === null) {
@@ -363,7 +363,7 @@ class NodeDetailYamlIPv6IndicatorsController {
     }
 
     private saveIndicators(): angular.IPromise<any> {
-        return this.MinemeldConfig
+        return this.MinemeldConfigService
             .saveDataFile(this.cfd_indicators, this.indicators, this.nodename)
             .then((result: any) => {
                 this.toastr.success('CHANGES SAVED');

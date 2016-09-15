@@ -23,7 +23,7 @@ export class PrototypeTooltipController {
     prototypeDescription: string;
     libraryDescription: string;
 
-    constructor(MinemeldPrototype: IMinemeldPrototypeService) {
+    constructor(MinemeldPrototypeService: IMinemeldPrototypeService) {
         var toks: string[];
 
         toks = this.name.split('.');
@@ -31,7 +31,7 @@ export class PrototypeTooltipController {
         this.prototypeName = toks[1];
         this.libraryName = toks[0];
 
-        MinemeldPrototype.getPrototypeLibrary(toks[0])
+        MinemeldPrototypeService.getPrototypeLibrary(toks[0])
         .then((result: IMinemeldPrototypeLibrary) => {
             this.libraryDescription = result.description;
 

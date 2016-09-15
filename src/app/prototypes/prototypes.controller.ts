@@ -5,7 +5,7 @@ import { IMinemeldPrototypeService } from '../../app/services/prototype';
 declare var he: any;
 
 export class PrototypesController {
-    MinemeldPrototype: IMinemeldPrototypeService;
+    MinemeldPrototypeService: IMinemeldPrototypeService;
     toastr: any;
     $scope: angular.IScope;
     $compile: angular.ICompileService;
@@ -17,12 +17,12 @@ export class PrototypesController {
     dtColumns: any[];
     dtOptions: any;
 
-    /* @ngInject */
+    /** @ngInject */
     constructor(toastr: any,
-        MinemeldPrototype: IMinemeldPrototypeService,
+        MinemeldPrototypeService: IMinemeldPrototypeService,
         moment: moment.MomentStatic, $scope: angular.IScope, DTOptionsBuilder: any,
         DTColumnBuilder: any, $compile: angular.ICompileService, $state: angular.ui.IStateService) {
-        this.MinemeldPrototype = MinemeldPrototype;
+        this.MinemeldPrototypeService = MinemeldPrototypeService;
         this.toastr = toastr;
         this.$scope = $scope;
         this.DTColumnBuilder = DTColumnBuilder;
@@ -39,7 +39,7 @@ export class PrototypesController {
 
     private setupPrototypesTable() {
         this.dtOptions = this.DTOptionsBuilder.fromFnPromise(() => {
-            var $p: any = this.MinemeldPrototype.getPrototypeLibraries()
+            var $p: any = this.MinemeldPrototypeService.getPrototypeLibraries()
                 .then((result: any) => {
                     var l, p: string;
                     var curlibrary, curprototype: any;

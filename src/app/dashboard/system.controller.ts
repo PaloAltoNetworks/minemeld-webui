@@ -1,11 +1,11 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldStatus } from  '../../app/services/status';
-import { IMinemeldSupervisor } from '../../app/services/supervisor';
+import { IMinemeldStatusService } from  '../../app/services/status';
+import { IMinemeldSupervisorService } from '../../app/services/supervisor';
 
 export class SystemController {
-    mmstatus: IMinemeldStatus;
-    MinemeldSupervisor: IMinemeldSupervisor;
+    mmstatus: IMinemeldStatusService;
+    MinemeldSupervisorService: IMinemeldSupervisorService;
     toastr: any;
     $interval: angular.IIntervalService;
     $scope: angular.IScope;
@@ -25,12 +25,12 @@ export class SystemController {
 
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
-                MinemeldStatus: IMinemeldStatus, $scope: angular.IScope,
+                MinemeldStatusService: IMinemeldStatusService, $scope: angular.IScope,
                 moment: moment.MomentStatic,
-                MinemeldSupervisor: IMinemeldSupervisor, $state: angular.ui.IStateService) {
+                MinemeldSupervisorService: IMinemeldSupervisorService, $state: angular.ui.IStateService) {
         this.toastr = toastr;
-        this.mmstatus = MinemeldStatus;
-        this.MinemeldSupervisor = MinemeldSupervisor;
+        this.mmstatus = MinemeldStatusService;
+        this.MinemeldSupervisorService = MinemeldSupervisorService;
         this.$interval = $interval;
         this.$scope = $scope;
         this.moment = moment;
@@ -51,7 +51,7 @@ export class SystemController {
     }
 
     private updateSystem(): void {
-        var vm: any = this;
+        var vm: SystemController = this;
 
         vm.mmstatus.getSystem()
         .then(
@@ -72,9 +72,9 @@ export class SystemController {
     }
 
     private updateSupervisor(): void {
-        var vm: any = this;
+        var vm: SystemController = this;
 
-        vm.MinemeldSupervisor.getStatus()
+        vm.MinemeldSupervisorService.getStatus()
         .then(
             function(result: any) {
                 var p: string;
