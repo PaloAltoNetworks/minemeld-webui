@@ -5,7 +5,7 @@ import { IMinemeldPrototypeService, IMinemeldPrototypeLibrary, IMinemeldPrototyp
 declare var jsyaml: any;
 
 export class PrototypeAddController {
-    MinemeldPrototype: IMinemeldPrototypeService;
+    MinemeldPrototypeService: IMinemeldPrototypeService;
     $state: angular.ui.IStateService;
     $rootScope: any;
     toastr: any;
@@ -34,13 +34,13 @@ export class PrototypeAddController {
     ];
 
     /* @ngInject */
-    constructor(MinemeldPrototype: IMinemeldPrototypeService,
+    constructor(MinemeldPrototypeService: IMinemeldPrototypeService,
                 $stateParams: angular.ui.IStateParamsService,
                 $state: angular.ui.IStateService,
                 toastr: any,
                 $rootScope: angular.IRootScopeService) {
         this.$state = $state;
-        this.MinemeldPrototype = MinemeldPrototype;
+        this.MinemeldPrototypeService = MinemeldPrototypeService;
         this.toastr = toastr;
         this.$rootScope = $rootScope;
 
@@ -53,14 +53,14 @@ export class PrototypeAddController {
         this.name = this.prototype.split('.').join('_');
         this.name = this.name + '-' + (new Date().getTime());
 
-        MinemeldPrototype.getPrototypeLibrary('minemeldlocal')
+        MinemeldPrototypeService.getPrototypeLibrary('minemeldlocal')
         .then((result: any) => {
             this.localLibrary = result;
         }, (error: any) => {
             toastr.error('ERROR RETRIEVING LOCAL PROTOTYPE LIBRARY: ' + error.statusText);
         });
 
-        MinemeldPrototype.getPrototypeYaml(this.prototype).then((result: IMinemeldPrototype) => {
+        MinemeldPrototypeService.getPrototypeYaml(this.prototype).then((result: IMinemeldPrototype) => {
             this.class = result.class;
             this.description = result.description;
             this.nodeType = result.nodeType;
@@ -140,14 +140,14 @@ export class PrototypeAddController {
         }
 
         this.saving = true;
-        this.MinemeldPrototype.setPrototypeYaml(
+        this.MinemeldPrototypeService.setPrototypeYaml(
             full_prototypename,
             this.class,
             this.config,
             optionalParams
         ).then((result: any) => {
             this.toastr.success('PROTOTYPE ' + full_prototypename + ' ADDED');
-            this.MinemeldPrototype.invalidateCache();
+            this.MinemeldPrototypeService.invalidateCache();
             this.$state.go('prototypes', { reload: true });
         }, (error: any) => {
             this.toastr.error('ERROR ADDING PROTOTYPE ' + full_prototypename + ': ' + error.statusText);

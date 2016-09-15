@@ -106,5 +106,5 @@ export function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterPro
     })
     ;
 
-  $urlRouterProvider.otherwise('/dashboard');
+  $urlRouterProvider.otherwise('/login');
 }

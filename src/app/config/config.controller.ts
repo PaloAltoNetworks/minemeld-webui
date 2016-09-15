@@ -2,7 +2,7 @@
 
 import { IMinemeldConfigService, IMinemeldConfigInfo, IMinemeldConfigNode } from  '../../app/services/config';
 import { IConfirmService } from '../../app/services/confirm';
-import { IMinemeldSupervisor } from '../../app/services/supervisor';
+import { IMinemeldSupervisorService } from '../../app/services/supervisor';
 
 declare var he: any;
 
@@ -15,8 +15,8 @@ export class ConfigController {
     $modal: angular.ui.bootstrap.IModalService;
     DTColumnBuilder: any;
     DTOptionsBuilder: any;
-    MinemeldConfig: IMinemeldConfigService;
-    MinemeldSupervisor: IMinemeldSupervisor;
+    MinemeldConfigService: IMinemeldConfigService;
+    MinemeldSupervisorService: IMinemeldSupervisorService;
     ConfirmService: IConfirmService;
 
     dtNodes: any = {};
@@ -29,11 +29,11 @@ export class ConfigController {
     configInfo: IMinemeldConfigInfo;
     nodesConfig: IMinemeldConfigNode[];
 
-    /* @ngInject */
+    /** @ngInject */
     constructor(toastr: any, $scope: angular.IScope, DTOptionsBuilder: any,
                 DTColumnBuilder: any, $compile: angular.ICompileService,
-                MinemeldConfig: IMinemeldConfigService,
-                MinemeldSupervisor: IMinemeldSupervisor,
+                MinemeldConfigService: IMinemeldConfigService,
+                MinemeldSupervisorService: IMinemeldSupervisorService,
                 $state: angular.ui.IStateService, $q: angular.IQService,
                 $modal: angular.ui.bootstrap.IModalService,
                 ConfirmService: IConfirmService) {
@@ -45,15 +45,15 @@ export class ConfigController {
         this.$state = $state;
         this.$q = $q;
         this.$modal = $modal;
-        this.MinemeldConfig = MinemeldConfig;
-        this.MinemeldSupervisor = MinemeldSupervisor;
+        this.MinemeldConfigService = MinemeldConfigService;
+        this.MinemeldSupervisorService = MinemeldSupervisorService;
         this.ConfirmService = ConfirmService;
 
         this.setupNodesTable();
     }
 
     revert() {
-        this.MinemeldConfig.reload('running').then((result: any) => {
+        this.MinemeldConfigService.reload('running').then((result: any) => {
             this.$state.go(this.$state.current.name, {}, {reload: true});
         }, (error: any) => {
             this.toastr.error('ERROR RELOADING CONFIG: ' + error.statusText);
@@ -61,7 +61,7 @@ export class ConfigController {
     }
 
     load() {
-        this.MinemeldConfig.reload('committed').then((result: any) => {
+        this.MinemeldConfigService.reload('committed').then((result: any) => {
             this.$state.go(this.$state.current.name, {}, {reload: true});
         }, (error: any) => {
             this.toastr.error('ERROR RELOADING CONFIG: ' + error.statusText);
@@ -87,11 +87,11 @@ export class ConfigController {
             if (result !== 'ok') {
                 this.toastr.error('ERROR SAVING NODE CONFIG: ' + result.statusText);
                 this.refreshConfig().finally(() => {
-                    this.changed = this.MinemeldConfig.changed;
+                    this.changed = this.MinemeldConfigService.changed;
                     this.dtNodes.reloadData();
                 });
             } else {
-                this.changed = this.MinemeldConfig.changed;
+                this.changed = this.MinemeldConfigService.changed;
                 this.dtNodes.reloadData();
             }
         });
@@ -133,7 +133,7 @@ export class ConfigController {
         );
 
         p.then((result: any) => {
-            this.MinemeldConfig.deleteNode(nodenum).then((result: any) => {
+            this.MinemeldConfigService.deleteNode(nodenum).then((result: any) => {
                 this.dtNodes.reloadData();
             }, (error: any) => {
                 this.toastr.error('ERROR DELETING NODE: ' + error.statusText);
@@ -146,10 +146,10 @@ export class ConfigController {
         var p: angular.IPromise<any>;
 
         this.inCommit = true;
-        p = this.MinemeldConfig.commit().then((result: any) => {
+        p = this.MinemeldConfigService.commit().then((result: any) => {
             this.toastr.success('COMMIT SUCCESSFUL');
             this.dtNodes.reloadData();
-            this.MinemeldSupervisor.restartEngine().then(
+            this.MinemeldSupervisorService.restartEngine().then(
                 (result: any) => { this.toastr.success('Restarting engine, could take some minutes. Check <a href="/#/system">SYSTEM</a>'); },
                 (error: any) => { this.toastr.error('ERROR RESTARTING ENGINE: ' + error.statusText); }
             );
@@ -172,6 +172,7 @@ export class ConfigController {
         })
         .withBootstrap()
         .withPaginationType('simple_numbers')
+        .withOption('order', [[2, 'asc'], [1, 'asc']])
         .withOption('aaSorting', [])
         .withOption('aaSortingFixed', [])
         .withOption('paging', false)
@@ -310,10 +311,10 @@ export class ConfigController {
     }
 
     private refreshConfig(): angular.IPromise<any> {
-        return this.MinemeldConfig.refresh().then((result: any) => {
-            this.configInfo = this.MinemeldConfig.configInfo;
-            this.nodesConfig = this.MinemeldConfig.nodesConfig;
-            this.changed = this.MinemeldConfig.configInfo.changed;
+        return this.MinemeldConfigService.refresh().then((result: any) => {
+            this.configInfo = this.MinemeldConfigService.configInfo;
+            this.nodesConfig = this.MinemeldConfigService.nodesConfig;
+            this.changed = this.MinemeldConfigService.configInfo.changed;
 
             return result;
         }, (error: any) => {
@@ -330,21 +331,21 @@ export class ConfigController {
 
 export class ConfigureOutputController {
     nodenum: number;
-    MinemeldConfig: IMinemeldConfigService;
+    MinemeldConfigService: IMinemeldConfigService;
     $modalInstance: angular.ui.bootstrap.IModalServiceInstance;
 
     nodeConfig: IMinemeldConfigNode;
     output: boolean;
     originalOutput: boolean;
 
-    /* @ngInject */
-    constructor(MinemeldConfig: IMinemeldConfigService,
+    /** @ngInject */
+    constructor(MinemeldConfigService: IMinemeldConfigService,
                 $modalInstance: angular.ui.bootstrap.IModalServiceInstance,
                 nodenum: number) {
         this.nodenum = nodenum;
-        this.MinemeldConfig = MinemeldConfig;
+        this.MinemeldConfigService = MinemeldConfigService;
         this.$modalInstance = $modalInstance;
-        this.nodeConfig = this.MinemeldConfig.nodesConfig[nodenum];
+        this.nodeConfig = this.MinemeldConfigService.nodesConfig[nodenum];
         this.output = this.nodeConfig.properties.output;
         this.originalOutput = this.output;
     }
@@ -359,7 +360,7 @@ export class ConfigureOutputController {
 
     save() {
         this.nodeConfig.properties.output = this.output;
-        this.MinemeldConfig.saveNodeConfig(this.nodenum)
+        this.MinemeldConfigService.saveNodeConfig(this.nodenum)
             .then((result: any) => {
                 this.$modalInstance.close('ok');
             }, (error: any) => {
@@ -374,7 +375,7 @@ export class ConfigureOutputController {
 
 export class ConfigureInputsController {
     nodenum: number;
-    MinemeldConfig: IMinemeldConfigService;
+    MinemeldConfigService: IMinemeldConfigService;
     $modalInstance: angular.ui.bootstrap.IModalServiceInstance;
 
     nodeConfig: IMinemeldConfigNode;
@@ -382,16 +383,16 @@ export class ConfigureInputsController {
     availableInputs: string[];
     changed: boolean = false;
 
-    /* @ngInject */
-    constructor(MinemeldConfig: IMinemeldConfigService,
+    /** @ngInject */
+    constructor(MinemeldConfigService: IMinemeldConfigService,
                 $modalInstance: angular.ui.bootstrap.IModalServiceInstance,
                 nodenum: number) {
         this.nodenum = nodenum;
-        this.MinemeldConfig = MinemeldConfig;
+        this.MinemeldConfigService = MinemeldConfigService;
         this.$modalInstance = $modalInstance;
-        this.nodeConfig = this.MinemeldConfig.nodesConfig[nodenum];
+        this.nodeConfig = this.MinemeldConfigService.nodesConfig[nodenum];
         this.inputs = angular.copy(this.nodeConfig.properties.inputs);
-        this.availableInputs = this.MinemeldConfig.nodesConfig
+        this.availableInputs = this.MinemeldConfigService.nodesConfig
             .filter((x: IMinemeldConfigNode) => {
                 if (x.deleted) {
                     return false;
@@ -408,7 +409,7 @@ export class ConfigureInputsController {
 
     save() {
         this.nodeConfig.properties.inputs = this.inputs;
-        this.MinemeldConfig.saveNodeConfig(this.nodenum)
+        this.MinemeldConfigService.saveNodeConfig(this.nodenum)
             .then((result: any) => {
                 this.$modalInstance.close('ok');
             }, (error: any) => {

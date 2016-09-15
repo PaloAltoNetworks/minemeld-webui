@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldStatus } from  '../../app/services/status';
+import { IMinemeldStatusService } from  '../../app/services/status';
 
 export interface INodeDetailResolverService {
     registerClass(classname: string, classdetails: INodeDetailClass);
@@ -19,9 +19,7 @@ export interface INodeDetailClass {
 }
 
 export class NodeDetailResolver implements INodeDetailResolverService {
-    static $inject = ['MinemeldStatus', '$resource'];
-
-    mmstatus: IMinemeldStatus;
+    mmstatus: IMinemeldStatusService;
     $resource: angular.resource.IResourceService;
 
     nodeClasses: any = {};
@@ -49,8 +47,9 @@ export class NodeDetailResolver implements INodeDetailResolverService {
         ]
     };
 
-    constructor(MinemeldStatus: IMinemeldStatus, $resource: angular.resource.IResourceService) {
-        this.mmstatus = MinemeldStatus;
+    /** @ngInject */
+    constructor(MinemeldStatusService: IMinemeldStatusService, $resource: angular.resource.IResourceService) {
+        this.mmstatus = MinemeldStatusService;
         this.$resource = $resource;
     }
 

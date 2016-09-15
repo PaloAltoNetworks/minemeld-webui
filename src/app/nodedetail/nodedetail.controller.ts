@@ -1,4 +1,4 @@
-import { IMinemeldStatus } from  '../../app/services/status';
+import { IMinemeldStatusService } from  '../../app/services/status';
 import { INodeDetailResolverService, INodeDetailTab, INodeDetailClass } from '../../app/services/nodedetailresolver';
 
 /** @ngInject */
@@ -12,7 +12,7 @@ export class NodeDetailController {
 
     constructor($stateParams: angular.ui.IStateParamsService,
                 $state: angular.ui.IStateService,
-                MinemeldStatus: IMinemeldStatus,
+                MinemeldStatusService: IMinemeldStatusService,
                 toastr: any, NodeDetailResolver: INodeDetailResolverService) {
         this.nodename = $stateParams['nodename'];
         this.$state = $state;

@@ -53,7 +53,7 @@ function dagPusherRegisterClass(NodeDetailResolver: INodeDetailResolverService) 
 }
 
 class NodeDetailDagPusherDevicesController {
-    MinemeldConfig: IMinemeldConfigService;
+    MinemeldConfigService: IMinemeldConfigService;
     toastr: any;
     $scope: angular.IScope;
     DTOptionsBuilder: any;
@@ -73,12 +73,12 @@ class NodeDetailDagPusherDevicesController {
     device_list: any[];
 
     /** @ngInject */
-    constructor(toastr: any, MinemeldConfig: IMinemeldConfigService,
+    constructor(toastr: any, MinemeldConfigService: IMinemeldConfigService,
                 $scope: angular.IScope, DTOptionsBuilder: any,
                 DTColumnBuilder: any, $compile: angular.ICompileService,
                 $modal: angular.ui.bootstrap.IModalService,
                 ConfirmService: IConfirmService) {
-        this.MinemeldConfig = MinemeldConfig;
+        this.MinemeldConfigService = MinemeldConfigService;
         this.$scope = $scope;
         this.toastr = toastr;
         this.DTColumnBuilder = DTColumnBuilder;
@@ -137,7 +137,7 @@ class NodeDetailDagPusherDevicesController {
     }
 
     private saveDeviceList(): angular.IPromise<any> {
-        return this.MinemeldConfig.saveDataFile(this.cfd_device_list, this.device_list)
+        return this.MinemeldConfigService.saveDataFile(this.cfd_device_list, this.device_list)
             .then((result: any) => {
                 this.dtDevices.reloadData();
             });
@@ -147,7 +147,7 @@ class NodeDetailDagPusherDevicesController {
         var vm: any = this;
 
         this.dtOptions = this.DTOptionsBuilder.fromFnPromise(function() {
-            return vm.MinemeldConfig.getDataFile(vm.cfd_device_list).then((result: any) => {
+            return vm.MinemeldConfigService.getDataFile(vm.cfd_device_list).then((result: any) => {
                 vm.changed = false;
 
                 if (result === null) {

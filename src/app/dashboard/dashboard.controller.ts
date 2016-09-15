@@ -1,7 +1,7 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldStatus } from  '../../app/services/status';
-import { IMinemeldMetrics } from '../../app/services/metrics';
+import { IMinemeldStatusService } from  '../../app/services/status';
+import { IMinemeldMetricsService } from '../../app/services/metrics';
 
 interface ITNodeIndicatorsStats {
     length: number;
@@ -22,8 +22,8 @@ interface IMetricsDictionary {
 }
 
 export class DashboardController {
-    mmstatus: IMinemeldStatus;
-    mmmetrics: IMinemeldMetrics;
+    mmstatus: IMinemeldStatusService;
+    mmmetrics: IMinemeldMetricsService;
     moment: moment.MomentStatic;
     toastr: any;
     $interval: angular.IIntervalService;
@@ -116,11 +116,11 @@ export class DashboardController {
 
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
-                MinemeldStatus: IMinemeldStatus, MinemeldMetrics: IMinemeldMetrics,
+                MinemeldStatusService: IMinemeldStatusService, MinemeldMetricsService: IMinemeldMetricsService,
                 moment: moment.MomentStatic, $scope: angular.IScope, $state: angular.ui.IStateService) {
         this.toastr = toastr;
-        this.mmstatus = MinemeldStatus;
-        this.mmmetrics = MinemeldMetrics;
+        this.mmstatus = MinemeldStatusService;
+        this.mmmetrics = MinemeldMetricsService;
         this.$interval = $interval;
         this.moment = moment;
         this.$scope = $scope;
@@ -235,7 +235,7 @@ export class DashboardController {
     }
 
     private updateMinemeld(): void {
-        var vm: any = this;
+        var vm: DashboardController = this;
 
         vm.mmstatus.getMinemeld()
         .then(
@@ -244,7 +244,11 @@ export class DashboardController {
                 vm.updateMinemeldStats(vm);
             },
             function(error: any) {
-                vm.toastr.error('ERROR RETRIEVING MINEMELD STATUS: ' + error.status);
+                if (!error.cancelled) {
+                    vm.toastr.error('ERROR RETRIEVING MINEMELD STATUS: ' + error.statusText);
+                }
+
+                throw error;
             }
         )
         .finally(function() {
@@ -330,7 +334,11 @@ export class DashboardController {
                 }
             },
             function(error: any) {
-                vm.toastr.error('ERROR RETRIEVING MINERS METRICS: ' + error.status);
+                if (!error.cancelled) {
+                    vm.toastr.error('ERROR RETRIEVING MINERS METRICS: ' + error.status);
+                }
+
+                throw error;
             }
         )
         .finally(function() {
@@ -416,7 +424,11 @@ export class DashboardController {
                 }
             },
             function(error: any) {
-                vm.toastr.error('ERROR RETRIEVING OUTPUTS METRICS: ' + error.status);
+                if (!error.cancelled) {
+                    vm.toastr.error('ERROR RETRIEVING OUTPUTS METRICS: ' + error.status);
+                }
+
+                throw error;
             }
         )
         .finally(function() {
@@ -470,7 +482,11 @@ export class DashboardController {
                 }
             },
             function(error: any) {
-                vm.toastr.error('ERROR RETRIEVING MINEMELD METRICS: ' + error.status);
+                if (!error.cancelled) {
+                    vm.toastr.error('ERROR RETRIEVING MINEMELD METRICS: ' + error.status);
+                }
+
+                throw error;
             }
         )
         .finally(function() {

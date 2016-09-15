@@ -1,41 +1,31 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldAuth } from './auth';
+import { IMineMeldAPIService } from './minemeldapi';
 
-export interface IMinemeldSupervisor {
+export interface IMinemeldSupervisorService {
     getStatus(): angular.IPromise<any>;
     startEngine(): angular.IPromise<any>;
     stopEngine(): angular.IPromise<any>;
     restartEngine(): angular.IPromise<any>;
 }
 
-export class MinemeldSupervisor implements IMinemeldSupervisor {
-    static $inject = ['$resource', '$state', 'MinemeldAuth'];
-
-    $resource: angular.resource.IResourceService;
+export class MinemeldSupervisorService implements IMinemeldSupervisorService {
     $state: angular.ui.IStateService;
-    MinemeldAuth: IMinemeldAuth;
+    MineMeldAPIService: IMineMeldAPIService;
 
-    constructor($resource: angular.resource.IResourceService,
-                $state: angular.ui.IStateService,
-                MinemeldAuth: IMinemeldAuth) {
-        this.$resource = $resource;
+    /** @ngInject */
+    constructor($state: angular.ui.IStateService,
+                MineMeldAPIService: IMineMeldAPIService) {
         this.$state = $state;
-        this.MinemeldAuth = MinemeldAuth;
+        this.MineMeldAPIService = MineMeldAPIService;
     }
 
     public getStatus(): angular.IPromise<any> {
         var system: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
-        if (!this.MinemeldAuth.authorizationSet) {
-            this.$state.go('login');
-            return;
-        }
-
-        system = this.$resource('/supervisor', {}, {
+        system = this.MineMeldAPIService.getAPIResource('/supervisor', {}, {
             get: {
-                method: 'GET',
-                headers: this.MinemeldAuth.getAuthorizationHeaders()
+                method: 'GET'
             }
         });
 
@@ -45,27 +35,15 @@ export class MinemeldSupervisor implements IMinemeldSupervisor {
             }
 
             return new Array();
-        }, (error: any) => {
-            if (error.status === 401) {
-                this.$state.go('login');
-            }
-
-            return error;
         });
     }
 
     public startEngine(): angular.IPromise<any> {
         var minemeld: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
-        if (!this.MinemeldAuth.authorizationSet) {
-            this.$state.go('login');
-            return;
-        }
-
-        minemeld = this.$resource('/supervisor/minemeld-engine/start', {}, {
+        minemeld = this.MineMeldAPIService.getAPIResource('/supervisor/minemeld-engine/start', {}, {
             get: {
-                method: 'GET',
-                headers: this.MinemeldAuth.getAuthorizationHeaders()
+                method: 'GET'
             }
         });
 
@@ -75,27 +53,15 @@ export class MinemeldSupervisor implements IMinemeldSupervisor {
             }
 
             return new Array();
-        }, (error: any) => {
-            if (error.status === 401) {
-                this.$state.go('login');
-            }
-
-            return error;
         });
     }
 
     public stopEngine(): angular.IPromise<any> {
         var minemeld: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
-        if (!this.MinemeldAuth.authorizationSet) {
-            this.$state.go('login');
-            return;
-        }
-
-        minemeld = this.$resource('/supervisor/minemeld-engine/stop', {}, {
+        minemeld = this.MineMeldAPIService.getAPIResource('/supervisor/minemeld-engine/stop', {}, {
             get: {
-                method: 'GET',
-                headers: this.MinemeldAuth.getAuthorizationHeaders()
+                method: 'GET'
             }
         });
 
@@ -105,27 +71,15 @@ export class MinemeldSupervisor implements IMinemeldSupervisor {
             }
 
             return new Array();
-        }, (error: any) => {
-            if (error.status === 401) {
-                this.$state.go('login');
-            }
-
-            return error;
         });
     }
 
     public restartEngine(): angular.IPromise<any> {
         var minemeld: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
-        if (!this.MinemeldAuth.authorizationSet) {
-            this.$state.go('login');
-            return;
-        }
-
-        minemeld = this.$resource('/supervisor/minemeld-engine/restart', {}, {
+        minemeld = this.MineMeldAPIService.getAPIResource('/supervisor/minemeld-engine/restart', {}, {
             get: {
-                method: 'GET',
-                headers: this.MinemeldAuth.getAuthorizationHeaders()
+                method: 'GET'
             }
         });
 
@@ -135,12 +89,6 @@ export class MinemeldSupervisor implements IMinemeldSupervisor {
             }
 
             return new Array();
-        }, (error: any) => {
-            if (error.status === 401) {
-                this.$state.go('login');
-            }
-
-            return error;
         });
     }
 }

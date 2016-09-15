@@ -1,7 +1,7 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldStatus } from  '../../app/services/status';
-import { IMinemeldMetrics } from '../../app/services/metrics';
+import { IMinemeldStatusService } from  '../../app/services/status';
+import { IMinemeldMetricsService } from '../../app/services/metrics';
 import { IMinemeldStatusNode } from '../../app/services/status';
 
 interface INGMinemeldStatusNode extends IMinemeldStatusNode {
@@ -20,8 +20,8 @@ interface IMetricsDictionary {
 }
 
 export class NodeDetailStatsController {
-    mmstatus: IMinemeldStatus;
-    mmmetrics: IMinemeldMetrics;
+    mmstatus: IMinemeldStatusService;
+    mmmetrics: IMinemeldMetricsService;
     moment: moment.MomentStatic;
     toastr: any;
     $interval: angular.IIntervalService;
@@ -80,13 +80,14 @@ export class NodeDetailStatsController {
 
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
-        MinemeldStatus: IMinemeldStatus, MinemeldMetrics: IMinemeldMetrics,
+        MinemeldStatusService: IMinemeldStatusService,
+        MinemeldMetricsService: IMinemeldMetricsService,
         moment: moment.MomentStatic, $scope: angular.IScope,
         $compile: angular.ICompileService, $state: angular.ui.IStateService,
         $stateParams: angular.ui.IStateParamsService) {
         this.toastr = toastr;
-        this.mmstatus = MinemeldStatus;
-        this.mmmetrics = MinemeldMetrics;
+        this.mmstatus = MinemeldStatusService;
+        this.mmmetrics = MinemeldMetricsService;
         this.$interval = $interval;
         this.moment = moment;
         this.$scope = $scope;

@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldAuth } from './auth';
+import { IMineMeldAPIService } from './minemeldapi';
 
 export interface IMinemeldPrototypeLibrary {
     description?: string;
@@ -36,24 +36,20 @@ export interface IMinemeldPrototypeService {
     invalidateCache(): void;
 }
 
-export class MinemeldPrototype implements IMinemeldPrototypeService {
-    static $inject = ['$resource', '$state', '$q', 'MinemeldAuth'];
-
-    $resource: angular.resource.IResourceService;
+export class MinemeldPrototypeService implements IMinemeldPrototypeService {
     $state: angular.ui.IStateService;
     $q: angular.IQService;
-    MinemeldAuth: IMinemeldAuth;
+    MineMeldAPIService: IMineMeldAPIService;
 
     prototypesDict: IMinemeldPrototypeLibraryDictionary;
 
-    constructor($resource: angular.resource.IResourceService,
-                $state: angular.ui.IStateService,
+    /** @ngInject */
+    constructor($state: angular.ui.IStateService,
                 $q: angular.IQService,
-                MinemeldAuth: IMinemeldAuth) {
-        this.$resource = $resource;
+                MineMeldAPIService: IMineMeldAPIService) {
         this.$state = $state;
         this.$q = $q;
-        this.MinemeldAuth = MinemeldAuth;
+        this.MineMeldAPIService = MineMeldAPIService;
     }
 
     public getPrototypeLibraries(): angular.IPromise<any> {
@@ -116,15 +112,9 @@ export class MinemeldPrototype implements IMinemeldPrototypeService {
         var params: any;
         var prototypeYaml: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
-        if (!this.MinemeldAuth.authorizationSet) {
-            this.$state.go('login');
-            return;
-        }
-
-        prototypeYaml = this.$resource('/prototype/:prototypename', {}, {
+        prototypeYaml = this.MineMeldAPIService.getAPIResource('/prototype/:prototypename', {}, {
             get: {
-                method: 'GET',
-                headers: this.MinemeldAuth.getAuthorizationHeaders()
+                method: 'GET'
             }
         });
 
@@ -146,17 +136,11 @@ export class MinemeldPrototype implements IMinemeldPrototypeService {
         var prototypeYaml: any;
         var prototype: any;
 
-        if (!this.MinemeldAuth.authorizationSet) {
-            this.$state.go('login');
-            return;
-        }
-
-        prototypeYaml = this.$resource('/prototype/:prototypename', {
+        prototypeYaml = this.MineMeldAPIService.getAPIResource('/prototype/:prototypename', {
             prototypename: prototypename
         }, {
             post: {
-                method: 'POST',
-                headers: this.MinemeldAuth.getAuthorizationHeaders()
+                method: 'POST'
             }
         });
 
@@ -184,15 +168,9 @@ export class MinemeldPrototype implements IMinemeldPrototypeService {
     private getPrototypes() {
         var prototypes: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
-        if (!this.MinemeldAuth.authorizationSet) {
-            this.$state.go('login');
-            return;
-        }
-
-        prototypes = this.$resource('/prototype', {}, {
+        prototypes = this.MineMeldAPIService.getAPIResource('/prototype', {}, {
             get: {
-                method: 'GET',
-                headers: this.MinemeldAuth.getAuthorizationHeaders()
+                method: 'GET'
             }
         });
 
