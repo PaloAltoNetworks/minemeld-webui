@@ -3,7 +3,7 @@
 import { INodeDetailResolverService } from '../../app/services/nodedetailresolver';
 import { IMinemeldConfigService } from '../../app/services/config';
 import { NodeDetailInfoController } from './nodedetail.info.controller';
-import { IMinemeldStatus } from  '../../app/services/status';
+import { IMinemeldStatusService } from  '../../app/services/status';
 
 class ET {
     static CATNAMES: string[] = [
@@ -112,7 +112,7 @@ function proofpointRegisterClass(NodeDetailResolver: INodeDetailResolverService)
 }
 
 class NodeDetailProofpointInfoController extends NodeDetailInfoController {
-    MinemeldConfig: IMinemeldConfigService;
+    MinemeldConfigService: IMinemeldConfigService;
     $modal: angular.ui.bootstrap.IModalService;
 
     authCode: string;
@@ -121,21 +121,21 @@ class NodeDetailProofpointInfoController extends NodeDetailInfoController {
 
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
-        MinemeldStatus: IMinemeldStatus,
+        MinemeldStatusService: IMinemeldStatusService,
         moment: moment.MomentStatic, $scope: angular.IScope,
         $compile: angular.ICompileService, $state: angular.ui.IStateService,
-        $stateParams: angular.ui.IStateParamsService, MinemeldConfig: IMinemeldConfigService,
+        $stateParams: angular.ui.IStateParamsService, MinemeldConfigService: IMinemeldConfigService,
         $modal: angular.ui.bootstrap.IModalService) {
-        super(toastr, $interval, MinemeldStatus, moment, $scope, $compile, $state, $stateParams);
+        super(toastr, $interval, MinemeldStatusService, moment, $scope, $compile, $state, $stateParams);
 
-        this.MinemeldConfig = MinemeldConfig;
+        this.MinemeldConfigService = MinemeldConfigService;
         this.$modal = $modal;
 
         this.loadSideConfig();
     }
 
     loadSideConfig(): void {
-        this.MinemeldConfig.getDataFile(this.nodename + '_side_config')
+        this.MinemeldConfigService.getDataFile(this.nodename + '_side_config')
         .then((result: any) => {
             if (!result) {
                 this.authCode = undefined;
@@ -195,7 +195,7 @@ class NodeDetailProofpointInfoController extends NodeDetailInfoController {
                 sconfig.montiored_categories = this.monitoredCategories;
             }
 
-            return this.MinemeldConfig.saveDataFile(
+            return this.MinemeldConfigService.saveDataFile(
                 this.nodename + '_side_config',
                 sconfig,
                 this.nodename
@@ -238,7 +238,7 @@ class NodeDetailProofpointInfoController extends NodeDetailInfoController {
                 sconfig.auth_code = this.authCode;
             }
 
-            return this.MinemeldConfig.saveDataFile(
+            return this.MinemeldConfigService.saveDataFile(
                 this.nodename + '_side_config',
                 sconfig,
                 this.nodename

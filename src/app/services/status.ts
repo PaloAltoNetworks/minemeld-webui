@@ -1,8 +1,8 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldAuth } from './auth';
+import { IMineMeldAPIService } from './minemeldapi';
 
-export interface IMinemeldStatus {
+export interface IMinemeldStatusService {
     NODE_STATES: string[];
     getSystem(): angular.IPromise<any>;
     getMinemeld(): angular.IPromise<any>;
@@ -22,15 +22,12 @@ export interface IMinemeldStatusNode {
     };
 }
 
-export class MinemeldStatus implements IMinemeldStatus {
-    static $inject = ['$resource', '$state', 'MinemeldAuth'];
-
+export class MinemeldStatusService implements IMinemeldStatusService {
     authorizationSet: boolean = false;
     authorizationString: string;
 
-    $resource: angular.resource.IResourceService;
     $state: angular.ui.IStateService;
-    MinemeldAuth: IMinemeldAuth;
+    MineMeldAPIService: IMineMeldAPIService;
 
     NODE_STATES: string[] = [
         'READY',
@@ -44,26 +41,19 @@ export class MinemeldStatus implements IMinemeldStatus {
         'STOPPED'
     ];
 
-    constructor($resource: angular.resource.IResourceService,
-                $state: angular.ui.IStateService,
-                MinemeldAuth: IMinemeldAuth) {
-        this.$resource = $resource;
+    /** @ngInject */
+    constructor($state: angular.ui.IStateService,
+                MineMeldAPIService: IMineMeldAPIService) {
         this.$state = $state;
-        this.MinemeldAuth = MinemeldAuth;
+        this.MineMeldAPIService = MineMeldAPIService;
     }
 
     public getSystem(): angular.IPromise<any> {
         var system: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
-        if (!this.MinemeldAuth.authorizationSet) {
-            this.$state.go('login');
-            return;
-        }
-
-        system = this.$resource('/status/system', {}, {
+        system = this.MineMeldAPIService.getAPIResource('/status/system', {}, {
             get: {
-                method: 'GET',
-                headers: this.MinemeldAuth.getAuthorizationHeaders()
+                method: 'GET'
             }
         });
 
@@ -73,27 +63,15 @@ export class MinemeldStatus implements IMinemeldStatus {
             }
 
             return new Array();
-        }, (error: any) => {
-            if (error.status === 401) {
-                this.$state.go('login');
-            }
-
-            return error;
         });
     }
 
     public getMinemeld(): angular.IPromise<any> {
         var minemeld: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
-        if (!this.MinemeldAuth.authorizationSet) {
-            this.$state.go('login');
-            return;
-        }
-
-        minemeld = this.$resource('/status/minemeld', {}, {
+        minemeld = this.MineMeldAPIService.getAPIResource('/status/minemeld', {}, {
             get: {
-                method: 'GET',
-                headers: this.MinemeldAuth.getAuthorizationHeaders()
+                method: 'GET'
             }
         });
 
@@ -103,27 +81,15 @@ export class MinemeldStatus implements IMinemeldStatus {
             }
 
             return new Array();
-        }, (error: any) => {
-            if (error.status === 401) {
-                this.$state.go('login');
-            }
-
-            return error;
         });
     }
 
     public getConfig(): angular.IPromise<any> {
         var config: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
-        if (!this.MinemeldAuth.authorizationSet) {
-            this.$state.go('login');
-            return;
-        }
-
-        config = this.$resource('/status/config', {}, {
+        config = this.MineMeldAPIService.getAPIResource('/status/config', {}, {
             get: {
-                method: 'GET',
-                headers: this.MinemeldAuth.getAuthorizationHeaders()
+                method: 'GET'
             }
         });
 
@@ -133,12 +99,6 @@ export class MinemeldStatus implements IMinemeldStatus {
             }
 
             return new Array();
-        }, (error: any) => {
-            if (error.status === 401) {
-                this.$state.go('login');
-            }
-
-            return error;
         });
     }
 
@@ -148,15 +108,9 @@ export class MinemeldStatus implements IMinemeldStatus {
             nodename: nodename
         };
 
-        if (!this.MinemeldAuth.authorizationSet) {
-            this.$state.go('login');
-            return;
-        }
-
-        hupresult = this.$resource('/status/:nodename/hup', {}, {
+        hupresult = this.MineMeldAPIService.getAPIResource('/status/:nodename/hup', {}, {
             get: {
-                method: 'GET',
-                headers: this.MinemeldAuth.getAuthorizationHeaders()
+                method: 'GET'
             }
         });
 
@@ -166,12 +120,6 @@ export class MinemeldStatus implements IMinemeldStatus {
             }
 
             return new Array();
-        }, (error: any) => {
-            if (error.status === 401) {
-                this.$state.go('login');
-            }
-
-            return error;
         });
     }
 }

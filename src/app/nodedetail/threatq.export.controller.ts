@@ -3,7 +3,7 @@
 import { INodeDetailResolverService } from '../../app/services/nodedetailresolver';
 import { IMinemeldConfigService } from '../../app/services/config';
 import { NodeDetailInfoController } from './nodedetail.info.controller';
-import { IMinemeldStatus } from  '../../app/services/status';
+import { IMinemeldStatusService } from  '../../app/services/status';
 import { IConfirmService } from '../../app/services/confirm';
 
 /** @ngInject */
@@ -42,7 +42,7 @@ function threatqExportRegisterClass(NodeDetailResolver: INodeDetailResolverServi
 }
 
 class NodeDetailThreatQExportInfoController extends NodeDetailInfoController {
-    MinemeldConfig: IMinemeldConfigService;
+    MinemeldConfigService: IMinemeldConfigService;
     url: string;
     verify_cert: boolean;
     $modal: angular.ui.bootstrap.IModalService;
@@ -50,23 +50,23 @@ class NodeDetailThreatQExportInfoController extends NodeDetailInfoController {
 
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
-        MinemeldStatus: IMinemeldStatus,
+        MinemeldStatusService: IMinemeldStatusService,
         moment: moment.MomentStatic, $scope: angular.IScope,
         $compile: angular.ICompileService, $state: angular.ui.IStateService,
-        $stateParams: angular.ui.IStateParamsService, MinemeldConfig: IMinemeldConfigService,
+        $stateParams: angular.ui.IStateParamsService, MinemeldConfigService: IMinemeldConfigService,
         $modal: angular.ui.bootstrap.IModalService,
         ConfirmService: IConfirmService) {
-        this.MinemeldConfig = MinemeldConfig;
+        this.MinemeldConfigService = MinemeldConfigService;
         this.$modal = $modal;
         this.ConfirmService = ConfirmService;
 
-        super(toastr, $interval, MinemeldStatus, moment, $scope, $compile, $state, $stateParams);
+        super(toastr, $interval, MinemeldStatusService, moment, $scope, $compile, $state, $stateParams);
 
         this.loadSideConfig();
     }
 
     loadSideConfig(): void {
-        this.MinemeldConfig.getDataFile(this.nodename + '_side_config')
+        this.MinemeldConfigService.getDataFile(this.nodename + '_side_config')
         .then((result: any) => {
             if (typeof result.url != 'undefined') {
                 this.url = result.url;
@@ -100,7 +100,7 @@ class NodeDetailThreatQExportInfoController extends NodeDetailInfoController {
             side_config.verify_cert = this.verify_cert;
         }
 
-        return this.MinemeldConfig.saveDataFile(
+        return this.MinemeldConfigService.saveDataFile(
             this.nodename + '_side_config',
             side_config,
             this.nodename

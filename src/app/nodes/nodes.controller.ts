@@ -1,13 +1,13 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldStatus } from  '../../app/services/status';
-import { IMinemeldMetrics } from '../../app/services/metrics';
+import { IMinemeldStatusService } from  '../../app/services/status';
+import { IMinemeldMetricsService } from '../../app/services/metrics';
 
 declare var he: any;
 
 export class NodesController {
-    mmstatus: IMinemeldStatus;
-    mmmetrics: IMinemeldMetrics;
+    mmstatus: IMinemeldStatusService;
+    mmmetrics: IMinemeldMetricsService;
     moment: moment.MomentStatic;
     toastr: any;
     $interval: angular.IIntervalService;
@@ -26,12 +26,12 @@ export class NodesController {
 
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
-        MinemeldStatus: IMinemeldStatus, MinemeldMetrics: IMinemeldMetrics,
+        MinemeldStatusService: IMinemeldStatusService, MinemeldMetricsService: IMinemeldMetricsService,
         moment: moment.MomentStatic, $scope: angular.IScope, DTOptionsBuilder: any,
         DTColumnBuilder: any, $compile: angular.ICompileService, $state: angular.ui.IStateService) {
         this.toastr = toastr;
-        this.mmstatus = MinemeldStatus;
-        this.mmmetrics = MinemeldMetrics;
+        this.mmstatus = MinemeldStatusService;
+        this.mmmetrics = MinemeldMetricsService;
         this.$interval = $interval;
         this.moment = moment;
         this.$scope = $scope;
@@ -73,12 +73,16 @@ export class NodesController {
     }
 
     private setupNodesTable() {
-        var vm: any = this;
+        var vm: NodesController = this;
 
         this.dtOptions = this.DTOptionsBuilder.fromFnPromise(function() {
             var $p: any = vm.mmstatus.getMinemeld()
                 .catch(function(error: any) {
-                    this.toastr.error('ERROR RETRIEVING MINEMELD STATUS:' + error.statusText);
+                    if (!error.cancelled) {
+                        vm.toastr.error('ERROR RETRIEVING MINEMELD STATUS: ' + error.statusText);
+                    }
+
+                    throw error;
                 });
 
             return $p;

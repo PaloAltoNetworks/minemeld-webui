@@ -28,7 +28,7 @@ function browserSyncInit(baseDir, browser) {
   };
 
   server.middleware = proxyMiddleware(
-    ['/status', '/metrics', '/prototype', '/config', '/supervisor', '/feeds', '/validate', '/traced'],
+    ['/login', '/logout', '/status', '/metrics', '/prototype', '/config', '/supervisor', '/feeds', '/validate', '/traced'],
     {target: args.url, secure: false}
   );
 

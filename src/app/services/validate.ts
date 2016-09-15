@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldAuth } from './auth';
+import { IMineMeldAPIService } from './minemeldapi';
 
 export interface IMinemeldValidateService {
     syslogMinerRule(rule: any): angular.IPromise<any>;
@@ -10,36 +10,27 @@ interface IMinemeldValidateResource extends angular.resource.IResourceClass<angu
     post(params: any, postdata: any);
 }
 
-export class MinemeldValidate implements IMinemeldValidateService {
-    static $inject = ['$resource', '$state', '$q', 'MinemeldAuth'];
-
-    $resource: angular.resource.IResourceService;
+export class MinemeldValidateService implements IMinemeldValidateService {
     $state: angular.ui.IStateService;
     $q: angular.IQService;
-    MinemeldAuth: IMinemeldAuth;
+    MineMeldAPIService: IMineMeldAPIService;
 
+    /** @ngInject */
     constructor($resource: angular.resource.IResourceService,
                 $state: angular.ui.IStateService,
                 $q: angular.IQService,
-                MinemeldAuth: IMinemeldAuth) {
-        this.$resource = $resource;
+                MineMeldAPIService: IMineMeldAPIService) {
         this.$state = $state;
         this.$q = $q;
-        this.MinemeldAuth = MinemeldAuth;
+        this.MineMeldAPIService = MineMeldAPIService;
     }
 
     syslogMinerRule(rule: any): angular.IPromise<any> {
         var r: IMinemeldValidateResource;
 
-        if (!this.MinemeldAuth.authorizationSet) {
-            this.$state.go('login');
-            return;
-        }
-
-        r = <IMinemeldValidateResource>(this.$resource('/validate/syslogminerrule', {}, {
+        r = <IMinemeldValidateResource>(this.MineMeldAPIService.getAPIResource('/validate/syslogminerrule', {}, {
             post: {
-                    method: 'POST',
-                    headers: this.MinemeldAuth.getAuthorizationHeaders()
+                    method: 'POST'
                 }
         }));
 

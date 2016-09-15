@@ -3,7 +3,7 @@
 import { IMinemeldPrototypeService, IMinemeldPrototypeLibrary, IMinemeldPrototype } from '../../app/services/prototype';
 
 export class PrototypedetailController {
-    MinemeldPrototype: IMinemeldPrototypeService;
+    MinemeldPrototypeService: IMinemeldPrototypeService;
     $state: angular.ui.IStateService;
 
     prototypeName: string;
@@ -12,18 +12,18 @@ export class PrototypedetailController {
     prototype: IMinemeldPrototype;
 
     /* @ngInject */
-    constructor(MinemeldPrototype: IMinemeldPrototypeService,
+    constructor(MinemeldPrototypeService: IMinemeldPrototypeService,
                 $stateParams: angular.ui.IStateParamsService,
                 $state: angular.ui.IStateService,
                 toastr: any) {
         this.$state = $state;
 
-        this.MinemeldPrototype = MinemeldPrototype;
+        this.MinemeldPrototypeService = MinemeldPrototypeService;
 
         this.libraryName = $stateParams['libraryName'];
         this.prototypeName = $stateParams['prototypeName'];
 
-        MinemeldPrototype.getPrototypeLibrary($stateParams['libraryName'])
+        MinemeldPrototypeService.getPrototypeLibrary($stateParams['libraryName'])
         .then((result: any) => {
             this.library = result;
             this.prototype = this.library.prototypes[$stateParams['prototypeName']];

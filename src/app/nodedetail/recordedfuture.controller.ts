@@ -3,7 +3,7 @@
 import { INodeDetailResolverService } from '../../app/services/nodedetailresolver';
 import { IMinemeldConfigService } from '../../app/services/config';
 import { NodeDetailInfoController } from './nodedetail.info.controller';
-import { IMinemeldStatus } from  '../../app/services/status';
+import { IMinemeldStatusService } from  '../../app/services/status';
 
 /** @ngInject */
 function recordedFutureRouterConfig($stateProvider: ng.ui.IStateProvider) {
@@ -41,27 +41,27 @@ function recordedFutureRegisterClass(NodeDetailResolver: INodeDetailResolverServ
 }
 
 class NodeDetailRecordedFutureInfoController extends NodeDetailInfoController {
-    MinemeldConfig: IMinemeldConfigService;
+    MinemeldConfigService: IMinemeldConfigService;
     token: string;
     $modal: angular.ui.bootstrap.IModalService;
 
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
-        MinemeldStatus: IMinemeldStatus,
+        MinemeldStatusService: IMinemeldStatusService,
         moment: moment.MomentStatic, $scope: angular.IScope,
         $compile: angular.ICompileService, $state: angular.ui.IStateService,
-        $stateParams: angular.ui.IStateParamsService, MinemeldConfig: IMinemeldConfigService,
+        $stateParams: angular.ui.IStateParamsService, MinemeldConfigService: IMinemeldConfigService,
         $modal: angular.ui.bootstrap.IModalService) {
-        this.MinemeldConfig = MinemeldConfig;
+        this.MinemeldConfigService = MinemeldConfigService;
         this.$modal = $modal;
 
-        super(toastr, $interval, MinemeldStatus, moment, $scope, $compile, $state, $stateParams);
+        super(toastr, $interval, MinemeldStatusService, moment, $scope, $compile, $state, $stateParams);
 
         this.loadToken();
     }
 
     loadToken(): void {
-        this.MinemeldConfig.getDataFile(this.nodename + '_side_config')
+        this.MinemeldConfigService.getDataFile(this.nodename + '_side_config')
         .then((result: any) => {
             if (result.token) {
                 this.token = result.token;
@@ -88,7 +88,7 @@ class NodeDetailRecordedFutureInfoController extends NodeDetailInfoController {
 
         mi.result.then((result: any) => {
             this.token = result.token;
-            return this.MinemeldConfig.saveDataFile(
+            return this.MinemeldConfigService.saveDataFile(
                 this.nodename + '_side_config',
                 { token: this.token },
                 this.nodename

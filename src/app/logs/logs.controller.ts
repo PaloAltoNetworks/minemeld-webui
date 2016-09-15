@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldTraced } from  '../../app/services/traced';
+import { IMinemeldTracedService } from  '../../app/services/traced';
 
 declare var he: any;
 
@@ -12,7 +12,7 @@ interface IRunningQuery {
 }
 
 export class LogsController {
-    MinemeldTraced: IMinemeldTraced;
+    MinemeldTracedService: IMinemeldTracedService;
     $scope: angular.IScope;
     $modal: angular.ui.bootstrap.IModalService;
     $state: angular.ui.IStateService;
@@ -36,10 +36,10 @@ export class LogsController {
     lastScrollTime: number;
 
     /* @ngInject */
-    constructor(MinemeldTraced: IMinemeldTraced, $scope: angular.IScope,
+    constructor(MinemeldTracedService: IMinemeldTracedService, $scope: angular.IScope,
                 $modal: angular.ui.bootstrap.IModalService, $state: angular.ui.IStateService,
                 $stateParams: angular.ui.IStateParamsService) {
-        this.MinemeldTraced = MinemeldTraced;
+        this.MinemeldTracedService = MinemeldTracedService;
         this.$scope = $scope;
         this.$modal = $modal;
         this.$state = $state;
@@ -66,7 +66,6 @@ export class LogsController {
 
     submitQuery(): void {
         if (this.runningQuery) {
-            console.log('query running');
             return;
         }
 
@@ -79,7 +78,7 @@ export class LogsController {
             return;
         }
 
-        this.MinemeldTraced.closeAll();
+        this.MinemeldTracedService.closeAll();
         this.showMore = true;
         this.resetQuery();
     }
@@ -139,7 +138,6 @@ export class LogsController {
         var numLines: number;
 
         if (this.runningQuery) {
-            console.log('query already running');
             return;
         }
 
@@ -170,7 +168,7 @@ export class LogsController {
             numLines = 200;
         }
 
-        qid = this.MinemeldTraced.generateQueryID();
+        qid = this.MinemeldTracedService.generateQueryID();
 
         this.runningQuery = {
             qid: qid,
@@ -179,7 +177,7 @@ export class LogsController {
             numLinesReceived: 0
         };
 
-        this.MinemeldTraced.query(qid, {
+        this.MinemeldTracedService.query(qid, {
             query: this.query,
             timestamp: timestamp,
             counter: counter,
@@ -275,14 +273,13 @@ export class LogsController {
     }
 
     private queryError(qid: string, error: any) {
-        console.log('queryError', qid, error);
         if (this.runningQuery.qid === qid) {
             this.resetQuery();
         }
     }
 
     private destroy() {
-        this.MinemeldTraced.closeAll();
+        this.MinemeldTracedService.closeAll();
         this.$window.off('resize', this.boundResizeTable);
         this.$table.off('scroll', this.boundScrollHandler);
     }
