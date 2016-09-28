@@ -142,7 +142,7 @@ export class MinemeldPrototypeService implements IMinemeldPrototypeService {
             post: {
                 method: 'POST'
             }
-        });
+        }, false);
 
         if (optionalParams) {
             prototype = angular.copy(optionalParams);

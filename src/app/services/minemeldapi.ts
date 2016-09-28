@@ -4,13 +4,14 @@ interface IMineMeldAPIPromise {
     resource: angular.resource.IResource<any>;
     resolved: boolean;
     cancelled: boolean;
+    cancellable: boolean;
 }
 
 export interface IMineMeldAPIResource extends angular.resource.IResourceClass<angular.resource.IResource<any>> {
 }
 
 export interface IMineMeldAPIService {
-    getAPIResource(url: string, paramDefaults?: any, actions?: any): IMineMeldAPIResource;
+    getAPIResource(url: string, paramDefaults?: any, actions?: any, cancellable?: boolean): IMineMeldAPIResource;
     logIn(username: string, password: string): angular.IPromise<any>;
     logOut(): angular.IPromise<any>;
     cancelAPICalls(): void;
@@ -39,9 +40,13 @@ export class MineMeldAPIService implements IMineMeldAPIService {
         this.$state = $state;
     }
 
-    public getAPIResource(url: string, paramDefaults?: any, actions?: any): IMineMeldAPIResource {
+    public getAPIResource(url: string, paramDefaults?: any, actions?: any, cancellable?: boolean): IMineMeldAPIResource {
         var result: IMineMeldAPIResource;
         var vm: MineMeldAPIService = this;
+
+        if (typeof cancellable == 'undefined') {
+            cancellable = true;
+        }
 
         angular.forEach(actions, (action: angular.resource.IActionDescriptor, actionName: string) => {
             action.cancellable = true;
@@ -60,6 +65,7 @@ export class MineMeldAPIService implements IMineMeldAPIService {
                 origResult = origAction.apply(null, args);
                 promise = {
                     resource: origResult,
+                    cancellable: cancellable,
                     cancelled: false,
                     resolved: false
                 };
@@ -132,7 +138,7 @@ export class MineMeldAPIService implements IMineMeldAPIService {
 
     public cancelAPICalls(): void {
         this.outstanding.forEach((value: IMineMeldAPIPromise) => {
-            if (!value.resolved) {
+            if (!value.resolved && value.cancellable) {
                 value.cancelled = true;
                 value.resource.$cancelRequest();
             }
