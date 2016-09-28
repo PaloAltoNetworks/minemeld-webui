@@ -112,7 +112,7 @@ export class MinemeldStatusService implements IMinemeldStatusService {
             get: {
                 method: 'GET'
             }
-        });
+        }, false);
 
         return hupresult.get(params).$promise.then((result: any) => {
             if ('result' in result) {

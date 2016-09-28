@@ -45,7 +45,7 @@ export class MinemeldSupervisorService implements IMinemeldSupervisorService {
             get: {
                 method: 'GET'
             }
-        });
+        }, false);
 
         return minemeld.get().$promise.then((result: any) => {
             if ('result' in result) {
@@ -63,7 +63,7 @@ export class MinemeldSupervisorService implements IMinemeldSupervisorService {
             get: {
                 method: 'GET'
             }
-        });
+        }, false);
 
         return minemeld.get().$promise.then((result: any) => {
             if ('result' in result) {
@@ -81,7 +81,7 @@ export class MinemeldSupervisorService implements IMinemeldSupervisorService {
             get: {
                 method: 'GET'
             }
-        });
+        }, false);
 
         return minemeld.get().$promise.then((result: any) => {
             if ('result' in result) {

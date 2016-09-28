@@ -101,7 +101,7 @@ export class MinemeldConfigService implements IMinemeldConfigService {
             get: {
                 method: 'GET'
             }
-        });
+        }, false);
 
         if (config) {
             params.c = config;
@@ -119,7 +119,7 @@ export class MinemeldConfigService implements IMinemeldConfigService {
             post: {
                 method: 'POST'
             }
-        }));
+        }, false));
 
         return r.post({}, JSON.stringify({ version: this.configInfo.version })).$promise;
     }
@@ -133,7 +133,7 @@ export class MinemeldConfigService implements IMinemeldConfigService {
             put: {
                 method: 'PUT'
             }
-        }));
+        }, false));
 
         return r.put({}, JSON.stringify(this.nodesConfig[noden])).$promise.then((result: any) => {
             return result.result;
@@ -157,7 +157,7 @@ export class MinemeldConfigService implements IMinemeldConfigService {
             post: {
                 method: 'POST'
             }
-        }));
+        }, false));
 
         return r.post({}, JSON.stringify(config)).$promise.then((result: any) => {
             return result.result;
@@ -173,7 +173,7 @@ export class MinemeldConfigService implements IMinemeldConfigService {
             del: {
                 method: 'DELETE'
             }
-        }));
+        }, false));
 
         return r.del({ version: this.nodesConfig[noden].version }).$promise
         .then((result: any) => {
@@ -216,7 +216,7 @@ export class MinemeldConfigService implements IMinemeldConfigService {
                 put: {
                     method: 'PUT'
                 }
-        }));
+        }, false));
 
         if (hup) {
             params.h = hup;
@@ -238,7 +238,7 @@ export class MinemeldConfigService implements IMinemeldConfigService {
                 post: {
                     method: 'POST'
                 }
-        }));
+        }, false));
 
         if (hup) {
             params.h = hup;
