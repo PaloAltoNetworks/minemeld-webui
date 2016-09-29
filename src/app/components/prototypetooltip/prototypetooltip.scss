@@ -1,10 +1,12 @@
-.prototypetooltip-table {
+.prototypetooltip-maindiv {
     margin: 0;
     background-color: transparent !important;
     text-align: left;
+    max-height: 150px;
+    overflow-y: hidden;
+    margin-bottom: 3px;
 }
 
-.prototypetooltip-table td {
-    border: 0px !important;
-    padding-bottom: 3px;
+.prototypetooltip-maindiv div div {
+    text-overflow: ellipsis;
 }
