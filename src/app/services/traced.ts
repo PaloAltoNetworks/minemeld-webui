@@ -119,7 +119,7 @@ export class MinemeldTracedService implements IMinemeldTracedService {
             get: {
                 method: 'GET'
             }
-        });
+        }, false);
 
         return qResource.get().$promise;
     }

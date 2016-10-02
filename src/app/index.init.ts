@@ -17,6 +17,14 @@ export function minemeldInit($state: angular.ui.IStateService,
         return;
     };
 
+    $rootScope.$on('$stateChangeStart', (event: any, toState: any, toParams: any) => {
+        if (toState.name !== 'login' && !MineMeldAPIService.isLoggedIn()) {
+            event.preventDefault();
+            $state.go('login');
+        }
+    });
+
+
     $rootScope.$on('$stateChangeSuccess', (event: any, toState: any, toParams: any, fromState: any, fromParams: any) => {
         $rootScope.mmPreviousState = {
             state: fromState,

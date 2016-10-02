@@ -318,6 +318,10 @@ export class ConfigController {
 
             return result;
         }, (error: any) => {
+            if (error.cancelled) {
+                return;
+            }
+
             this.toastr.error('ERROR RELOADING CONFIG: ' + error.statusText);
 
             this.configInfo = undefined;

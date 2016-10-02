@@ -335,7 +335,7 @@ export class DashboardController {
             },
             function(error: any) {
                 if (!error.cancelled) {
-                    vm.toastr.error('ERROR RETRIEVING MINERS METRICS: ' + error.status);
+                    vm.toastr.error('ERROR RETRIEVING MINERS METRICS: ' + error.statusText);
                 }
 
                 throw error;
@@ -425,7 +425,7 @@ export class DashboardController {
             },
             function(error: any) {
                 if (!error.cancelled) {
-                    vm.toastr.error('ERROR RETRIEVING OUTPUTS METRICS: ' + error.status);
+                    vm.toastr.error('ERROR RETRIEVING OUTPUTS METRICS: ' + error.statusText);
                 }
 
                 throw error;
@@ -483,7 +483,7 @@ export class DashboardController {
             },
             function(error: any) {
                 if (!error.cancelled) {
-                    vm.toastr.error('ERROR RETRIEVING MINEMELD METRICS: ' + error.status);
+                    vm.toastr.error('ERROR RETRIEVING MINEMELD METRICS: ' + error.statusText);
                 }
 
                 throw error;

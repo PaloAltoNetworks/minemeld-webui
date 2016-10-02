@@ -59,7 +59,9 @@ export class SystemController {
                 vm.system = result;
             },
             function(error: any) {
-                vm.toastr.error('ERROR RETRIEVING SYSTEM STATUS: ' + error.status);
+                if (!error.cancelled) {
+                    vm.toastr.error('ERROR RETRIEVING SYSTEM STATUS: ' + error.statusText);
+                }
             }
         )
         .finally(function() {
@@ -88,7 +90,9 @@ export class SystemController {
                 }
             },
             function(error: any) {
-                vm.toastr.error('ERROR RETRIEVING SUPERVISOR STATUS: ' + error.status);
+                if (!error.cancelled) {
+                    vm.toastr.error('ERROR RETRIEVING SUPERVISOR STATUS: ' + error.statusText);
+                }
             }
         )
         .finally(function() {

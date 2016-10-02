@@ -110,6 +110,13 @@ export class MinemeldEventsService implements IMinemeldEventsService {
     }
 
     private onError(subtype: string, event: string, e: any) {
+        if (typeof e.data !== 'undefined') {
+            if (e.data.indexOf('401') !== -1) {
+                this.$state.go('login');
+                return;
+            }
+        }
+
         angular.forEach(this.subscriptions, (sub: ISubscription) => {
            if ((sub.subType !== subtype) || (sub.topic !== event)) {
                return;
