@@ -31,16 +31,32 @@ export class MineMeldAPIService implements IMineMeldAPIService {
     $resource: angular.resource.IResourceService;
     $httpParamSerializer: angular.IHttpParamSerializer;
     $state: angular.ui.IStateService;
+    $cookies: angular.cookies.ICookiesService;
 
     loggedIn: boolean = false;
 
     /** @ngInject */
     constructor($resource: angular.resource.IResourceService,
                 $state: angular.ui.IStateService,
-                $httpParamSerializer: angular.IHttpParamSerializer) {
+                $httpParamSerializer: angular.IHttpParamSerializer,
+                $cookies: angular.cookies.ICookiesService) {
         this.$resource = $resource;
         this.$httpParamSerializer = $httpParamSerializer;
         this.$state = $state;
+        this.$cookies = $cookies;
+
+        if ($cookies.get('mm-ec-login')) {
+            this.loggedIn = true;
+        }
+    }
+
+    private setLoggedIn(status: boolean): void {
+        this.loggedIn = status;
+        if (status) {
+            this.$cookies.put('mm-ec-login', '1');
+        } else {
+            this.$cookies.remove('mm-ec-login');
+        }
     }
 
     public getAPIResource(url: string, paramDefaults?: any, actions?: any, cancellable?: boolean): IMineMeldAPIResource {
@@ -75,11 +91,11 @@ export class MineMeldAPIService implements IMineMeldAPIService {
 
                 origResult.$promise
                     .then(() => {
-                        vm.loggedIn = true;
+                        vm.setLoggedIn(true);
                     }, (error: any) => {
                         if (error.status === 401) {
                             vm.$state.go('login');
-                            vm.loggedIn = false;
+                            vm.setLoggedIn(false);
                             throw error;
                         }
 
@@ -113,7 +129,7 @@ export class MineMeldAPIService implements IMineMeldAPIService {
         var loginResource: IMineMeldAPIResourceLogIn;
         var vm: MineMeldAPIService = this;
 
-        this.loggedIn = false;
+        this.setLoggedIn(false);
 
         loginResource = <IMineMeldAPIResourceLogIn>this.getAPIResource('/login', {}, {
                 post: {
@@ -130,14 +146,14 @@ export class MineMeldAPIService implements IMineMeldAPIService {
             u: username,
             p: password
         }).$promise.then(() => {
-            this.loggedIn = true;
+            this.setLoggedIn(true);
         });
     }
 
     public logOut(): angular.IPromise<any> {
         var logoutResource: IMineMeldAPIResourceLogOut;
 
-        this.loggedIn = false;
+        this.setLoggedIn(false);
 
         logoutResource = <IMineMeldAPIResourceLogOut>this.getAPIResource('/logout', {}, {
             get: {
