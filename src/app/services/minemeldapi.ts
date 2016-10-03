@@ -14,6 +14,7 @@ export interface IMineMeldAPIService {
     getAPIResource(url: string, paramDefaults?: any, actions?: any, cancellable?: boolean): IMineMeldAPIResource;
     logIn(username: string, password: string): angular.IPromise<any>;
     logOut(): angular.IPromise<any>;
+    isLoggedIn(): boolean;
     cancelAPICalls(): void;
 }
 
@@ -30,6 +31,8 @@ export class MineMeldAPIService implements IMineMeldAPIService {
     $resource: angular.resource.IResourceService;
     $httpParamSerializer: angular.IHttpParamSerializer;
     $state: angular.ui.IStateService;
+
+    loggedIn: boolean = false;
 
     /** @ngInject */
     constructor($resource: angular.resource.IResourceService,
@@ -71,9 +74,12 @@ export class MineMeldAPIService implements IMineMeldAPIService {
                 };
 
                 origResult.$promise
-                    .catch((error: any) => {
+                    .then(() => {
+                        vm.loggedIn = true;
+                    }, (error: any) => {
                         if (error.status === 401) {
                             vm.$state.go('login');
+                            vm.loggedIn = false;
                             throw error;
                         }
 
@@ -107,6 +113,8 @@ export class MineMeldAPIService implements IMineMeldAPIService {
         var loginResource: IMineMeldAPIResourceLogIn;
         var vm: MineMeldAPIService = this;
 
+        this.loggedIn = false;
+
         loginResource = <IMineMeldAPIResourceLogIn>this.getAPIResource('/login', {}, {
                 post: {
                     method: 'POST',
@@ -121,11 +129,15 @@ export class MineMeldAPIService implements IMineMeldAPIService {
         return loginResource.post({}, {
             u: username,
             p: password
-        }).$promise;
+        }).$promise.then(() => {
+            this.loggedIn = true;
+        });
     }
 
     public logOut(): angular.IPromise<any> {
         var logoutResource: IMineMeldAPIResourceLogOut;
+
+        this.loggedIn = false;
 
         logoutResource = <IMineMeldAPIResourceLogOut>this.getAPIResource('/logout', {}, {
             get: {
@@ -134,6 +146,10 @@ export class MineMeldAPIService implements IMineMeldAPIService {
         });
 
         return logoutResource.get().$promise;
+    }
+
+    public isLoggedIn(): boolean {
+        return this.loggedIn;
     }
 
     public cancelAPICalls(): void {
