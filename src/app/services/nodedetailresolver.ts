@@ -21,6 +21,8 @@ export interface INodeDetailClass {
 export class NodeDetailResolver implements INodeDetailResolverService {
     mmstatus: IMinemeldStatusService;
     $resource: angular.resource.IResourceService;
+    $q: angular.IQService;
+    $rootScope: angular.IRootScopeService;
 
     nodeClasses: any = {};
 
@@ -48,9 +50,14 @@ export class NodeDetailResolver implements INodeDetailResolverService {
     };
 
     /** @ngInject */
-    constructor(MinemeldStatusService: IMinemeldStatusService, $resource: angular.resource.IResourceService) {
+    constructor(MinemeldStatusService: IMinemeldStatusService,
+                $resource: angular.resource.IResourceService,
+                $q: angular.IQService,
+                $rootScope: angular.IRootScopeService) {
         this.mmstatus = MinemeldStatusService;
         this.$resource = $resource;
+        this.$q = $q;
+        this.$rootScope = $rootScope;
     }
 
     registerClass(classname: string, classdetails: INodeDetailClass) {
@@ -58,11 +65,12 @@ export class NodeDetailResolver implements INodeDetailResolverService {
     }
 
     resolveNode(nodename: string) {
-        return this.mmstatus.getMinemeld()
-        .then((result: any) => {
-            var node: any;
+        var deferred: angular.IDeferred<any>;
+        var result: angular.IPromise<any>;
 
-            node = result.filter((x: any) => { return x.name === nodename; })[0];
+        deferred = this.$q.defer();
+        result = deferred.promise.then(() => {
+            var node: any = this.mmstatus.currentStatus[nodename];
 
             if (this.nodeClasses.hasOwnProperty(node.class)) {
                 return this.nodeClasses[node.class];
@@ -70,5 +78,19 @@ export class NodeDetailResolver implements INodeDetailResolverService {
 
             return this.defaultClass;
         });
+
+        if (Object.keys(this.mmstatus.currentStatus).length === 0) {
+            var listener: any = this.$rootScope.$on(
+                'mm-status-changed',
+                () => {
+                    deferred.resolve();
+                    listener();
+                }
+            );
+        } else {
+            deferred.resolve();
+        }
+
+        return result;
     }
 }

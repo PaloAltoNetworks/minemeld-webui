@@ -148,8 +148,12 @@ class NodeDetailCredentialsInfoController extends NodeDetailInfoController {
         moment: moment.MomentStatic, $scope: angular.IScope,
         $compile: angular.ICompileService, $state: angular.ui.IStateService,
         $stateParams: angular.ui.IStateParamsService, MinemeldConfigService: IMinemeldConfigService,
-        $modal: angular.ui.bootstrap.IModalService) {
-        super(toastr, $interval, MinemeldStatusService, moment, $scope, $compile, $state, $stateParams);
+        $modal: angular.ui.bootstrap.IModalService,
+        $rootScope: angular.IRootScopeService, $timeout: angular.ITimeoutService) {
+        super(
+            toastr, $interval, MinemeldStatusService, moment, $scope,
+            $compile, $state, $stateParams, $rootScope, $timeout
+        );
 
         this.MinemeldConfigService = MinemeldConfigService;
         this.$modal = $modal;

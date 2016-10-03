@@ -59,6 +59,12 @@
     background-color: $minemeld-processor !important;
 }
 
+.nodes-dt-name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
 .nodes-label-miner {
     background-color: $minemeld-miner;
 }
