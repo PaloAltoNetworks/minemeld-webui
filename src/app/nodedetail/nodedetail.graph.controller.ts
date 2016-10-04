@@ -1,6 +1,7 @@
 /// <reference path="../../../typings/main.d.ts" />
 
 import { IMinemeldStatusService, IMinemeldStatusNode } from  '../../app/services/status';
+import { IThrottled, IThrottleService } from '../../app/services/throttle';
 
 export class NodeDetailGraphController {
     mmstatus: IMinemeldStatusService;
@@ -13,6 +14,7 @@ export class NodeDetailGraphController {
     $stateParams: angular.ui.IStateParamsService;
 
     mmStatusListener: any;
+    mmThrottledUpdate: IThrottled;
 
     nodename: string;
 
@@ -24,7 +26,8 @@ export class NodeDetailGraphController {
         moment: moment.MomentStatic, $scope: angular.IScope,
         $compile: angular.ICompileService, $state: angular.ui.IStateService,
         $stateParams: angular.ui.IStateParamsService,
-        $rootScope: angular.IRootScopeService, $timeout: angular.ITimeoutService) {
+        $rootScope: angular.IRootScopeService,
+        ThrottleService: IThrottleService) {
         this.toastr = toastr;
         this.mmstatus = MinemeldStatusService;
         this.$interval = $interval;
@@ -37,11 +40,14 @@ export class NodeDetailGraphController {
         this.nodename = $scope.$parent['nodedetail']['nodename'];
 
         this.updateMinemeldStatus();
+
+        this.mmThrottledUpdate = ThrottleService.throttle(
+            this.updateMinemeldStatus.bind(this),
+            500
+        );
         this.mmStatusListener = $rootScope.$on(
             'mm-status-changed',
-            () => {
-                $timeout(this.updateMinemeldStatus.bind(this));
-            }
+            this.mmThrottledUpdate
         );
 
         this.$scope.$on('$destroy', this.destroy.bind(this));
@@ -94,6 +100,9 @@ export class NodeDetailGraphController {
     }
 
     private destroy() {
+        if (this.mmThrottledUpdate) {
+            this.mmThrottledUpdate.cancel();
+        }
         if (this.mmStatusListener) {
             this.mmStatusListener();
         }

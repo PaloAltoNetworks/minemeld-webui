@@ -62,6 +62,8 @@ export class MinemeldConfigService implements IMinemeldConfigService {
         this.$state = $state;
         this.$q = $q;
         this.MineMeldAPIService = MineMeldAPIService;
+
+        this.MineMeldAPIService.onLogout(this.emptyCache.bind(this));
     }
 
     refresh() {
@@ -248,5 +250,11 @@ export class MinemeldConfigService implements IMinemeldConfigService {
             .then((result: any) => {
                 return result.result;
             });
+    }
+
+    private emptyCache(): void {
+        this.nodesConfig = undefined;
+        this.configInfo = undefined;
+        this.changed = undefined;
     }
 }

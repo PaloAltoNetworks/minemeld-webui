@@ -1,7 +1,8 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldStatusService } from  '../../app/services/status';
+import { IMinemeldStatusService, IMinemeldStatus } from  '../../app/services/status';
 import { IMinemeldMetricsService } from '../../app/services/metrics';
+import { IThrottleService, IThrottled } from '../../app/services/throttle';
 
 declare var he: any;
 
@@ -19,6 +20,7 @@ export class NodesController {
     DTOptionsBuilder: any;
 
     mmStatusListener: any;
+    mmThrottledUpdate: IThrottled;
 
     dtNodes: any = {};
     dtColumns: any[];
@@ -29,7 +31,8 @@ export class NodesController {
         MinemeldStatusService: IMinemeldStatusService, MinemeldMetricsService: IMinemeldMetricsService,
         moment: moment.MomentStatic, $scope: angular.IScope, DTOptionsBuilder: any,
         DTColumnBuilder: any, $compile: angular.ICompileService, $state: angular.ui.IStateService,
-        $q: angular.IQService, $rootScope: angular.IRootScopeService, $timeout: angular.ITimeoutService) {
+        $q: angular.IQService, $rootScope: angular.IRootScopeService, $timeout: angular.ITimeoutService,
+        ThrottleService: IThrottleService) {
         this.toastr = toastr;
         this.mmstatus = MinemeldStatusService;
         this.mmmetrics = MinemeldMetricsService;
@@ -43,11 +46,11 @@ export class NodesController {
         this.$q = $q;
 
         this.setupNodesTable();
+
+        this.mmThrottledUpdate = ThrottleService.throttle(this.updateNodesTable.bind(this), 5000);
         this.mmStatusListener = $rootScope.$on(
             'mm-status-changed',
-            () => {
-                $timeout(this.updateNodesTable.bind(this));
-            }
+            this.mmThrottledUpdate
         );
 
         this.$scope.$on('$destroy', this.destroy.bind(this));
@@ -59,11 +62,14 @@ export class NodesController {
 
     private updateNodesTable() {
         var vm: any = this;
+        var tbody: JQuery;
 
-        if (vm.dtNodes) {
+        if (vm.dtNodes && vm.dtNodes.reloadData) {
+            tbody = angular.element('#nodesTable > tbody').children().unbind();
+
             vm.dtNodes.reloadData(
-                () => { /* do nothing */ return; },
-                true
+                () => { tbody.remove(); tbody = null; },
+                false
             );
         }
     }
@@ -72,14 +78,14 @@ export class NodesController {
         var vm: NodesController = this;
 
         this.dtOptions = this.DTOptionsBuilder.fromFnPromise(function() {
-            return vm.$q((resolve: angular.IQResolveReject<any>) => {
+            return vm.mmstatus.getStatus().then((value: IMinemeldStatus) => {
                 var result: any[] = [];
 
-                angular.forEach(vm.mmstatus.currentStatus, (x: any) => {
+                angular.forEach(value, (x: any) => {
                     result.push(x);
                 });
 
-                resolve(result);
+                return result;
             });
         })
         .withBootstrap()
@@ -88,7 +94,10 @@ export class NodesController {
         .withOption('aaSorting', [])
         .withOption('stateSave', true)
         .withOption('aaSortingFixed', [])
+        .withOption('bDeferRender', true)
+        .withOption('redraw', true)
         .withOption('lengthMenu', [[50, -1], [50, 'All']])
+        .withOption('pageLength', -1)
         .withOption('createdRow', function(row: HTMLScriptElement, data: any) {
             var c: string;
             var fc: HTMLElement;
@@ -127,13 +136,11 @@ export class NodesController {
                 return '';
             }).withOption('width', '5px').notSortable(),
             this.DTColumnBuilder.newColumn('name').withClass('nodes-dt-name').withTitle('NAME').renderWith(function(data: any, type: any, full: any) {
-                var result: string = '<div tooltip="class ' + full.class + '" tooltip-popup-delay="500">' + he.encode(data, {strict: true});
+                var result: string = he.encode(data, {strict: true});
 
                 if (full.sub_state && full.sub_state === 'ERROR') {
                     result = result + ' <span class="text-danger glyphicon glyphicon-exclamation-sign"></span>';
                 }
-
-                result = result + '</div>';
 
                 return result;
             }),
@@ -253,5 +260,6 @@ export class NodesController {
 
     private destroy() {
         this.mmStatusListener();
+        this.mmThrottledUpdate.cancel();
     }
 }

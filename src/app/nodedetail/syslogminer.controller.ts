@@ -5,6 +5,7 @@ import { IMinemeldConfigService } from '../../app/services/config';
 import { IConfirmService } from '../../app/services/confirm';
 import { IMinemeldValidateService } from '../../app/services/validate';
 import { IMinemeldStatusService, IMinemeldStatusNode } from '../../app/services/status';
+import { IThrottled, IThrottleService } from '../../app/services/throttle';
 
 declare var he: any;
 declare var jsyaml: any;
@@ -31,6 +32,7 @@ class SyslogMinerRulesController {
     nodename: string;
 
     mmStatusListener: any;
+    mmThrottledUpdate: IThrottled;
 
     /** @ngInject */
     constructor(toastr: any, MinemeldConfigService: IMinemeldConfigService,
@@ -39,7 +41,8 @@ class SyslogMinerRulesController {
                 $modal: angular.ui.bootstrap.IModalService,
                 MinemeldStatusService: IMinemeldStatusService, $interval: angular.IIntervalService,
                 ConfirmService: IConfirmService,
-                $rootScope: angular.IRootScopeService, $timeout: angular.ITimeoutService) {
+                $rootScope: angular.IRootScopeService,
+                ThrottleService: IThrottleService) {
         this.MinemeldConfigService = MinemeldConfigService;
         this.toastr = toastr;
         this.DTColumnBuilder = DTColumnBuilder;
@@ -55,11 +58,14 @@ class SyslogMinerRulesController {
         this.cfd_rules_list = this.nodename + '_rules';
 
         this.setupRulesTable();
+
+        this.mmThrottledUpdate = ThrottleService.throttle(
+            this.updateMinemeldStatus.bind(this),
+            500
+        );
         this.mmStatusListener = $rootScope.$on(
             'mm-status-changed',
-            () => {
-                $timeout(this.updateMinemeldStatus.bind(this));
-            }
+            this.mmThrottledUpdate
         );
 
         this.$scope.$on('$destroy', () => { this.destroy(); });
@@ -174,6 +180,9 @@ class SyslogMinerRulesController {
     }
 
     private destroy() {
+        if (this.mmThrottledUpdate) {
+            this.mmThrottledUpdate.cancel();
+        }
         if (this.mmStatusListener) {
             this.mmStatusListener();
         }

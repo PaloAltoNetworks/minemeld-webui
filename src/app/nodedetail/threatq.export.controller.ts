@@ -5,6 +5,7 @@ import { IMinemeldConfigService } from '../../app/services/config';
 import { NodeDetailInfoController } from './nodedetail.info.controller';
 import { IMinemeldStatusService } from  '../../app/services/status';
 import { IConfirmService } from '../../app/services/confirm';
+import { IThrottleService } from '../../app/services/throttle';
 
 /** @ngInject */
 function threatqExportConfig($stateProvider: ng.ui.IStateProvider) {
@@ -54,7 +55,8 @@ class NodeDetailThreatQExportInfoController extends NodeDetailInfoController {
         moment: moment.MomentStatic, $scope: angular.IScope,
         $compile: angular.ICompileService, $state: angular.ui.IStateService,
         $stateParams: angular.ui.IStateParamsService, MinemeldConfigService: IMinemeldConfigService,
-        $rootScope: angular.IRootScopeService, $timeout: angular.ITimeoutService,
+        $rootScope: angular.IRootScopeService,
+        ThrottleService: IThrottleService,
         $modal: angular.ui.bootstrap.IModalService,
         ConfirmService: IConfirmService) {
         this.MinemeldConfigService = MinemeldConfigService;
@@ -63,7 +65,7 @@ class NodeDetailThreatQExportInfoController extends NodeDetailInfoController {
 
         super(
             toastr, $interval, MinemeldStatusService, moment, $scope,
-            $compile, $state, $stateParams, $rootScope, $timeout
+            $compile, $state, $stateParams, $rootScope, ThrottleService
         );
 
         this.loadSideConfig();

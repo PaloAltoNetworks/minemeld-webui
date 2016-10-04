@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h1 class="modal-title">{{ vm.nodeConfig.name }} <span ng-if="vm.originalOutput != vm.output">*</span></h1>
+    <h1 class="modal-title">{{ vm.nodeConfig.name }} <span ng-if="vm.changed">*</span></h1>
 </div>
 <div class="modal-body">
     <div class="row">
@@ -8,15 +8,24 @@
         </div>
         <div class="col-xs-10">
             <ui-select multiple ng-model="vm.inputs" theme="bootstrap" on-select="vm.hasChanged()" on-remove="vm.hasChanged()">
-                <ui-select-match placeholder="Select inputs...">{{$item}}</ui-select-match>
-                <ui-select-choices repeat="input in vm.availableInputs | filter:$select.search">
-                    {{input}}
+                <ui-select-match placeholder="Select input nodes...">{{$item.name}}</ui-select-match>
+                <ui-select-choices group-by="'nodeType'" repeat="input.name as input in vm.availableInputs | filter: {'name':$select.search}">
+                    <div>
+                        <span ng-bind-html="input.name | highlight: $select.search"></span>
+                    </div>
                 </ui-select-choices>
+                <ui-select-no-choice><i>{{ vm.noChoiceMessage }}</i></ui-select-no-choice>
             </ui-select>
         </div>
     </div>
 </div>
 <div class="modal-footer">
+    <button ng-if="!vm.expertMode" tooltip-popup-delay="500" tooltip="enable expert mode" type="button" style="float: left;" class="btn btn-modal-action btn-sm" ng-click="vm.toggleExpert()">
+        <span class="glyphicon glyphicon-eye-open"></span>
+    </button>
+    <button ng-if="vm.expertMode" tooltip-popup-delay="500" tooltip="disable expert mode" type="button" style="float: left;" class="btn btn-modal-action btn-sm" ng-click="vm.toggleExpert()">
+        <span class="glyphicon glyphicon-eye-close"></span>
+    </button>
     <button ng-disabled="!vm.changed" class="btn btn-primary btn-sm" type="button" ng-click="vm.save()">OK</button>
     <button class="btn btn-warning btn-sm" type="button" ng-click="vm.cancel()">CANCEL</button>
 </div>
