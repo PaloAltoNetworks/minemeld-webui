@@ -52,11 +52,15 @@ class NodeDetailAutofocusELInfoController extends NodeDetailInfoController {
         moment: moment.MomentStatic, $scope: angular.IScope,
         $compile: angular.ICompileService, $state: angular.ui.IStateService,
         $stateParams: angular.ui.IStateParamsService, MinemeldConfigService: IMinemeldConfigService,
-        $modal: angular.ui.bootstrap.IModalService) {
+        $modal: angular.ui.bootstrap.IModalService,
+        $rootScope: angular.IRootScopeService, $timeout: angular.ITimeoutService) {
         this.MinemeldConfigService = MinemeldConfigService;
         this.$modal = $modal;
 
-        super(toastr, $interval, MinemeldStatusService, moment, $scope, $compile, $state, $stateParams);
+        super(
+            toastr, $interval, MinemeldStatusService, moment, $scope,
+            $compile, $state, $stateParams, $rootScope, $timeout
+        );
 
         this.loadSideConfig();
     }

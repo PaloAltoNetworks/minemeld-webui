@@ -12,19 +12,19 @@ export class NodeDetailGraphController {
     $state: angular.ui.IStateService;
     $stateParams: angular.ui.IStateParamsService;
 
+    mmStatusListener: any;
+
     nodename: string;
 
     nodes: IMinemeldStatusNode[];
-
-    updateMinemeldStatusPromise: angular.IPromise<any>;
-    updateMinemeldStatusInterval: number = 5 * 60 * 1000;
 
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
         MinemeldStatusService: IMinemeldStatusService,
         moment: moment.MomentStatic, $scope: angular.IScope,
         $compile: angular.ICompileService, $state: angular.ui.IStateService,
-        $stateParams: angular.ui.IStateParamsService) {
+        $stateParams: angular.ui.IStateParamsService,
+        $rootScope: angular.IRootScopeService, $timeout: angular.ITimeoutService) {
         this.toastr = toastr;
         this.mmstatus = MinemeldStatusService;
         this.$interval = $interval;
@@ -37,75 +37,65 @@ export class NodeDetailGraphController {
         this.nodename = $scope.$parent['nodedetail']['nodename'];
 
         this.updateMinemeldStatus();
+        this.mmStatusListener = $rootScope.$on(
+            'mm-status-changed',
+            () => {
+                $timeout(this.updateMinemeldStatus.bind(this));
+            }
+        );
 
         this.$scope.$on('$destroy', this.destroy.bind(this));
     }
 
     private updateMinemeldStatus() {
-        var vm: any = this;
+        var cnode: IMinemeldStatusNode;
+        var k: number;
+        var i: any;
+        var nodes: IMinemeldStatusNode[] = [];
+        var members: string[] = [];
+        var tobeadded: string[] = [this.nodename];
+        var clength: number;
 
-        vm.mmstatus.getMinemeld()
-        .then((result: any) => {
-            var cnode: IMinemeldStatusNode;
-            var j: number;
-            var k: number;
-            var i: any;
-            var nodes: IMinemeldStatusNode[] = [];
-            var members: string[] = [];
-            var tobeadded: string[] = [this.nodename];
-            var clength: number;
+        do {
+            clength = members.length;
 
-            do {
-                clength = members.length;
+            Object.keys(this.mmstatus.currentStatus).forEach((nname: string) => {
+                cnode = this.mmstatus.currentStatus[nname];
 
-                for (var j = 0; j < result.length; j++) {
-                    cnode = <IMinemeldStatusNode>result[j];
+                if (members.indexOf(nname) > -1) {
+                    return;
+                }
 
-                    if (members.indexOf(cnode.name) > -1) {
-                        continue;
-                    }
+                k = tobeadded.indexOf(nname);
+                if (k > -1) {
+                    nodes.push(cnode);
+                    members.push(nname);
+                    tobeadded.splice(k, 1);
 
-                    k = tobeadded.indexOf(cnode.name);
-                    if (k > -1) {
-                        nodes.push(cnode);
-                        members.push(cnode.name);
-                        tobeadded.splice(k, 1);
-
-                        for (i in cnode.inputs) {
-                            if ((tobeadded.indexOf(cnode.inputs[i]) <= -1) &&
-                                (members.indexOf(cnode.inputs[i]) <= -1)) {
-                                tobeadded.push(cnode.inputs[i]);
-                            }
+                    for (i in cnode.inputs) {
+                        if ((tobeadded.indexOf(cnode.inputs[i]) <= -1) &&
+                            (members.indexOf(cnode.inputs[i]) <= -1)) {
+                            tobeadded.push(cnode.inputs[i]);
                         }
-                    } else {
-                        for (i in cnode.inputs) {
-                            if (members.indexOf(cnode.inputs[i]) > -1) {
-                                if (tobeadded.indexOf(cnode.name) <= -1) {
-                                    tobeadded.push(cnode.name);
-                                }
+                    }
+                } else {
+                    for (i in cnode.inputs) {
+                        if (members.indexOf(cnode.inputs[i]) > -1) {
+                            if (tobeadded.indexOf(nname) <= -1) {
+                                tobeadded.push(nname);
                             }
                         }
                     }
                 }
-            } while ((clength !== members.length) || (tobeadded.length !== 0));
+            });
+        } while ((clength !== members.length) || (tobeadded.length !== 0));
 
-            vm.nodes = nodes;
-        }, function(error: any) {
-            vm.toastr.error('ERROR RETRIEVING MINEMELD STATUS: ' + error.status);
-        })
-        .finally(function() {
-            vm.updateMinemeldStatusPromise = vm.$interval(
-                vm.updateMinemeldStatus.bind(vm),
-                vm.updateMinemeldStatusInterval,
-                1
-            );
-        })
-        ;
+        this.nodes = nodes;
     }
 
     private destroy() {
-        if (this.updateMinemeldStatusPromise) {
-            this.$interval.cancel(this.updateMinemeldStatusPromise);
+        if (this.mmStatusListener) {
+            this.mmStatusListener();
         }
     }
 }

@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldStatusService } from  '../../app/services/status';
+import { IMinemeldStatusService, IMinemeldStatusNode } from  '../../app/services/status';
 import { IMinemeldMetricsService } from '../../app/services/metrics';
 
 interface ITNodeIndicatorsStats {
@@ -28,6 +28,7 @@ export class DashboardController {
     toastr: any;
     $interval: angular.IIntervalService;
     $scope: angular.IScope;
+    $rootScope: angular.IRootScopeService;
 
     indicatorsOptions: any = {
         chart: {
@@ -86,11 +87,9 @@ export class DashboardController {
         }
     };
 
-    numIndicators: number = 0;
+    mmStatusListener: any;
 
-    minemeld: any;
-    minemeldUpdateInterval: number = 60 * 1000;
-    minemeldUpdatePromise: angular.IPromise<any>;
+    numIndicators: number = 0;
 
     numMiners: number = 0;
     numProcessors: number = 0;
@@ -117,15 +116,24 @@ export class DashboardController {
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
                 MinemeldStatusService: IMinemeldStatusService, MinemeldMetricsService: IMinemeldMetricsService,
-                moment: moment.MomentStatic, $scope: angular.IScope, $state: angular.ui.IStateService) {
+                moment: moment.MomentStatic, $scope: angular.IScope, $state: angular.ui.IStateService,
+                $rootScope: angular.IRootScopeService, $timeout: angular.ITimeoutService) {
         this.toastr = toastr;
         this.mmstatus = MinemeldStatusService;
         this.mmmetrics = MinemeldMetricsService;
         this.$interval = $interval;
         this.moment = moment;
         this.$scope = $scope;
+        this.$rootScope = $rootScope;
 
-        this.updateMinemeld();
+        this.updateMinemeldStats();
+        this.mmStatusListener = this.$rootScope.$on(
+            'mm-status-changed',
+            () => {
+                $timeout(this.updateMinemeldStats.bind(this));
+            }
+        );
+
         this.updateNTMinersMetrics();
         this.updateNTOutputsMetrics();
         this.updateMinemeldMetrics();
@@ -133,61 +141,60 @@ export class DashboardController {
         this.$scope.$on('$destroy', this.destroy.bind(this));
     }
 
-    updateMinemeldStats(vm: any) {
-        var j: number;
-        var e: any;
+    updateMinemeldStats(): void {
+        var node: IMinemeldStatusNode;
 
-        vm.numMiners = 0;
-        vm.numProcessors = 0;
-        vm.numOutputs = 0;
-        vm.numIndicators = 0;
+        this.numMiners = 0;
+        this.numProcessors = 0;
+        this.numOutputs = 0;
+        this.numIndicators = 0;
 
-        vm.minersStats.length = 0;
-        vm.minersStats.added = 0;
-        vm.minersStats.removed = 0;
-        vm.minersStats.aged_out = 0;
-        vm.outputsStats.length = 0;
-        vm.outputsStats.added = 0;
-        vm.outputsStats.removed = 0;
+        this.minersStats.length = 0;
+        this.minersStats.added = 0;
+        this.minersStats.removed = 0;
+        this.minersStats.aged_out = 0;
+        this.outputsStats.length = 0;
+        this.outputsStats.added = 0;
+        this.outputsStats.removed = 0;
 
-        for (j = 0; j < vm.minemeld.length; j++) {
-            e = vm.minemeld[j];
+        Object.keys(this.mmstatus.currentStatus).forEach((nname: string) => {
+            node = this.mmstatus.currentStatus[nname];
 
-            if (e.inputs.length === 0) {
-                vm.numMiners++;
+            if (node.inputs.length === 0) {
+                this.numMiners++;
 
-                if (e.length) {
-                    vm.minersStats.length += e.length;
+                if (node.length) {
+                    this.minersStats.length += node.length;
                 }
-                if (e.statistics && e.statistics.added) {
-                    vm.minersStats.added += e.statistics.added;
+                if (node.statistics && node.statistics['added']) {
+                    this.minersStats.added += node.statistics['added'];
                 }
-                if (e.statistics && e.statistics.removed) {
-                    vm.minersStats.removed += e.statistics.removed;
+                if (node.statistics && node.statistics['removed']) {
+                    this.minersStats.removed += node.statistics['removed'];
                 }
-                if (e.statistics && e.statistics.aged_out) {
-                    vm.minersStats.aged_out += e.statistics.aged_out;
+                if (node.statistics && node.statistics['aged_out']) {
+                    this.minersStats.aged_out += node.statistics['aged_out'];
                 }
-            } else if (!e.output) {
-                vm.numOutputs++;
+            } else if (!node.output) {
+                this.numOutputs++;
 
-                if (e.length) {
-                    vm.outputsStats.length += e.length;
+                if (node.length) {
+                    this.outputsStats.length += node.length;
                 }
-                if (e.statistics && e.statistics.added) {
-                    vm.outputsStats.added += e.statistics.added;
+                if (node.statistics && node.statistics['added']) {
+                    this.outputsStats.added += node.statistics['added'];
                 }
-                if (e.statistics && e.statistics.removed) {
-                    vm.outputsStats.removed += e.statistics.removed;
+                if (node.statistics && node.statistics['removed']) {
+                    this.outputsStats.removed += node.statistics['removed'];
                 }
             } else {
-                vm.numProcessors++;
+                this.numProcessors++;
             }
 
-            if (e.length) {
-                vm.numIndicators += e.length;
+            if (node.length) {
+                this.numIndicators += node.length;
             }
-        }
+        });
     }
 
     chartRangeChanged() {
@@ -220,8 +227,8 @@ export class DashboardController {
     }
 
     private destroy() {
-        if (this.minemeldUpdatePromise) {
-            this.$interval.cancel(this.minemeldUpdatePromise);
+        if (this.mmStatusListener) {
+            this.mmStatusListener();
         }
         if (this.minemeldMetricsUpdatePromise) {
             this.$interval.cancel(this.minemeldMetricsUpdatePromise);
@@ -232,32 +239,6 @@ export class DashboardController {
         if (this.ntoutputsUpdatePromise) {
             this.$interval.cancel(this.ntoutputsUpdatePromise);
         }
-    }
-
-    private updateMinemeld(): void {
-        var vm: DashboardController = this;
-
-        vm.mmstatus.getMinemeld()
-        .then(
-            function(result: any) {
-                vm.minemeld = result;
-                vm.updateMinemeldStats(vm);
-            },
-            function(error: any) {
-                if (!error.cancelled) {
-                    vm.toastr.error('ERROR RETRIEVING MINEMELD STATUS: ' + error.statusText);
-                }
-
-                throw error;
-            }
-        )
-        .finally(function() {
-            vm.minemeldUpdatePromise = vm.$interval(
-                vm.updateMinemeld.bind(vm),
-                vm.minemeldUpdateInterval,
-                1
-            );
-        });
     }
 
     private updateNTMinersMetrics() {

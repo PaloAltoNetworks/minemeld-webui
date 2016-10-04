@@ -35,7 +35,7 @@
     <div class="row dashboard-row-processor">
       <div class="col-xs-12 dashboard-chart-column">
         <div class="dashboard-chart-title small m-t-xs"># OF INDICATORS (LAST {{dashboard.chartRange}})</div>
-        <nvd3 ng-if="dashboard.minemeldMetrics.length" api="dashboard.minemeldMetricsLengthAPI" 
+        <nvd3 ng-if="dashboard.minemeldMetrics.length" api="dashboard.minemeldMetricsLengthAPI"
           options="dashboard.indicatorsOptions" data="dashboard.minemeldMetrics.length"></nvd3>
         <div ng-if="!dashboard.minemeldMetrics.length" class="dashboard-chart-placeholder">NO STATS YET</div>
       </div>

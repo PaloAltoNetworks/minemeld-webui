@@ -29,11 +29,18 @@
                         <span ng-switch-default class="label label-warning">{{ nodedetailinfo.nodeState.stateAsString }}</span>
                     </td>
                 </tr>
-                <tr ng-if="nodedetailinfo.nodeState.last_run">
+                <tr ng-if="nodedetailinfo.nodeState.last_run || nodedetailinfo.nodeState.sub_state">
                     <td>LAST RUN</td>
                     <td>
-                        <span>{{ nodedetailinfo.nodeState.last_run | date:'yyyy-MM-dd HH:mm:ss Z' }}</span>
-                        <span tooltip="run now" tooltip-popup-delay="200" ng-click="nodedetailinfo.run()" class="nodedetail-info-icon fa fa-refresh"></span>
+                        <span ng-bind="nodedetailinfo.nodeState.last_run | date:'yyyy-MM-dd HH:mm:ss Z'"></span>
+                        <span ng-if="nodedetailinfo.nodeState.sub_state"
+                              ng-class="['label', {WAITING: 'label-default', POLLING:'label-primary', ERROR:'label-danger', SUCCESS:'label-success', REBUILDING:'label-warning'}[nodedetailinfo.nodeState.sub_state]]"
+                              ng-bind="nodedetailinfo.nodeState.sub_state"></span>
+                        <span tooltip="run now"
+                              tooltip-popup-delay="200"
+                              ng-if="nodedetailinfo.nodeState.sub_state != 'WAITING' && nodedetailinfo.nodeState.sub_state != 'REBUILDING' && nodedetailinfo.nodeState.sub_state != 'POLLING'"
+                              ng-click="nodedetailinfo.run()"
+                              class="nodedetail-info-icon fa fa-refresh"></span>
                     </td>
                 </tr>
                 <tr>
