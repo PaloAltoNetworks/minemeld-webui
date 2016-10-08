@@ -4,6 +4,7 @@ import { INodeDetailResolverService } from '../../app/services/nodedetailresolve
 import { IMinemeldConfigService } from '../../app/services/config';
 import { NodeDetailInfoController } from './nodedetail.info.controller';
 import { IMinemeldStatusService } from  '../../app/services/status';
+import { IThrottleService } from '../../app/services/throttle';
 
 /** @ngInject */
 function autofocusExportListConfig($stateProvider: ng.ui.IStateProvider) {
@@ -53,13 +54,14 @@ class NodeDetailAutofocusELInfoController extends NodeDetailInfoController {
         $compile: angular.ICompileService, $state: angular.ui.IStateService,
         $stateParams: angular.ui.IStateParamsService, MinemeldConfigService: IMinemeldConfigService,
         $modal: angular.ui.bootstrap.IModalService,
-        $rootScope: angular.IRootScopeService, $timeout: angular.ITimeoutService) {
+        $rootScope: angular.IRootScopeService,
+        ThrottleService: IThrottleService) {
         this.MinemeldConfigService = MinemeldConfigService;
         this.$modal = $modal;
 
         super(
             toastr, $interval, MinemeldStatusService, moment, $scope,
-            $compile, $state, $stateParams, $rootScope, $timeout
+            $compile, $state, $stateParams, $rootScope, ThrottleService
         );
 
         this.loadSideConfig();

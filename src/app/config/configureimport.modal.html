@@ -1,0 +1,27 @@
+<div class="modal-header">
+    <h1 class="modal-title">IMPORT CONFIGURATION</h1>
+</div>
+<div class="modal-body">
+    <div ng-class="['row', {'has-error': !vm.syntaxValid }]">
+        <div class="col-xs-2">
+            CONFIG
+        </div>
+        <div class="col-xs-10">
+            <div class="prototypeadd-ace-editor form-control" ng-readonly="vm.processing" ng-model="vm.config" ui-ace="{
+                useWrapMode : false,
+                showGutter: true,
+                theme:'github',
+                mode: 'yaml',
+                firstLineNumber: 1,
+                onLoad: vm.editorLoaded,
+                onChange: vm.aceChanged
+            }"></div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button ng-if="vm.numAnnotations !== 0" class="btn btn-modal-action btn-sm" style="float: left;" ng-click="vm.errorClick()"><span class="glyphicon glyphicon glyphicon-remove-sign text-danger"></span> <span ng-bind="vm.numAnnotations"></span></button>
+    <button ng-disabled="!vm.valid || vm.processing" class="btn btn-primary btn-sm" type="button" ng-click="vm.append()">APPEND</button>
+    <button ng-disabled="!vm.valid || vm.processing" class="btn btn-primary btn-sm" type="button" ng-click="vm.replace()">REPLACE</button>
+    <button ng-disabled="vm.processing" class="btn btn-warning btn-sm" type="button" ng-click="vm.cancel()">CANCEL</button>
+</div>

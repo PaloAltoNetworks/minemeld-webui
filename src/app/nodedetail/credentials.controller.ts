@@ -4,6 +4,7 @@ import { INodeDetailResolverService } from '../../app/services/nodedetailresolve
 import { IMinemeldConfigService } from '../../app/services/config';
 import { NodeDetailInfoController } from './nodedetail.info.controller';
 import { IMinemeldStatusService } from  '../../app/services/status';
+import { IThrottleService } from '../../app/services/throttle';
 
 /** @ngInject */
 function credentialsListConfig($stateProvider: ng.ui.IStateProvider) {
@@ -149,10 +150,11 @@ class NodeDetailCredentialsInfoController extends NodeDetailInfoController {
         $compile: angular.ICompileService, $state: angular.ui.IStateService,
         $stateParams: angular.ui.IStateParamsService, MinemeldConfigService: IMinemeldConfigService,
         $modal: angular.ui.bootstrap.IModalService,
-        $rootScope: angular.IRootScopeService, $timeout: angular.ITimeoutService) {
+        $rootScope: angular.IRootScopeService,
+        ThrottleService: IThrottleService) {
         super(
             toastr, $interval, MinemeldStatusService, moment, $scope,
-            $compile, $state, $stateParams, $rootScope, $timeout
+            $compile, $state, $stateParams, $rootScope, ThrottleService
         );
 
         this.MinemeldConfigService = MinemeldConfigService;
@@ -265,11 +267,11 @@ class NodeDetailCredentialsInfoController extends NodeDetailInfoController {
             this.username = result.username;
 
             return this.saveSideConfig();
+        }, (error: any) => {
+            this.toastr.error('ERROR SETTING USERNAME: ' + error.statusText);
         })
         .then((result: any) => {
             this.toastr.success('USERNAME SET');
-        }, (error: any) => {
-            this.toastr.error('ERROR SETTING USERNAME: ' + error.status);
         });
     }
 }

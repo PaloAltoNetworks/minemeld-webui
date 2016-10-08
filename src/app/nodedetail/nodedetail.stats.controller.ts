@@ -3,6 +3,7 @@
 import { IMinemeldStatusService } from  '../../app/services/status';
 import { IMinemeldMetricsService } from '../../app/services/metrics';
 import { IMinemeldStatusNode } from '../../app/services/status';
+import { IThrottled, IThrottleService } from '../../app/services/throttle';
 
 interface INGMinemeldStatusNode extends IMinemeldStatusNode {
     indicators: number;
@@ -35,6 +36,7 @@ export class NodeDetailStatsController {
     nodeState: INGMinemeldStatusNode;
 
     mmStatusListener: any;
+    mmThrottledUpdate: IThrottled;
 
     chartOptions: any = {
         chart: {
@@ -84,7 +86,8 @@ export class NodeDetailStatsController {
         moment: moment.MomentStatic, $scope: angular.IScope,
         $compile: angular.ICompileService, $state: angular.ui.IStateService,
         $stateParams: angular.ui.IStateParamsService,
-        $rootScope: angular.IRootScopeService, $timeout: angular.ITimeoutService) {
+        $rootScope: angular.IRootScopeService,
+        ThrottleService: IThrottleService) {
         this.toastr = toastr;
         this.mmstatus = MinemeldStatusService;
         this.mmmetrics = MinemeldMetricsService;
@@ -98,11 +101,13 @@ export class NodeDetailStatsController {
         this.nodename = $scope.$parent['nodedetail']['nodename'];
 
         this.updateMinemeldStatus();
+        this.mmThrottledUpdate = ThrottleService.throttle(
+            this.updateMinemeldStatus.bind(this),
+            500
+        );
         this.mmStatusListener = $rootScope.$on(
             'mm-status-changed',
-            () => {
-                $timeout(this.updateMinemeldStatus.bind(this));
-            }
+            this.mmThrottledUpdate
         );
         this.updateNodeMetrics();
 
@@ -197,6 +202,9 @@ export class NodeDetailStatsController {
     }
 
     private destroy() {
+        if (this.mmThrottledUpdate) {
+            this.mmThrottledUpdate.cancel();
+        }
         if (this.mmStatusListener) {
             this.mmStatusListener();
         }

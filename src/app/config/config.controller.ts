@@ -2,6 +2,7 @@
 
 import { IMinemeldConfigService, IMinemeldConfigInfo, IMinemeldConfigNode } from  '../../app/services/config';
 import { IConfirmService } from '../../app/services/confirm';
+import { IMinemeldPrototypeService } from '../../app/services/prototype';
 import { IMinemeldSupervisorService } from '../../app/services/supervisor';
 
 declare var he: any;
@@ -16,8 +17,11 @@ export class ConfigController {
     DTColumnBuilder: any;
     DTOptionsBuilder: any;
     MinemeldConfigService: IMinemeldConfigService;
+    MinemeldPrototypeService: IMinemeldPrototypeService;
     MinemeldSupervisorService: IMinemeldSupervisorService;
     ConfirmService: IConfirmService;
+
+    expertMode: boolean = false;
 
     dtNodes: any = {};
     dtColumns: any[];
@@ -34,6 +38,7 @@ export class ConfigController {
                 DTColumnBuilder: any, $compile: angular.ICompileService,
                 MinemeldConfigService: IMinemeldConfigService,
                 MinemeldSupervisorService: IMinemeldSupervisorService,
+                MinemeldPrototypeService: IMinemeldPrototypeService,
                 $state: angular.ui.IStateService, $q: angular.IQService,
                 $modal: angular.ui.bootstrap.IModalService,
                 ConfirmService: IConfirmService) {
@@ -46,6 +51,7 @@ export class ConfigController {
         this.$q = $q;
         this.$modal = $modal;
         this.MinemeldConfigService = MinemeldConfigService;
+        this.MinemeldPrototypeService = MinemeldPrototypeService;
         this.MinemeldSupervisorService = MinemeldSupervisorService;
         this.ConfirmService = ConfirmService;
 
@@ -65,6 +71,41 @@ export class ConfigController {
             this.$state.go(this.$state.current.name, {}, {reload: true});
         }, (error: any) => {
             this.toastr.error('ERROR RELOADING CONFIG: ' + error.statusText);
+        });
+    }
+
+    import(): void {
+        var mi: angular.ui.bootstrap.IModalServiceInstance;
+
+        mi = this.$modal.open({
+            templateUrl: 'app/config/configureimport.modal.html',
+            controller: 'ConfigureImportController',
+            controllerAs: 'vm',
+            bindToController: true,
+            backdrop: 'static',
+            animation: false,
+            size: 'lg'
+        });
+
+        mi.result.then((result: any) => {
+            if (result === 'ok') {
+                this.changed = this.MinemeldConfigService.changed;
+                this.dtNodes.reloadData();
+            }
+        });
+    }
+
+    export(): void {
+        var mi: angular.ui.bootstrap.IModalServiceInstance;
+
+        mi = this.$modal.open({
+            templateUrl: 'app/config/configureexport.modal.html',
+            controller: 'ConfigureExportController',
+            controllerAs: 'vm',
+            bindToController: true,
+            backdrop: 'static',
+            animation: false,
+            size: 'lg'
         });
     }
 
@@ -99,6 +140,14 @@ export class ConfigController {
 
     configureInputs(nodenum: number) {
         var mi: angular.ui.bootstrap.IModalServiceInstance;
+
+        if (!this.expertMode) {
+            if (typeof this.nodesConfig[nodenum].properties.node_type !== 'undefined') {
+                if (this.nodesConfig[nodenum].properties.node_type === 'miner') {
+                    return;
+                }
+            }
+        }
 
         mi = this.$modal.open({
             templateUrl: 'app/config/configureinputs.modal.html',
@@ -164,6 +213,21 @@ export class ConfigController {
         .finally(() => { this.inCommit = false; });
     }
 
+    toggleExpert() {
+        if (this.expertMode) {
+            this.expertMode = false;
+        } else {
+            this.expertMode = true;
+        }
+
+        angular.element('#configTable thead tr th:nth-child(6)').toggle();
+        angular.element('#configTable tbody tr td:nth-child(6)').toggle();
+
+        angular.element('.config-table-miner')
+            .toggleClass('config-table-clickable')
+            .toggleClass('config-table-disabled');
+    }
+
     private setupNodesTable() {
         var vm: ConfigController = this;
 
@@ -175,8 +239,17 @@ export class ConfigController {
         .withOption('order', [[2, 'asc'], [1, 'asc']])
         .withOption('aaSorting', [])
         .withOption('aaSortingFixed', [])
+        .withOption('bDeferRender', true)
         .withOption('paging', false)
         .withOption('stateSave', true)
+        .withOption('headerCallback', (thead: HTMLScriptElement) => {
+            var fc: HTMLElement;
+
+            fc = <HTMLElement>thead.childNodes[5];
+            fc.setAttribute('ng-show', 'vm.expertMode');
+
+            vm.$compile(angular.element(thead).contents())(vm.$scope);
+        })
         .withOption('createdRow', function(row: HTMLScriptElement, data: any, index: any) {
             var c: string;
             var fc: HTMLElement;
@@ -188,24 +261,37 @@ export class ConfigController {
 
             row.className += ' config-table-row';
 
-            if ((!data.properties.inputs) || (data.properties.inputs.length === 0)) {
+            c = 'nodes-dt-header-default';
+            if (typeof data.properties.node_type === 'undefined') {
+                c = 'nodes-dt-header-default';
+            } else if (data.properties.node_type === 'miner') {
                 c = 'nodes-dt-header-miner';
-            } else if (data.properties.output === false) {
+            } else if (data.properties.node_type === 'output') {
                     c = 'nodes-dt-header-output';
-            } else {
+            } else if (data.properties.node_type === 'processor') {
                     c = 'nodes-dt-header-processor';
             }
-
             fc = <HTMLElement>(row.childNodes[0]);
             fc.className += ' ' + c;
 
             fc = <HTMLElement>(row.childNodes[4]);
             fc.setAttribute('ng-click', 'vm.configureInputs(' + index + ')');
-            fc.className += ' config-table-clickable';
+            if (typeof data.properties.node_type !== 'undefined' && data.properties.node_type === 'miner') {
+                fc.className += ' config-table-miner';
+
+                if (vm.expertMode) {
+                    fc.className += ' config-table-clickable';
+                } else {
+                    fc.className += ' config-table-disabled';
+                }
+            } else {
+                fc.className += ' config-table-clickable';
+            }
 
             fc = <HTMLElement>(row.childNodes[5]);
             fc.setAttribute('ng-click', 'vm.configureOutput(' + index + ')');
             fc.className += ' config-table-clickable';
+            fc.setAttribute('ng-show', 'vm.expertMode');
 
             fc = <HTMLElement>(row.childNodes[6]);
             fc.setAttribute('ng-click', 'vm.removeNode(' + index + ')');
@@ -213,6 +299,7 @@ export class ConfigController {
             fc.style.verticalAlign = 'middle';
             fc.setAttribute('tooltip', 'delete node');
             fc.setAttribute('tooltip-popup-delay', '500');
+            fc.setAttribute('tooltip-append-to-body', 'true');
             fc.className += ' config-table-clickable';
 
             vm.$compile(angular.element(row).contents())(vm.$scope);
@@ -232,20 +319,16 @@ export class ConfigController {
             this.DTColumnBuilder.newColumn('name').withTitle('NAME').renderWith(function(data: any, type: any, full: any) {
                 return he.encode(data, { strict: true });
             }),
-            this.DTColumnBuilder.newColumn(null).withTitle('POSITION').renderWith(function(data: any, type: any, full: any) {
-                var c: string;
-                var v: string;
+            this.DTColumnBuilder.newColumn(null).withTitle('TYPE').renderWith(function(data: any, type: any, full: any) {
+                var v, c, nt: string;
 
-                if ((!full.properties.inputs) || (full.properties.inputs.length === 0)) {
-                    c = 'nodes-label-miner';
-                    v = 'MINER';
-                } else if (full.properties.output === false) {
-                    c = 'nodes-label-output';
-                    v = 'OUTPUT';
-                } else {
-                    c = 'nodes-label-processor';
-                    v = 'PROCESSOR';
+                if (typeof full.properties.node_type === 'undefined') {
+                    return '<span class="label label-default">UNKNOWN</span>';
                 }
+
+                nt = he.encode(full.properties.node_type, {strict: true});
+                c = 'nodes-label-' + nt;
+                v = <string>(nt).toUpperCase();
 
                 return '<span class="label ' + c + '">' + v + '</span>';
             }),
@@ -307,7 +390,13 @@ export class ConfigController {
             return $p.promise;
         }*/
 
-        return this.refreshConfig();
+        return this.MinemeldPrototypeService.getPrototypeLibraries().then((result: any) => {
+            return this.refreshConfig();
+        }, (error: any) => {
+            this.toastr.error('ERROR LOADING PROTOTYPES: ' + error.statusText);
+
+            throw error;
+        });
     }
 
     private refreshConfig(): angular.IPromise<any> {
@@ -329,6 +418,30 @@ export class ConfigController {
             this.changed = false;
 
             return this.nodesConfig;
+        }).then((config: any[]) => {
+            var result: angular.IPromise<any>[] = [];
+
+            result = config.map((node: any) => {
+                if (typeof node.properties.prototype === 'undefined') {
+                    return this.$q.when(node);
+                }
+
+                return this.MinemeldPrototypeService.getPrototype(node.properties.prototype).then((result: any) => {
+                    if (typeof result === 'undefined') {
+                        node.properties.node_type = 'UNKNOWN';
+                    } else {
+                        if (result.node_type) {
+                            node.properties.node_type = result.node_type;
+                        }
+                    }
+
+                    return node;
+                }, (error: any) => {
+                    return node;
+                });
+            });
+
+            return this.$q.all(result);
         });
     }
 }
@@ -377,14 +490,25 @@ export class ConfigureOutputController {
     }
 }
 
+interface InputProperties {
+    name: string;
+    nodeType: string;
+};
+
 export class ConfigureInputsController {
     nodenum: number;
     MinemeldConfigService: IMinemeldConfigService;
     $modalInstance: angular.ui.bootstrap.IModalServiceInstance;
 
+    expertMode: boolean = false;
     nodeConfig: IMinemeldConfigNode;
+    nodeType: string;
+    nodeTypeLimit: number;
+
+    noChoiceMessage: string;
+
     inputs: string[];
-    availableInputs: string[];
+    availableInputs: InputProperties[];
     changed: boolean = false;
 
     /** @ngInject */
@@ -394,21 +518,29 @@ export class ConfigureInputsController {
         this.nodenum = nodenum;
         this.MinemeldConfigService = MinemeldConfigService;
         this.$modalInstance = $modalInstance;
-        this.nodeConfig = this.MinemeldConfigService.nodesConfig[nodenum];
-        this.inputs = angular.copy(this.nodeConfig.properties.inputs);
-        this.availableInputs = this.MinemeldConfigService.nodesConfig
-            .filter((x: IMinemeldConfigNode) => {
-                if (x.deleted) {
-                    return false;
-                }
 
-                return true;
-            })
-            .map((x: IMinemeldConfigNode) => { return x.name; });
+        this.nodeConfig = this.MinemeldConfigService.nodesConfig[nodenum];
+        if (typeof this.nodeConfig.properties.node_type !== 'undefined') {
+            this.nodeType = this.nodeConfig.properties.node_type;
+        }
+        if (this.nodeType === 'output') {
+            this.nodeTypeLimit = 1;
+        }
+        if (this.nodeType === 'miner') {
+            this.nodeTypeLimit = 0;
+        }
+        if (this.nodeType === 'processor') {
+            this.nodeTypeLimit = 1024; /* should be enough */
+        }
+
+        this.inputs = angular.copy(this.nodeConfig.properties.inputs);
+
+        this.loadAvailableInputs();
     }
 
     hasChanged() {
         this.changed = true;
+        this.loadAvailableInputs();
     }
 
     save() {
@@ -423,5 +555,132 @@ export class ConfigureInputsController {
 
     cancel() {
         this.$modalInstance.dismiss();
+    }
+
+    toggleExpert(): void {
+        if (this.expertMode) {
+            this.expertMode = false;
+        } else {
+            this.expertMode = true;
+        }
+        this.loadAvailableInputs();
+    }
+
+    private loadAvailableInputs(): void {
+        var t: IMinemeldConfigNode[];
+
+        if (!this.expertMode) {
+            if (this.inputs.length >= this.nodeTypeLimit) {
+                this.availableInputs = this.inputs.map((i: string) => {
+                    var cn: IMinemeldConfigNode;
+                    var nt: string = 'UNKNOWN';
+
+                    for (cn of this.MinemeldConfigService.nodesConfig) {
+                        if (cn.name == i) {
+                            if (typeof cn.properties.node_type !== 'undefined') {
+                                nt = cn.properties.node_type.toUpperCase();
+                            }
+                            break;
+                        }
+                    }
+
+                    return {
+                        name: i,
+                        nodeType: nt
+                    };
+                });
+
+                this.noChoiceMessage = 'Max number of input nodes for this ' + this.nodeType.toUpperCase() + ' node reached';
+
+                return;
+            }
+        }
+
+        t = this.MinemeldConfigService.nodesConfig
+            .filter((x: IMinemeldConfigNode) => {
+                /* first thing remove deleted nodes and itself */
+                if (x.name == this.nodeConfig.name) {
+                    return false;
+                }
+
+                /* already selected inputs should be available */
+                if (this.inputs.indexOf(x.name) !== -1) {
+                    return true;
+                }
+
+                if (x.deleted) {
+                    return false;
+                }
+
+                return true;
+            });
+
+        if (!this.expertMode && typeof this.nodeType !== 'undefined') {
+            t = t.filter((x: IMinemeldConfigNode) => {
+                var x_nt: string;
+
+                if (typeof x.properties.node_type === 'undefined') {
+                    return true;
+                }
+                x_nt = x.properties.node_type;
+
+                if (this.nodeType === 'miner') {
+                    return false;
+                }
+                if (this.nodeType === 'processor') {
+                    if (x_nt === 'miner') {
+                        return true;
+                    }
+                    if (x_nt === 'processor') {
+                        return true;
+                    }
+                    return false;
+                }
+                if (this.nodeType === 'output') {
+                    if (x_nt === 'miner') {
+                        return true;
+                    }
+                    if (x_nt === 'processor') {
+                        return true;
+                    }
+                    return false;
+                }
+
+                return true;
+            });
+        }
+
+        this.availableInputs = t.map((x: IMinemeldConfigNode) => {
+            var nt: string;
+
+            nt = 'UNKNOWN';
+            if (typeof x.properties.node_type !== 'undefined') {
+                nt = x.properties.node_type.toUpperCase();
+            }
+
+            return {
+                name: x.name,
+                nodeType: nt
+            };
+        });
+
+        /* in ui-select all the already specified nodes should be "available"
+           this thing here is to add selected but deleted nodes */
+        angular.forEach(this.inputs, (x: string) => {
+            var f: InputProperties[];
+
+            f = this.availableInputs.filter((ai: InputProperties) => {
+                return ai.name == x;
+            });
+
+            if (f.length === 0) {
+                this.availableInputs.push({
+                    name: x,
+                    nodeType: 'UNKNOWN'
+                });
+            }
+        });
+
+        this.noChoiceMessage = 'No suitable input nodes found';
     }
 }

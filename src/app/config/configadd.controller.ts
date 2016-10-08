@@ -13,6 +13,11 @@ interface IPrototypesDescription {
     nodeType?: string;
 }
 
+interface IInputNode {
+    name: string;
+    nodeType: string;
+}
+
 export class ConfigAddController {
     MinemeldPrototypeService: IMinemeldPrototypeService;
     MinemeldConfigService: IMinemeldConfigService;
@@ -20,13 +25,18 @@ export class ConfigAddController {
     $state: angular.ui.IStateService;
     $stateParams: angular.ui.IStateParamsService;
     $rootScope: any;
+    $q: angular.IQService;
 
     availablePrototypes: IPrototypesDescription[] = new Array();
-    availableInputs: string[];
+    availableInputs: IInputNode[];
+    configNodes: IInputNode[];
 
     name: string = 'node-' + (new Date().getTime());
     prototype: string;
     inputs: string[] = new Array();
+    inputsDisabled: boolean = false;
+    inputsLimit: number;
+    noInputsChoiceMessage: string;
     output: boolean = false;
 
     selectedPrototype: IPrototypesDescription;
@@ -36,7 +46,8 @@ export class ConfigAddController {
                 MinemeldConfigService: IMinemeldConfigService,
                 toastr: any, $state: angular.ui.IStateService,
                 $stateParams: angular.ui.IStateParamsService,
-                $rootScope: angular.IRootScopeService) {
+                $rootScope: angular.IRootScopeService,
+                $q: angular.IQService) {
         var p: string;
         var toks: string[];
 
@@ -46,6 +57,7 @@ export class ConfigAddController {
         this.toastr = toastr;
         this.$state = $state;
         this.$stateParams = $stateParams;
+        this.$q = $q;
 
         p = this.$stateParams['prototype'];
         if (p !== 'none') {
@@ -92,20 +104,14 @@ export class ConfigAddController {
                     }
                 }
             }
-        }, (error: any) => {
-            this.toastr.error('ERROR RETRIEVING PROTOTYPES: ' + error.statusText);
-        });
-
-        this.MinemeldConfigService.refresh().then((result: any) => {
-            this.availableInputs = this.MinemeldConfigService.nodesConfig
-                .filter((x: IMinemeldConfigNode) => {
-                    if (x.deleted) {
-                        return false;
-                    }
-                    return true;
-                })
-                .map((x: IMinemeldConfigNode) => { return x.name; });
-        }, (error: any) => {
+        }).then((result: any) => {
+            return this.MinemeldConfigService.refresh();
+        }).then((result: any) => {
+            return this.decorateConfigNodes();
+        }).then((result: any) => {
+            this.configNodes = result;
+            this.loadAvailableInputs();
+        }).then(undefined, (error: any) => {
             this.toastr.error('ERROR RETRIEVING CONFIG: ' + error.statusText);
         });
     }
@@ -128,6 +134,7 @@ export class ConfigAddController {
 
     valid(): boolean {
         var namere = /^[a-zA-Z0-9_\-]+$/;
+        var ci: IInputNode;
 
         if (this.name.length === 0) {
             return false;
@@ -152,8 +159,10 @@ export class ConfigAddController {
             return false;
         }
 
-        if (this.availableInputs.indexOf(this.name) > -1) {
-            return false;
+        for (ci of this.availableInputs) {
+            if (ci.name == this.name) {
+                return false;
+            }
         }
 
         if (this.availablePrototypes.filter(
@@ -168,21 +177,128 @@ export class ConfigAddController {
 
     prototypeSelected($item: IPrototypesDescription, $model: string): void {
         this.selectedPrototype = $item;
+        this.inputs = [];
+        if (typeof $item === 'undefined') {
+            return;
+        }
 
-        if ($item.nodeType == 'OUTPUT') {
+        if ($item.nodeType === 'OUTPUT') {
             this.output = false;
-        } else if ($item.nodeType == 'MINER') {
+            this.inputsDisabled = false;
+            this.inputsLimit = 1;
+        } else if ($item.nodeType === 'MINER') {
             this.output = true;
-        } else if ($item.nodeType == 'PROCESSOR') {
+            this.inputsDisabled = true;
+            this.inputsLimit = 0;
+        } else if ($item.nodeType === 'PROCESSOR') {
             this.output = true;
+            this.inputsDisabled = false;
+            this.inputsLimit = 1024;
+        }
+
+        if (this.configNodes) {
+            this.loadAvailableInputs();
         }
     }
 
     prototypeRemoved($item: IPrototypesDescription, $model: string): void {
         this.selectedPrototype = $item;
+        this.inputs = [];
+        this.inputsDisabled = false;
+        this.inputsLimit = undefined;
     }
 
     back() {
         this.$rootScope.mmBack('config');
+    }
+
+    inputsChanged() {
+        this.loadAvailableInputs();
+    }
+
+    private loadAvailableInputs(): void {
+        var result: IInputNode[];
+
+        this.noInputsChoiceMessage = 'No suitable input nodes found';
+
+        result = this.configNodes;
+
+        if (this.selectedPrototype && this.selectedPrototype.nodeType) {
+            result = result.filter((x: IInputNode) => {
+                if (x.nodeType === 'UNKNOWN') {
+                    return true;
+                }
+                if (this.selectedPrototype.nodeType === 'PROCESSOR') {
+                    if (x.nodeType === 'PROCESSOR') {
+                        return true;
+                    }
+                    if (x.nodeType === 'MINER') {
+                        return true;
+                    }
+                    return false;
+                }
+                if (this.selectedPrototype.nodeType === 'OUTPUT') {
+                    if (x.nodeType === 'PROCESSOR') {
+                        return true;
+                    }
+                    if (x.nodeType === 'MINER') {
+                        return true;
+                    }
+                    return false;
+                }
+                return false;
+            });
+
+            if (this.inputsLimit && this.inputs.length >= this.inputsLimit) {
+                result = result.filter((x: IInputNode) => {
+                    if (this.inputs.indexOf(x.name) !== -1) {
+                        return true;
+                    }
+
+                    return false;
+                });
+                this.noInputsChoiceMessage = 'Max number of input nodes for this prototype type reached';
+            }
+        }
+
+        this.availableInputs = result;
+    }
+
+    private decorateConfigNodes(): angular.IPromise<any> {
+        var t: IMinemeldConfigNode[];
+        var p: angular.IPromise<any>[] = [];
+
+        t = this.MinemeldConfigService.nodesConfig
+            .filter((x: IMinemeldConfigNode) => {
+                if (x.deleted) {
+                    return false;
+                }
+                return true;
+            });
+
+        angular.forEach(t, (nc: IMinemeldConfigNode) => {
+            if (typeof nc.properties.prototype === 'undefined') {
+                p.push(this.$q((resolve: angular.IQResolveReject<any>) => {
+                    resolve({
+                        name: nc.name,
+                        nodeType: 'UNKNOWN'
+                    });
+                }));
+                return;
+            }
+            p.push(this.MinemeldPrototypeService.getPrototype(nc.properties.prototype).then((result: any) => {
+                if (result.node_type) {
+                    return {
+                        name: nc.name,
+                        nodeType: result.node_type.toUpperCase()
+                    };
+                }
+                return { name: nc.name, nodeType: 'UNKNOWN' };
+            }));
+        });
+
+        return this.$q.all(p).then((result: any) => {
+            return result;
+        });
     }
 }

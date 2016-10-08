@@ -3,6 +3,12 @@
     <button tooltip-popup-delay="500" tooltip="commit config" type="button" class="btn btn-primary btn-sm" ng-disabled="(vm.changed === false) || vm.inCommit" ng-click="vm.commit()">
         <span class="glyphicon glyphicon-save"></span> COMMIT
     </button>
+    <button tooltip-popup-delay="500" tooltip="export config" type="button" class="config-action btn btn-config-action btn-sm" ng-click="vm.export()">
+        <span class="glyphicon glyphicon-export"></span> EXPORT
+    </button>
+    <button tooltip-popup-delay="500" tooltip="import config" type="button" class="config-action btn btn-config-action btn-sm" ng-click="vm.import()">
+        <span class="glyphicon glyphicon-import"></span> IMPORT
+    </button>
     <button tooltip-popup-delay="500" tooltip="load committed config" type="button" class="config-action btn btn-config-action btn-sm" ng-click="vm.load()">
         <span class="glyphicon glyphicon-refresh"></span> LOAD
     </button>
@@ -17,10 +23,20 @@
         dt-columns="vm.dtColumns" class="table table-condensed">
         <tfoot>
             <tr>
-                <td colspan="7" style="padding-right: 0;">
+                <td colspan="3" style="padding-left: 0;">
+                    <div class="btn-toolbar" style="float: left;">
+                        <button ng-if="!vm.expertMode" tooltip-popup-delay="500" tooltip="enable expert mode" type="button" class="btn btn-config-action btn-sm" ng-click="vm.toggleExpert()">
+                            <span class="glyphicon glyphicon-eye-open"></span>
+                        </button>
+                        <button ng-if="vm.expertMode" tooltip-popup-delay="500" tooltip="disable expert mode" type="button" class="btn btn-config-action btn-sm" ng-click="vm.toggleExpert()">
+                            <span class="glyphicon glyphicon-eye-close"></span>
+                        </button>
+                    </div>
+                </td>
+                <td colspan="4" style="padding-right: 0;">
                     <div class="btn-toolbar" style="float: right;">
                         <button tooltip-popup-delay="500" tooltip="browse prototypes" class="btn btn-primary btn-sm" type="button" ng-click="vm.$state.go('prototypes')"><span class="glyphicon glyphicon-menu-hamburger"></span></button>
-                        <button tooltip-popup-delay="500" tooltip="add node" class="btn btn-primary btn-sm" type="button" ng-click="vm.$state.go('configadd')"><span class="glyphicon glyphicon-plus"></span></button>
+                        <button ng-if="vm.expertMode" tooltip-popup-delay="500" tooltip="add node" class="btn btn-primary btn-sm" type="button" ng-click="vm.$state.go('configadd')"><span class="glyphicon glyphicon-plus"></span></button>
                     </div>
                 </td>
             </tr>

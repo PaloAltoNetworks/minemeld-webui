@@ -6,6 +6,8 @@ import { IMinemeldEventsService } from './events';
 export interface IMinemeldStatusService {
     NODE_STATES: string[];
     currentStatus: IMinemeldStatus;
+
+    getStatus(): angular.IPromise<IMinemeldStatus>;
     getSystem(): angular.IPromise<any>;
     getMinemeld(): angular.IPromise<any>;
     getConfig(): angular.IPromise<any>;
@@ -40,11 +42,13 @@ export class MinemeldStatusService implements IMinemeldStatusService {
     toastr: any;
     $interval: angular.IIntervalService;
     $rootScope: angular.IRootScopeService;
+    $q: angular.IQService;
 
     statusSubscription: number;
     statusUpdated: number;
     statusUpdatePromise: angular.IPromise<any>;
-    currentStatus: IMinemeldStatus = {};
+    currentStatus: IMinemeldStatus;
+    currentStatusDeferred: angular.IDeferred<IMinemeldStatus>;
 
     NODE_STATES: string[] = [
         'READY',
@@ -64,13 +68,15 @@ export class MinemeldStatusService implements IMinemeldStatusService {
                 MinemeldEventsService: IMinemeldEventsService,
                 toastr: any,
                 $interval: angular.IIntervalService,
-                $rootScope: angular.IRootScopeService) {
+                $rootScope: angular.IRootScopeService,
+                $q: angular.IQService) {
         this.$state = $state;
         this.MineMeldAPIService = MineMeldAPIService;
         this.MinemeldEventsService = MinemeldEventsService;
         this.toastr = toastr;
         this.$interval = $interval;
         this.$rootScope = $rootScope;
+        this.$q = $q;
 
         this.MineMeldAPIService.onLogin(this.initStatusMonitor.bind(this));
         this.MineMeldAPIService.onLogout(this.destroyStatusMonitor.bind(this));
@@ -83,6 +89,8 @@ export class MinemeldStatusService implements IMinemeldStatusService {
         if (this.statusSubscription) {
             return;
         }
+
+        this.currentStatusDeferred = this.$q.defer<IMinemeldStatus>();
         this.updateFullStatus();
     }
 
@@ -98,6 +106,16 @@ export class MinemeldStatusService implements IMinemeldStatusService {
         this.MinemeldEventsService.unsubscribe(this.statusSubscription);
         this.statusSubscription = undefined;
         this.currentStatus = {};
+        this.statusUpdated = undefined;
+    }
+
+    public getStatus(): angular.IPromise<IMinemeldStatus> {
+        if (typeof this.currentStatus === 'undefined') {
+            /* wait, we don't have the status yet */
+            return this.currentStatusDeferred.promise;
+        }
+
+        return this.$q.when(this.currentStatus);
     }
 
     public getSystem(): angular.IPromise<any> {
@@ -206,17 +224,18 @@ export class MinemeldStatusService implements IMinemeldStatusService {
     }
 
     private onEventsOpen(subtype: string, event: string, e: any): void {
-        console.log('open', e);
+        // console.log('open', e);
     }
 
     private onEventsError(subtype: string, event: string, e: any): void {
-        console.log('error', e);
+        console.log('Error in status event stream:', e);
     }
 
     private updateFullStatus(): void {
         this.getMinemeld(false).then((result: any) => {
             var status: IMinemeldStatusNode[];
             var ts: number;
+            var firstUpdate: boolean = !this.statusUpdated;
 
             status = result.result;
             ts = result.timestamp;
@@ -227,6 +246,10 @@ export class MinemeldStatusService implements IMinemeldStatusService {
             });
             this.statusUpdated = ts;
             this.$rootScope.$broadcast('mm-status-changed');
+
+            if (firstUpdate) {
+                this.currentStatusDeferred.resolve(this.currentStatus);
+            }
 
             if (typeof this.statusSubscription === 'undefined') {
                 this.statusSubscription = this.MinemeldEventsService.subscribeStatusEvents({

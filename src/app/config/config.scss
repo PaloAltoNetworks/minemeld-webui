@@ -50,13 +50,19 @@
     background-color: darken($body-bg, 10%) !important;
 }
 
+.config-table-disabled {
+    cursor: default !important;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc1JyBoZWlnaHQ9JzUnPgogIDxyZWN0IHdpZHRoPSc1JyBoZWlnaHQ9JzUnIGZpbGw9J3doaXRlJyBmaWxsLW9wYWNpdHk9IjAuMCIvPgogIDxwYXRoIGQ9J00wIDVMNSAwWk02IDRMNCA2Wk0tMSAxTDEgLTFaJyBzdHJva2U9JyNkZGQnIHN0cm9rZS13aWR0aD0nMScvPgo8L3N2Zz4K");
+    background-repeat: repeat;
+}
+
 .config-inputs-table > tbody {
     border-top: 2px solid $table-border-color;
     border-bottom: 1px solid $table-border-color;
 }
 
 .config-inputs-table > tbody > tr:hover {
-    background-color: darken($body-bg, 5%);    
+    background-color: darken($body-bg, 5%);
 }
 
 .config-add-form label {

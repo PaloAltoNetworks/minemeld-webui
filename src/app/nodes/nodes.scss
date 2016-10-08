@@ -49,20 +49,27 @@
 
 .nodes-dt-header-miner {
     background-color: $minemeld-miner !important;
+    width: 5px;
 }
 
 .nodes-dt-header-output {
     background-color: $minemeld-output !important;
+    width: 5px;
 }
 
 .nodes-dt-header-processor {
     background-color: $minemeld-processor !important;
+    width: 5px;
 }
 
 .nodes-dt-name {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+}
+
+.nodes-dt-header-default {
+    background-color: $gray-light !important;
 }
 
 .nodes-label-miner {

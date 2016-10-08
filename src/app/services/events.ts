@@ -51,7 +51,7 @@ export class MinemeldEventsService implements IMinemeldEventsService {
     subscriptions: ISubscription[] = [];
     last_id: number = -1;
 
-    event_sources: { [topic: string]: IEventSource } = {};
+    event_sources: { [topic: string]: { es: IEventSource, reconnect: boolean } } = {};
 
     /* @ngInject */
     constructor($state: angular.ui.IStateService,
@@ -87,7 +87,7 @@ export class MinemeldEventsService implements IMinemeldEventsService {
         };
 
         this.subscriptions.push(sub);
-        this.createEventSource(sub.subType);
+        this.createEventSource(sub.subType, undefined, true);
 
         return sub._id;
     }
@@ -132,6 +132,8 @@ export class MinemeldEventsService implements IMinemeldEventsService {
     }
 
     private onError(subtype: string, event: string, e: any) {
+        var ruri: string;
+
         angular.forEach(this.subscriptions, (sub: ISubscription) => {
            if ((sub.subType !== subtype) || (sub.topic !== event)) {
                return;
@@ -150,13 +152,30 @@ export class MinemeldEventsService implements IMinemeldEventsService {
 
                 return;
             }
+            if (e.data.indexOf('Reconnecting') !== -1) {
+                return;
+            }
+
+            ruri = subtype;
+            if (event) {
+                ruri += '/' + event;
+            }
+            if (this.event_sources[ruri].reconnect) {
+                console.log('ES: Reconnect on error');
+                this.deleteEventSource(subtype, event);
+                this.createEventSource(subtype, event, true);
+            }
         }
     }
 
-    private createEventSource(subtype: string, event?: string): void {
+    private createEventSource(subtype: string, event?: string, reconnect?: boolean): void {
         var new_es: IEventSource;
         var ruri: string = subtype;
         var headers: any;
+
+        if (typeof reconnect === 'undefined') {
+            reconnect = false;
+        }
 
         if (typeof event !== 'undefined') {
             ruri = ruri + '/' + event;
@@ -179,7 +198,10 @@ export class MinemeldEventsService implements IMinemeldEventsService {
         new_es.onopen = (e: any) => { this.onOpen(subtype, event, e); };
         new_es.onerror = (e: any) => { this.onError(subtype, event, e); };
 
-        this.event_sources[ruri] = new_es;
+        this.event_sources[ruri] = {
+            es: new_es,
+            reconnect: reconnect
+        };
     }
 
     private deleteEventSource(subtype: string, event: string): void {
@@ -204,7 +226,7 @@ export class MinemeldEventsService implements IMinemeldEventsService {
             return;
         }
 
-        this.event_sources[ruri].close();
+        this.event_sources[ruri].es.close();
         delete this.event_sources[ruri];
     }
 }
