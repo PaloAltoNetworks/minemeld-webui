@@ -60,8 +60,7 @@
     "3.4.0": "3.4.0"
   },
   "https://github.com/jquery/jquery-dist.git": {
-    "2.1.4": "2.1.4",
-    "3.0.0": "0078f86be166a8747819d5d1516776a662cb69df"
+    "2.1.4": "2.1.4"
   },
   "https://github.com/krispo/angular-nvd3.git": {
     "1.0.6": "1.0.6"
@@ -73,7 +72,8 @@
     "0.5.0": "0.5.0"
   },
   "https://github.com/mbostock-bower/d3-bower.git": {
-    "3.5.5": "3.5.5"
+    "3.5.5": "3.5.5",
+    "3.5.17": "abe0262a205c9f3755c3a757de4dfd1d49f34b24"
   },
   "https://github.com/moment/moment.git": {
     "2.10.6": "2.10.6"
