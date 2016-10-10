@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldStatusService, IMinemeldStatusNode } from  '../../app/services/status';
+import { IMinemeldStatusService, IMinemeldStatusNode, IMinemeldStatus } from  '../../app/services/status';
 import { IThrottled, IThrottleService } from '../../app/services/throttle';
 
 export class NodeDetailGraphController {
@@ -62,41 +62,43 @@ export class NodeDetailGraphController {
         var tobeadded: string[] = [this.nodename];
         var clength: number;
 
-        do {
-            clength = members.length;
+        this.mmstatus.getStatus().then((currentStatus: IMinemeldStatus) => {
+            do {
+                clength = members.length;
 
-            Object.keys(this.mmstatus.currentStatus).forEach((nname: string) => {
-                cnode = this.mmstatus.currentStatus[nname];
+                Object.keys(this.mmstatus.currentStatus).forEach((nname: string) => {
+                    cnode = this.mmstatus.currentStatus[nname];
 
-                if (members.indexOf(nname) > -1) {
-                    return;
-                }
-
-                k = tobeadded.indexOf(nname);
-                if (k > -1) {
-                    nodes.push(cnode);
-                    members.push(nname);
-                    tobeadded.splice(k, 1);
-
-                    for (i in cnode.inputs) {
-                        if ((tobeadded.indexOf(cnode.inputs[i]) <= -1) &&
-                            (members.indexOf(cnode.inputs[i]) <= -1)) {
-                            tobeadded.push(cnode.inputs[i]);
-                        }
+                    if (members.indexOf(nname) > -1) {
+                        return;
                     }
-                } else {
-                    for (i in cnode.inputs) {
-                        if (members.indexOf(cnode.inputs[i]) > -1) {
-                            if (tobeadded.indexOf(nname) <= -1) {
-                                tobeadded.push(nname);
+
+                    k = tobeadded.indexOf(nname);
+                    if (k > -1) {
+                        nodes.push(cnode);
+                        members.push(nname);
+                        tobeadded.splice(k, 1);
+
+                        for (i in cnode.inputs) {
+                            if ((tobeadded.indexOf(cnode.inputs[i]) <= -1) &&
+                                (members.indexOf(cnode.inputs[i]) <= -1)) {
+                                tobeadded.push(cnode.inputs[i]);
+                            }
+                        }
+                    } else {
+                        for (i in cnode.inputs) {
+                            if (members.indexOf(cnode.inputs[i]) > -1) {
+                                if (tobeadded.indexOf(nname) <= -1) {
+                                    tobeadded.push(nname);
+                                }
                             }
                         }
                     }
-                }
-            });
-        } while ((clength !== members.length) || (tobeadded.length !== 0));
+                });
+            } while ((clength !== members.length) || (tobeadded.length !== 0));
 
-        this.nodes = nodes;
+            this.nodes = nodes;
+        });
     }
 
     private destroy() {

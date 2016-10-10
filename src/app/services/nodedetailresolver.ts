@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldStatusService } from  '../../app/services/status';
+import { IMinemeldStatusService, IMinemeldStatus } from  '../../app/services/status';
 
 export interface INodeDetailResolverService {
     registerClass(classname: string, classdetails: INodeDetailClass);
@@ -65,12 +65,8 @@ export class NodeDetailResolver implements INodeDetailResolverService {
     }
 
     resolveNode(nodename: string) {
-        var deferred: angular.IDeferred<any>;
-        var result: angular.IPromise<any>;
-
-        deferred = this.$q.defer();
-        result = deferred.promise.then(() => {
-            var node: any = this.mmstatus.currentStatus[nodename];
+        return this.mmstatus.getStatus().then((currentStatus: IMinemeldStatus) => {
+            var node: any = currentStatus[nodename];
 
             if (this.nodeClasses.hasOwnProperty(node.class)) {
                 return this.nodeClasses[node.class];
@@ -78,19 +74,5 @@ export class NodeDetailResolver implements INodeDetailResolverService {
 
             return this.defaultClass;
         });
-
-        if (Object.keys(this.mmstatus.currentStatus).length === 0) {
-            var listener: any = this.$rootScope.$on(
-                'mm-status-changed',
-                () => {
-                    deferred.resolve();
-                    listener();
-                }
-            );
-        } else {
-            deferred.resolve();
-        }
-
-        return result;
     }
 }

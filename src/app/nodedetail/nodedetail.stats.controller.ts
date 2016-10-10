@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldStatusService } from  '../../app/services/status';
+import { IMinemeldStatusService, IMinemeldStatus } from  '../../app/services/status';
 import { IMinemeldMetricsService } from '../../app/services/metrics';
 import { IMinemeldStatusNode } from '../../app/services/status';
 import { IThrottled, IThrottleService } from '../../app/services/throttle';
@@ -197,8 +197,10 @@ export class NodeDetailStatsController {
     }
 
     private updateMinemeldStatus() {
-        this.nodeState = <INGMinemeldStatusNode>this.mmstatus.currentStatus[this.nodename];
-        this.nodeState.indicators = this.nodeState.length;
+        this.mmstatus.getStatus().then((currentStatus: IMinemeldStatus) => {
+            this.nodeState = <INGMinemeldStatusNode>currentStatus[this.nodename];
+            this.nodeState.indicators = this.nodeState.length;
+        });
     }
 
     private destroy() {

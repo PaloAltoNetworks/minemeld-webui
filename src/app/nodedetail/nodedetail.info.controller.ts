@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldStatusService, IMinemeldStatusNode } from  '../../app/services/status';
+import { IMinemeldStatusService, IMinemeldStatusNode, IMinemeldStatus } from  '../../app/services/status';
 import { IThrottled, IThrottleService } from '../../app/services/throttle';
 
 interface INGMinemeldStatusNode extends IMinemeldStatusNode {
@@ -82,7 +82,9 @@ export class NodeDetailInfoController {
     private updateMinemeldStatus() {
         var vm: NodeDetailInfoController = this;
 
-        vm.renderState(vm, vm.mmstatus.currentStatus[vm.nodename]);
+        this.mmstatus.getStatus().then((currentStatus: IMinemeldStatus) => {
+            vm.renderState(vm, currentStatus[vm.nodename]);
+        });
     }
 
     private updateMinemeldConfig() {
