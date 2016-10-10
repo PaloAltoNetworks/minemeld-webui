@@ -4,7 +4,7 @@ import { INodeDetailResolverService } from '../../app/services/nodedetailresolve
 import { IMinemeldConfigService } from '../../app/services/config';
 import { IConfirmService } from '../../app/services/confirm';
 import { IMinemeldValidateService } from '../../app/services/validate';
-import { IMinemeldStatusService, IMinemeldStatusNode } from '../../app/services/status';
+import { IMinemeldStatusService, IMinemeldStatusNode, IMinemeldStatus } from '../../app/services/status';
 import { IThrottled, IThrottleService } from '../../app/services/throttle';
 
 declare var he: any;
@@ -165,17 +165,19 @@ class SyslogMinerRulesController {
     updateMinemeldStatus(): void {
         var ns: IMinemeldStatusNode;
 
-        ns = this.MinemeldStatusService.currentStatus[this.nodename];
-        angular.forEach(ns.statistics, (value: number, key: any) => {
-            var metric: string;
+        this.MinemeldStatusService.getStatus().then((currentStatus: IMinemeldStatus) => {
+            ns = this.MinemeldStatusService.currentStatus[this.nodename];
+            angular.forEach(ns.statistics, (value: number, key: any) => {
+                var metric: string;
 
-            if (!key.startsWith('rule.')) {
-                return;
-            }
+                if (!key.startsWith('rule.')) {
+                    return;
+                }
 
-            metric = key.split('.', 2)[1];
+                metric = key.split('.', 2)[1];
 
-            angular.element('#' + metric).text(value);
+                angular.element('#' + metric).text(value);
+            });
         });
     }
 
