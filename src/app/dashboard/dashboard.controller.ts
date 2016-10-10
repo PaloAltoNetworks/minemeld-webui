@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldStatusService, IMinemeldStatusNode } from  '../../app/services/status';
+import { IMinemeldStatusService, IMinemeldStatusNode, IMinemeldStatus } from  '../../app/services/status';
 import { IMinemeldMetricsService } from '../../app/services/metrics';
 
 interface ITNodeIndicatorsStats {
@@ -157,43 +157,45 @@ export class DashboardController {
         this.outputsStats.added = 0;
         this.outputsStats.removed = 0;
 
-        Object.keys(this.mmstatus.currentStatus).forEach((nname: string) => {
-            node = this.mmstatus.currentStatus[nname];
+        this.mmstatus.getStatus().then((currentStatus: IMinemeldStatus) => {
+            Object.keys(currentStatus).forEach((nname: string) => {
+                node = currentStatus[nname];
 
-            if (node.inputs.length === 0) {
-                this.numMiners++;
+                if (node.inputs.length === 0) {
+                    this.numMiners++;
+
+                    if (node.length) {
+                        this.minersStats.length += node.length;
+                    }
+                    if (node.statistics && node.statistics['added']) {
+                        this.minersStats.added += node.statistics['added'];
+                    }
+                    if (node.statistics && node.statistics['removed']) {
+                        this.minersStats.removed += node.statistics['removed'];
+                    }
+                    if (node.statistics && node.statistics['aged_out']) {
+                        this.minersStats.aged_out += node.statistics['aged_out'];
+                    }
+                } else if (!node.output) {
+                    this.numOutputs++;
+
+                    if (node.length) {
+                        this.outputsStats.length += node.length;
+                    }
+                    if (node.statistics && node.statistics['added']) {
+                        this.outputsStats.added += node.statistics['added'];
+                    }
+                    if (node.statistics && node.statistics['removed']) {
+                        this.outputsStats.removed += node.statistics['removed'];
+                    }
+                } else {
+                    this.numProcessors++;
+                }
 
                 if (node.length) {
-                    this.minersStats.length += node.length;
+                    this.numIndicators += node.length;
                 }
-                if (node.statistics && node.statistics['added']) {
-                    this.minersStats.added += node.statistics['added'];
-                }
-                if (node.statistics && node.statistics['removed']) {
-                    this.minersStats.removed += node.statistics['removed'];
-                }
-                if (node.statistics && node.statistics['aged_out']) {
-                    this.minersStats.aged_out += node.statistics['aged_out'];
-                }
-            } else if (!node.output) {
-                this.numOutputs++;
-
-                if (node.length) {
-                    this.outputsStats.length += node.length;
-                }
-                if (node.statistics && node.statistics['added']) {
-                    this.outputsStats.added += node.statistics['added'];
-                }
-                if (node.statistics && node.statistics['removed']) {
-                    this.outputsStats.removed += node.statistics['removed'];
-                }
-            } else {
-                this.numProcessors++;
-            }
-
-            if (node.length) {
-                this.numIndicators += node.length;
-            }
+            });
         });
     }
 

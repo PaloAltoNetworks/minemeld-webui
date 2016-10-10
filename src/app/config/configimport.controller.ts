@@ -72,6 +72,9 @@ export class ConfigureImportController {
     numAnnotations: number = 0;
     firstAnnotation: number = 0;
 
+    progressMax: number;
+    progressValue: number;
+
     /** @ngInject */
     constructor($scope: angular.IScope,
                 $modalInstance: angular.ui.bootstrap.IModalServiceInstance,
@@ -300,6 +303,8 @@ export class ConfigureImportController {
         var annotations: ConfigAnnotations = new ConfigAnnotations();
         var node: IMinemeldConfigNode;
 
+        this.progressMax = Object.keys(this.pconfig.nodes).length;
+        this.progressValue = 0;
         this.processing = true;
 
         for (node of this.MinemeldConfigService.nodesConfig) {
@@ -332,6 +337,8 @@ export class ConfigureImportController {
     }
 
     replace(): void {
+        this.progressMax = Object.keys(this.pconfig.nodes).length + Object.keys(this.MinemeldConfigService.nodesConfig).length;
+        this.progressValue = 0;
         this.processing = true;
 
         this.ConfirmService.show(
@@ -364,6 +371,8 @@ export class ConfigureImportController {
 
     private deleteAllNodes(): angular.IPromise<any> {
         return this.MinemeldConfigService.nodesConfig.reduce((prevPromise: angular.IPromise<any>, currentNode: IMinemeldConfigNode, currentIndex: number) => {
+            this.progressValue += 1;
+
             if (currentNode.deleted) {
                 return prevPromise;
             }
@@ -377,6 +386,7 @@ export class ConfigureImportController {
     private appendNodes(): angular.IPromise<any> {
         return Object.keys(this.pconfig.nodes).reduce((prevPromise: angular.IPromise<any>, currentName: string) => {
             return prevPromise.then((result: any) => {
+                this.progressValue += 1;
                 return this.MinemeldConfigService.addNode(currentName, this.pconfig.nodes[currentName]);
             });
         }, this.$q.when('<append>'));
