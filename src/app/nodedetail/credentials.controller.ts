@@ -133,7 +133,7 @@ function credentialsRegisterClasses(NodeDetailResolver: INodeDetailResolverServi
     });
 }
 
-class NodeDetailCredentialsInfoController extends NodeDetailInfoController {
+export class NodeDetailCredentialsInfoController extends NodeDetailInfoController {
     MinemeldConfigService: IMinemeldConfigService;
     secret: string;
     username: string;
@@ -175,25 +175,7 @@ class NodeDetailCredentialsInfoController extends NodeDetailInfoController {
 
     loadSideConfig(): void {
         this.MinemeldConfigService.getDataFile(this.nodename + '_side_config')
-        .then((result: any) => {
-            if (!result) {
-                this.username = undefined;
-                this.secret = undefined;
-
-                return;
-            }
-            if (result[this.secretField]) {
-                this.secret = result[this.secretField];
-            } else {
-                this.secret = undefined;
-            }
-
-            if (this.usernameEnabled && result.username) {
-                this.username = result.username;
-            } else {
-                this.username = undefined;
-            }
-        }, (error: any) => {
+        .then(this.restoreSideConfig.bind(this), (error: any) => {
             this.toastr.error('ERROR RETRIEVING NODE SIDE CONFIG: ' + error.status);
             this.secret = undefined;
             this.username = undefined;
@@ -201,19 +183,13 @@ class NodeDetailCredentialsInfoController extends NodeDetailInfoController {
     }
 
     saveSideConfig(): angular.IPromise<any> {
-        var side_config: any = {};
+        var side_config: any;
 
-        if (this.secret) {
-            side_config[this.secretField] = this.secret;
-        }
-        if (this.username && this.usernameEnabled) {
-            side_config.username = this.username;
-        }
+        side_config = this.prepareSideConfig();
 
         return this.MinemeldConfigService.saveDataFile(
             this.nodename + '_side_config',
-            side_config,
-            this.nodename
+            side_config
         );
     }
 
@@ -273,6 +249,40 @@ class NodeDetailCredentialsInfoController extends NodeDetailInfoController {
         .then((result: any) => {
             this.toastr.success('USERNAME SET');
         });
+    }
+
+    protected restoreSideConfig(result: any) {
+        if (!result) {
+            this.username = undefined;
+            this.secret = undefined;
+
+            return;
+        }
+
+        if (result[this.secretField]) {
+            this.secret = result[this.secretField];
+        } else {
+            this.secret = undefined;
+        }
+
+        if (this.usernameEnabled && result.username) {
+            this.username = result.username;
+        } else {
+            this.username = undefined;
+        }
+    }
+
+    protected prepareSideConfig(): any {
+        var side_config: any = {};
+
+        if (this.secret) {
+            side_config[this.secretField] = this.secret;
+        }
+        if (this.username && this.usernameEnabled) {
+            side_config.username = this.username;
+        }
+
+        return side_config;
     }
 }
 
