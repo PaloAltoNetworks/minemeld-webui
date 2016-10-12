@@ -189,7 +189,8 @@ export class NodeDetailCredentialsInfoController extends NodeDetailInfoControlle
 
         return this.MinemeldConfigService.saveDataFile(
             this.nodename + '_side_config',
-            side_config
+            side_config,
+            this.nodename
         );
     }
 
@@ -294,6 +295,13 @@ class CredentialsSetPasswordController {
     password: string;
     password2: string;
 
+    /** @ngInject */
+    constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance,
+                secretName: string) {
+        this.$modalInstance = $modalInstance;
+        this.secretName = secretName;
+    }
+
     valid(): boolean {
         if (this.password !== this.password2) {
             angular.element('#fgPassword1').addClass('has-error');
@@ -309,13 +317,6 @@ class CredentialsSetPasswordController {
         }
 
         return true;
-    }
-
-    /** @ngInject */
-    constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance,
-                secretName: string) {
-        this.$modalInstance = $modalInstance;
-        this.secretName = secretName;
     }
 
     save() {
@@ -336,18 +337,18 @@ class CredentialsSetUsernameController {
 
     username: string;
 
+    /** @ngInject */
+    constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance, username: string) {
+        this.$modalInstance = $modalInstance;
+        this.username = username;
+    }
+
     valid(): boolean {
         if (!this.username) {
             return false;
         }
 
         return true;
-    }
-
-    /** @ngInject */
-    constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance, username: string) {
-        this.$modalInstance = $modalInstance;
-        this.username = username;
     }
 
     save() {

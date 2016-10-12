@@ -38,7 +38,7 @@
                               ng-bind="nodedetailinfo.nodeState.sub_state"></span>
                         <span tooltip="run now"
                               tooltip-popup-delay="200"
-                              ng-if="nodedetailinfo.nodeState.sub_state != 'WAITING' && nodedetailinfo.nodeState.sub_state != 'REBUILDING' && nodedetailinfo.nodeState.sub_state != 'POLLING'"
+                              ng-if="nodedetailinfo.nodeState.sub_state != 'REBUILDING' && nodedetailinfo.nodeState.sub_state != 'POLLING'"
                               ng-click="nodedetailinfo.run()"
                               class="nodedetail-info-icon fa fa-refresh"></span>
                     </td>
