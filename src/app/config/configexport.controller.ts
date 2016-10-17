@@ -55,9 +55,17 @@ export class ConfigureExportController {
             if (currentNode.deleted) {
                 return;
             }
-            oconfig[currentNode.name] = currentNode.properties;
+            oconfig[currentNode.name] = angular.copy(currentNode.properties);
+
+            delete oconfig[currentNode.name]['node_type'];
+
+            if (typeof oconfig[currentNode.name].inputs !== 'undefined' && !(oconfig[currentNode.name].inputs instanceof Array)) {
+                delete oconfig[currentNode.name]['inputs'];
+            }
         });
 
-        this.config = jsyaml.safeDump(oconfig);
+        this.config = jsyaml.safeDump({
+            nodes: oconfig
+        });
     }
 }
