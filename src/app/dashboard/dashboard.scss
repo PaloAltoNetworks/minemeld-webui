@@ -103,7 +103,7 @@
     background-color: #fff;
     margin-left: 0px !important;
     margin-right: 0px !important;
-    border-top: 2px solid $minemeld-miner !important;    
+    border-top: 2px solid $minemeld-miner !important;
 }
 
 .dashboard-label-miner {
@@ -118,7 +118,7 @@
     background-color: #fff;
     margin-left: 0px !important;
     margin-right: 0px !important;
-    border-top: 2px solid $minemeld-processor !important;    
+    border-top: 2px solid $minemeld-processor !important;
 }
 
 .dashboard-label-processor {
@@ -133,7 +133,7 @@
     background-color: #fff;
     margin-left: 0px !important;
     margin-right: 0px !important;
-    border-top: 2px solid $minemeld-output !important;    
+    border-top: 2px solid $minemeld-output !important;
 }
 
 .dashboard-label-output {
@@ -153,4 +153,16 @@
 .dashboard-chart-column {
     padding-left: 5px;
     padding-right: 5px;
+}
+
+.dashboard-ar-chart .nv-series-0 > .nv-area {
+    fill: url(#pattern-added);
+}
+
+.dashboard-ar-chart .nv-series-1 > .nv-area {
+    fill: url(#pattern-removed);
+}
+
+.dashboard-indicators-chart .nv-series-0 > .nv-area {
+    fill: url(#pattern-indicators);
 }

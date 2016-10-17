@@ -1,3 +1,12 @@
+<!-- patterns for chart fills -->
+<svg height="6" width="6" xmlns="http://www.w3.org/2000/svg" version="1.1">
+  <defs>
+    <pattern id="pattern-metric" patternUnits="userSpaceOnUse" width="3" height="3">
+      <path d='M0 3L3 0M-1 1L1 -1M2 4L4 2' stroke='#ff7f0e' stroke-width='1'/>
+    </pattern>
+  </defs>
+</svg>
+
 <div class="row">
     <div class="col-sm-12 col-md-12">
         <h5 class="m-b-xs">STATISTICS</h5>
@@ -10,7 +19,7 @@
                 <col style="width: 15%">
                 <col style="width: 10%">
                 <col style="width: 75%">
-            </colgroup> 
+            </colgroup>
             <thead>
                 <th>METRIC</th>
                 <th>CURRENT</th>
@@ -22,7 +31,7 @@
                     <td>{{ nodedetailstats.nodeState.length }}</td>
                     <td>
                         <div class="nodedetail-nvd3-container">
-                            <nvd3 api="nodedetailstats.chartApi.indicators" options="nodedetailstats.chartOptions"
+                            <nvd3 class="nodedetail-metric-chart" api="nodedetailstats.chartApi.indicators" options="nodedetailstats.chartOptions"
                                 data="nodedetailstats.metrics.indicators"></nvd3>
                         </div>
                     </td>
@@ -38,7 +47,7 @@
                 <col style="width: 15%">
                 <col style="width: 10%">
                 <col style="width: 75%">
-            </colgroup> 
+            </colgroup>
             <thead>
                 <th>METRIC</th>
                 <th>SINCE<br>ENGINE START</th>
@@ -50,7 +59,7 @@
                     <td>{{ nodedetailstats.nodeState.statistics[name] || 0 }}</td>
                     <td>
                         <div class="nodedetail-nvd3-container">
-                            <nvd3 api="nodedetailstats.chartApi[name]" options="nodedetailstats.chartOptions"
+                            <nvd3 class="nodedetail-metric-chart" api="nodedetailstats.chartApi[name]" options="nodedetailstats.chartOptions"
                                 data="nodedetailstats.metrics[name]"></nvd3>
                         </div>
                     </td>
