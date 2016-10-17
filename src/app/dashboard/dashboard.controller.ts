@@ -32,7 +32,7 @@ export class DashboardController {
 
     indicatorsOptions: any = {
         chart: {
-            type: 'discreteBarChart',
+            type: 'lineChart',
             margin : {
                 top: 0,
                 right: 0,
@@ -43,18 +43,22 @@ export class DashboardController {
             x: function(d: any) { return d.x; },
             y: function(d: any) { return d.y; },
             useInteractiveGuideline: true,
+            transition: 0,
             showXAxis: false,
-            tooltip: {
-                keyFormatter: function(d: any) { return this.moment.unix(d).fromNow().toUpperCase(); },
-                valueFormatter: function(d: any) { return Math.ceil(d); }
+            interactiveLayer: {
+                tooltip: {
+                    headerFormatter: function(d: any) { return this.moment.unix(d).fromNow().toUpperCase(); },
+                    valueFormatter: function(d: any) { return Math.ceil(d); }
+                }
             },
             showYAxis: false,
-            forceY: [],
+            forceY: [0, 1],
             yAxis: {
                 tickFormat: (d: number, i: any) => { return Math.ceil(d); }
             },
             showLegend: false,
-            color: ['#91B7C7']
+            color: ['#91B7C7'],
+            interpolate: 'monotone'
         }
     };
     arOptions: any = {

@@ -68,7 +68,7 @@
 
 .nodedetails-stats-table > thead th {
   font-size: 12px;
-  font-weight: 400 !important;  
+  font-weight: 400 !important;
 }
 
 .nodedetails-stats-table > tbody {
@@ -89,7 +89,7 @@
 
 .nodedetail-info-table > thead th {
   font-size: 12px;
-  font-weight: 400 !important;  
+  font-weight: 400 !important;
 }
 
 .nodedetail-info-table > tbody {
@@ -128,13 +128,13 @@
 .nodedetail-info-config > table table {
   margin-top: 0;
   background-color: lighten($body-bg, 2%) !important;
-  font-size: 12px;  
+  font-size: 12px;
 }
 
 .nodedetail-info-config > table table > thead th {
   background-color: darken($body-bg, 5%);
   font-size: 12px;
-  font-weight: 400 !important;  
+  font-weight: 400 !important;
 }
 
 .nodedetail-info-clickable:hover{
@@ -192,6 +192,10 @@
     height: 200px;
     border: 1px solid #ccc;
     border-radius: 4px;
+}
+
+.nodedetail-metric-chart .nv-series-0 > .nv-area {
+    fill: url(#pattern-metric);
 }
 
 .ace-focus {
