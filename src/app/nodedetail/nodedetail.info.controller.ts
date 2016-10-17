@@ -97,7 +97,9 @@ export class NodeDetailInfoController {
                 vm.nodeConfig.config = null;
             }
         }, function(error: any) {
-            vm.toastr.error('ERROR RETRIEVING MINEMELD CONFIG: ' + error.status);
+            if (!error.cancelled) {
+                vm.toastr.error('ERROR RETRIEVING MINEMELD CONFIG: ' + error.status);
+            }
         })
         .finally(function() {
             vm.updateMinemeldConfigPromise = vm.$interval(
