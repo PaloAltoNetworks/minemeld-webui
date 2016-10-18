@@ -186,8 +186,6 @@ class NodeDetailCIFInfoController extends NodeDetailCredentialsInfoController {
         this.filters = undefined;
         this.verify_cert = undefined;
 
-        console.log(side_config);
-
         if (!result) {
             return;
         }
@@ -219,8 +217,6 @@ class NodeDetailCIFInfoController extends NodeDetailCredentialsInfoController {
         if (typeof this.verify_cert !== 'undefined') {
             side_config.verify_cert = this.verify_cert;
         }
-
-        console.log(side_config);
 
         return side_config;
     }
@@ -259,8 +255,6 @@ class NodeDetailCIFInfoController extends NodeDetailCredentialsInfoController {
         });
 
         this.flattenedFilters = filter.join(' ');
-
-        console.log(this.flattenedFilters);
     }
 }
 
