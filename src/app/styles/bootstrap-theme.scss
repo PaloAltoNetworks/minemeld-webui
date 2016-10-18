@@ -96,9 +96,11 @@ div.main-container {
 }
 
 .nvtooltip {
-    border-radius: 0px !important;
-    border-color: $minemeld-system;
-    border-width: 1px;
+    max-width: $tooltip-max-width;
+    padding: 3px 8px;
+    color: $tooltip-color;
+    background-color: $tooltip-bg;
+    border-radius: $border-radius-base;
 }
 
 .nvtooltip strong, .nvtooltip td {
