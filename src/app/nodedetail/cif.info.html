@@ -39,7 +39,7 @@
                 <tr>
                     <td>VERIFY CERT</td>
                     <td tooltip="toggle Cert Verification" class="nodedetail-info-clickable" ng-click="nodedetailinfo.toggleCertificateVerification()">
-                        <span ng-if="nodedetailinfo.verify_cert === undefined" class="label label-success"><em>Not set</em></span>
+                        <span ng-if="nodedetailinfo.verify_cert === undefined"><em>Not set (default enabled)</em></span>
                         <span ng-if="nodedetailinfo.verify_cert !== undefined && !nodedetailinfo.verify_cert" class="label label-default"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></span>
                         <span ng-if="nodedetailinfo.verify_cert" class="label label-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></span>
                     </td>
