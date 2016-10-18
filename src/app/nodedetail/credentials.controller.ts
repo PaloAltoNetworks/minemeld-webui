@@ -27,6 +27,22 @@ function credentialsListConfig($stateProvider: ng.ui.IStateProvider) {
                 }
             }
         })
+        .state('nodedetail.vtinfo', {
+            templateUrl: 'app/nodedetail/credentials.info.html',
+            controller: NodeDetailCredentialsInfoController,
+            controllerAs: 'nodedetailinfo',
+            params: {
+                usernameEnabled: {
+                    value: false
+                },
+                secretName: {
+                    value: 'API KEY'
+                },
+                secretField: {
+                    value: 'api_key'
+                }
+            }
+        })
         .state('nodedetail.tmtinfo', {
             templateUrl: 'app/nodedetail/credentials.info.html',
             controller: NodeDetailCredentialsInfoController,
@@ -116,6 +132,27 @@ function credentialsRegisterClasses(NodeDetailResolver: INodeDetailResolverServi
             icon: 'fa fa-circle-o',
             tooltip: 'INFO',
             state: 'nodedetail.tmtinfo',
+            active: false
+        },
+        {
+            icon: 'fa fa-area-chart',
+            tooltip: 'STATS',
+            state: 'nodedetail.stats',
+            active: false
+        },
+        {
+            icon: 'fa fa-asterisk',
+            tooltip: 'GRAPH',
+            state: 'nodedetail.graph',
+            active: false
+        }]
+    });
+
+    NodeDetailResolver.registerClass('minemeld.ft.vt.Notifications', {
+        tabs: [{
+            icon: 'fa fa-circle-o',
+            tooltip: 'INFO',
+            state: 'nodedetail.vtinfo',
             active: false
         },
         {
