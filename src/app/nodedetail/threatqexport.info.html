@@ -48,8 +48,12 @@
                     <td>LAST RUN</td>
                     <td>
                         <span ng-bind="nodedetailinfo.nodeState.last_run | date:'yyyy-MM-dd HH:mm:ss Z'"></span>
-                        <span ng-if="nodedetailinfo.nodeState.sub_state"
-                              ng-class="['label', {WAITING: 'label-default', POLLING:'label-primary', ERROR:'label-danger', SUCCESS:'label-success', REBUILDING:'label-warning'}[nodedetailinfo.nodeState.sub_state]]"
+                        <span ng-if="nodedetailinfo.nodeState.sub_state && nodedetailinfo.nodeState.sub_state !== 'ERROR'"
+                              ng-class="['label', {WAITING: 'label-default', POLLING:'label-primary', SUCCESS:'label-success', REBUILDING:'label-warning'}[nodedetailinfo.nodeState.sub_state]]"
+                              ng-bind="nodedetailinfo.nodeState.sub_state"></span>
+                        <span ng-if="nodedetailinfo.nodeState.sub_state && nodedetailinfo.nodeState.sub_state === 'ERROR'"
+                              ng-class="['label', 'label-danger']"
+                              tooltip="{{ nodedetailinfo.nodeState.sub_state_message }}"
                               ng-bind="nodedetailinfo.nodeState.sub_state"></span>
                         <span tooltip="run now"
                               tooltip-popup-delay="200"

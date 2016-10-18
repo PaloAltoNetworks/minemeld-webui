@@ -139,7 +139,11 @@ export class NodesController {
                 var result: string = he.encode(data, {strict: true});
 
                 if (full.sub_state && full.sub_state === 'ERROR') {
-                    result = result + ' <span class="text-danger glyphicon glyphicon-exclamation-sign"></span>';
+                    result = result + ' <span';
+                    if (full.sub_state_message) {
+                        result = result + ' tooltip="' + full.sub_state_message +'"';
+                    }
+                    result = result + 'class="text-danger glyphicon glyphicon-exclamation-sign"></span>';
                 }
 
                 return result;
