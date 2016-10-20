@@ -25,8 +25,9 @@
                 <tr>
                     <td>STATE</td>
                     <td ng-switch on="nodedetailinfo.nodeState.state">
+                        <span ng-switch-when="4" class="label label-warning">{{ nodedetailinfo.nodeState.stateAsString }}</span>
                         <span ng-switch-when="5" class="label label-success">{{ nodedetailinfo.nodeState.stateAsString }}</span>
-                        <span ng-switch-default class="label label-warning">{{ nodedetailinfo.nodeState.stateAsString }}</span>
+                        <span ng-switch-default class="label label-primary">{{ nodedetailinfo.nodeState.stateAsString }}</span>
                     </td>
                 </tr>
                 <tr ng-if="nodedetailinfo.nodeState.last_run || nodedetailinfo.nodeState.sub_state">
