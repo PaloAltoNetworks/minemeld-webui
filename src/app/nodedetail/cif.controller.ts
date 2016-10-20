@@ -57,13 +57,13 @@ interface ICIFSideConfigFilters {
     tags?: string[];
     otype?: string;
     confidence?: number;
-    [key: string]: any
+    [key: string]: any;
 }
 
 interface ICIFSideConfig {
     verify_cert?: boolean;
     remote?: string;
-    filters?: ICIFSideConfigFilters
+    filters?: ICIFSideConfigFilters;
 }
 
 class NodeDetailCIFInfoController extends NodeDetailCredentialsInfoController {
@@ -329,7 +329,7 @@ class CIFSetFiltersController {
                 this.otype = this.filters.otype;
             }
             if (typeof this.filters.confidence !== 'undefined') {
-                this.confidence = ''+this.filters.confidence;
+                this.confidence = '' + this.filters.confidence;
             }
             if (typeof this.filters.tags !== 'undefined') {
                 this.tags = this.filters.tags;
