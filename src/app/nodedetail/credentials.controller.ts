@@ -14,6 +14,19 @@ function credentialsListConfig($stateProvider: ng.ui.IStateProvider) {
             controller: NodeDetailCredentialsInfoController,
             controllerAs: 'nodedetailinfo'
         })
+        .state('nodedetail.phishmeinfo', {
+            templateUrl: 'app/nodedetail/credentials.info.html',
+            controller: NodeDetailCredentialsInfoController,
+            controllerAs: 'nodedetailinfo',
+            params: {
+                secretName: {
+                    value: 'API KEY'
+                },
+                secretField: {
+                    value: 'api_key'
+                }
+            }
+        })
         .state('nodedetail.anomaliinfo', {
             templateUrl: 'app/nodedetail/credentials.info.html',
             controller: NodeDetailCredentialsInfoController,
@@ -153,6 +166,27 @@ function credentialsRegisterClasses(NodeDetailResolver: INodeDetailResolverServi
             icon: 'fa fa-circle-o',
             tooltip: 'INFO',
             state: 'nodedetail.vtinfo',
+            active: false
+        },
+        {
+            icon: 'fa fa-area-chart',
+            tooltip: 'STATS',
+            state: 'nodedetail.stats',
+            active: false
+        },
+        {
+            icon: 'fa fa-asterisk',
+            tooltip: 'GRAPH',
+            state: 'nodedetail.graph',
+            active: false
+        }]
+    });
+
+    NodeDetailResolver.registerClass('minemeld.ft.phishme.Intelligence', {
+        tabs: [{
+            icon: 'fa fa-circle-o',
+            tooltip: 'INFO',
+            state: 'nodedetail.phishmeinfo',
             active: false
         },
         {
