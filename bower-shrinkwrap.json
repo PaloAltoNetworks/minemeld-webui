@@ -2,8 +2,8 @@
   "https://github.com/Caged/d3-tip.git": {
     "0.6.7": "0.6.7"
   },
-  "https://github.com/DataTables/DataTables.git": {
-    "1.10.12": "b31abf704462a45f6ba7db439862d23c8cedc1f4"
+  "https://github.com/DataTables/Dist-DataTables.git": {
+    "1.10.12": "1.10.12"
   },
   "https://github.com/Foxandxss/angular-toastr.git": {
     "1.5.0": "1.5.0"
@@ -66,14 +66,14 @@
     "1.0.6": "1.0.6"
   },
   "https://github.com/l-lin/angular-datatables.git": {
-    "0.5.4": "0.5.4"
+    "0.5.5": "0.5.5"
   },
   "https://github.com/mathiasbynens/he.git": {
     "0.5.0": "0.5.0"
   },
   "https://github.com/mbostock-bower/d3-bower.git": {
-    "3.5.17": "abe0262a205c9f3755c3a757de4dfd1d49f34b24",
-    "3.5.5": "3.5.5"
+    "3.5.5": "3.5.5",
+    "3.5.17": "abe0262a205c9f3755c3a757de4dfd1d49f34b24"
   },
   "https://github.com/moment/moment.git": {
     "2.10.6": "2.10.6"
@@ -88,4 +88,3 @@
     "3.3.6": "3.3.6"
   }
 }
-

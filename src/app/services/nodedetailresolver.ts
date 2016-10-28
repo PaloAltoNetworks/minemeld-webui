@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldStatusService } from  '../../app/services/status';
+import { IMinemeldStatusService, IMinemeldStatus } from  '../../app/services/status';
 
 export interface INodeDetailResolverService {
     registerClass(classname: string, classdetails: INodeDetailClass);
@@ -21,6 +21,8 @@ export interface INodeDetailClass {
 export class NodeDetailResolver implements INodeDetailResolverService {
     mmstatus: IMinemeldStatusService;
     $resource: angular.resource.IResourceService;
+    $q: angular.IQService;
+    $rootScope: angular.IRootScopeService;
 
     nodeClasses: any = {};
 
@@ -48,9 +50,14 @@ export class NodeDetailResolver implements INodeDetailResolverService {
     };
 
     /** @ngInject */
-    constructor(MinemeldStatusService: IMinemeldStatusService, $resource: angular.resource.IResourceService) {
+    constructor(MinemeldStatusService: IMinemeldStatusService,
+                $resource: angular.resource.IResourceService,
+                $q: angular.IQService,
+                $rootScope: angular.IRootScopeService) {
         this.mmstatus = MinemeldStatusService;
         this.$resource = $resource;
+        this.$q = $q;
+        this.$rootScope = $rootScope;
     }
 
     registerClass(classname: string, classdetails: INodeDetailClass) {
@@ -58,11 +65,8 @@ export class NodeDetailResolver implements INodeDetailResolverService {
     }
 
     resolveNode(nodename: string) {
-        return this.mmstatus.getMinemeld()
-        .then((result: any) => {
-            var node: any;
-
-            node = result.filter((x: any) => { return x.name === nodename; })[0];
+        return this.mmstatus.getStatus().then((currentStatus: IMinemeldStatus) => {
+            var node: any = currentStatus[nodename];
 
             if (this.nodeClasses.hasOwnProperty(node.class)) {
                 return this.nodeClasses[node.class];

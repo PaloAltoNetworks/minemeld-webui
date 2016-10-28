@@ -14,6 +14,9 @@ export interface IMineMeldAPIService {
     getAPIResource(url: string, paramDefaults?: any, actions?: any, cancellable?: boolean): IMineMeldAPIResource;
     logIn(username: string, password: string): angular.IPromise<any>;
     logOut(): angular.IPromise<any>;
+    onLogin(listener: any): void;
+    onLogout(listener: any): void;
+    isLoggedIn(): boolean;
     cancelAPICalls(): void;
 }
 
@@ -30,21 +33,33 @@ export class MineMeldAPIService implements IMineMeldAPIService {
     $resource: angular.resource.IResourceService;
     $httpParamSerializer: angular.IHttpParamSerializer;
     $state: angular.ui.IStateService;
+    $cookies: angular.cookies.ICookiesService;
+    $rootScope: angular.IRootScopeService;
+
+    loggedIn: boolean = false;
 
     /** @ngInject */
     constructor($resource: angular.resource.IResourceService,
                 $state: angular.ui.IStateService,
-                $httpParamSerializer: angular.IHttpParamSerializer) {
+                $httpParamSerializer: angular.IHttpParamSerializer,
+                $cookies: angular.cookies.ICookiesService,
+                $rootScope: angular.IRootScopeService) {
         this.$resource = $resource;
         this.$httpParamSerializer = $httpParamSerializer;
         this.$state = $state;
+        this.$cookies = $cookies;
+        this.$rootScope = $rootScope;
+
+        if ($cookies.get('mm-ec-login')) {
+            this.loggedIn = true;
+        }
     }
 
     public getAPIResource(url: string, paramDefaults?: any, actions?: any, cancellable?: boolean): IMineMeldAPIResource {
         var result: IMineMeldAPIResource;
         var vm: MineMeldAPIService = this;
 
-        if (typeof cancellable == 'undefined') {
+        if (typeof cancellable === 'undefined') {
             cancellable = true;
         }
 
@@ -71,16 +86,19 @@ export class MineMeldAPIService implements IMineMeldAPIService {
                 };
 
                 origResult.$promise
-                    .catch((error: any) => {
+                    .then(() => {
+                        vm.setLoggedIn(true);
+                    }, (error: any) => {
                         if (error.status === 401) {
                             vm.$state.go('login');
+                            vm.setLoggedIn(false);
                             throw error;
                         }
 
                         if (promise.cancelled) {
                             error.cancelled = true;
                         } else {
-                            if (error.status == -1) {
+                            if (error.status === -1) {
                                 error.statusText = 'Timeout';
                             }
                         }
@@ -107,6 +125,8 @@ export class MineMeldAPIService implements IMineMeldAPIService {
         var loginResource: IMineMeldAPIResourceLogIn;
         var vm: MineMeldAPIService = this;
 
+        this.setLoggedIn(false);
+
         loginResource = <IMineMeldAPIResourceLogIn>this.getAPIResource('/login', {}, {
                 post: {
                     method: 'POST',
@@ -121,19 +141,27 @@ export class MineMeldAPIService implements IMineMeldAPIService {
         return loginResource.post({}, {
             u: username,
             p: password
-        }).$promise;
+        }).$promise.then(() => {
+            this.setLoggedIn(true);
+        });
     }
 
     public logOut(): angular.IPromise<any> {
         var logoutResource: IMineMeldAPIResourceLogOut;
 
-        logoutResource = <IMineMeldAPIResourceLogOut>this.getAPIResource('/logout', {}, {
+        this.setLoggedIn(false);
+
+        logoutResource = <IMineMeldAPIResourceLogOut>this.$resource('/logout', {}, {
             get: {
                 method: 'GET'
             }
         });
 
         return logoutResource.get().$promise;
+    }
+
+    public isLoggedIn(): boolean {
+        return this.loggedIn;
     }
 
     public cancelAPICalls(): void {
@@ -143,5 +171,28 @@ export class MineMeldAPIService implements IMineMeldAPIService {
                 value.resource.$cancelRequest();
             }
         });
+    }
+
+    public onLogin(listener: any): void {
+        this.$rootScope.$on('mm-login', listener);
+    }
+
+    public onLogout(listener: any): void {
+        this.$rootScope.$on('mm-logout', listener);
+    }
+
+    private setLoggedIn(status: boolean): void {
+        if (status == this.loggedIn) {
+            return;
+        }
+
+        this.loggedIn = status;
+        if (status) {
+            this.$cookies.put('mm-ec-login', '1');
+            this.$rootScope.$emit('mm-login');
+        } else {
+            this.$cookies.remove('mm-ec-login');
+            this.$rootScope.$emit('mm-logout');
+        }
     }
 }

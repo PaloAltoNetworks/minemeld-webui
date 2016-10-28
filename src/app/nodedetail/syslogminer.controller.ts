@@ -4,7 +4,8 @@ import { INodeDetailResolverService } from '../../app/services/nodedetailresolve
 import { IMinemeldConfigService } from '../../app/services/config';
 import { IConfirmService } from '../../app/services/confirm';
 import { IMinemeldValidateService } from '../../app/services/validate';
-import { IMinemeldStatusService, IMinemeldStatusNode } from '../../app/services/status';
+import { IMinemeldStatusService, IMinemeldStatusNode, IMinemeldStatus } from '../../app/services/status';
+import { IThrottled, IThrottleService } from '../../app/services/throttle';
 
 declare var he: any;
 declare var jsyaml: any;
@@ -30,8 +31,8 @@ class SyslogMinerRulesController {
     rules_list: any[];
     nodename: string;
 
-    updateMinemeldStatusPromise: angular.IPromise<any>;
-    updateMinemeldStatusInterval: number = 5 * 60 * 1000;
+    mmStatusListener: any;
+    mmThrottledUpdate: IThrottled;
 
     /** @ngInject */
     constructor(toastr: any, MinemeldConfigService: IMinemeldConfigService,
@@ -39,7 +40,9 @@ class SyslogMinerRulesController {
                 $compile: angular.ICompileService, $scope: angular.IScope,
                 $modal: angular.ui.bootstrap.IModalService,
                 MinemeldStatusService: IMinemeldStatusService, $interval: angular.IIntervalService,
-                ConfirmService: IConfirmService) {
+                ConfirmService: IConfirmService,
+                $rootScope: angular.IRootScopeService,
+                ThrottleService: IThrottleService) {
         this.MinemeldConfigService = MinemeldConfigService;
         this.toastr = toastr;
         this.DTColumnBuilder = DTColumnBuilder;
@@ -55,6 +58,15 @@ class SyslogMinerRulesController {
         this.cfd_rules_list = this.nodename + '_rules';
 
         this.setupRulesTable();
+
+        this.mmThrottledUpdate = ThrottleService.throttle(
+            this.updateMinemeldStatus.bind(this),
+            500
+        );
+        this.mmStatusListener = $rootScope.$on(
+            'mm-status-changed',
+            this.mmThrottledUpdate
+        );
 
         this.$scope.$on('$destroy', () => { this.destroy(); });
     }
@@ -150,42 +162,31 @@ class SyslogMinerRulesController {
         });
     }
 
-    private updateMinemeldStatus(): void {
-        var vm: SyslogMinerRulesController = this;
+    updateMinemeldStatus(): void {
+        var ns: IMinemeldStatusNode;
 
-        this.MinemeldStatusService.getMinemeld()
-            .then((result: any) => {
-                var ns: IMinemeldStatusNode;
+        this.MinemeldStatusService.getStatus().then((currentStatus: IMinemeldStatus) => {
+            ns = this.MinemeldStatusService.currentStatus[this.nodename];
+            angular.forEach(ns.statistics, (value: number, key: any) => {
+                var metric: string;
 
-                ns = <IMinemeldStatusNode>(result.filter(function(x: any) { return x.name === vm.nodename; })[0]);
+                if (!key.startsWith('rule.')) {
+                    return;
+                }
 
-                angular.forEach(ns.statistics, (value: number, key: any) => {
-                    var metric: string;
+                metric = key.split('.', 2)[1];
 
-                    if (!key.startsWith('rule.')) {
-                        return;
-                    }
-
-                    metric = key.split('.', 2)[1];
-
-                    angular.element('#' + metric).text(value);
-                });
-            }, (error: any) => {
-                vm.toastr.error('ERROR RETRIEVING MINEMELD STATUS: ' + error.status);
-            })
-            .finally(() => {
-                vm.updateMinemeldStatusPromise = vm.$interval(
-                    () => { vm.updateMinemeldStatus(); },
-                    vm.updateMinemeldStatusInterval,
-                    1
-                );
-            })
-            ;
+                angular.element('#' + metric).text(value);
+            });
+        });
     }
 
     private destroy() {
-        if (this.updateMinemeldStatusPromise) {
-            this.$interval.cancel(this.updateMinemeldStatusPromise);
+        if (this.mmThrottledUpdate) {
+            this.mmThrottledUpdate.cancel();
+        }
+        if (this.mmStatusListener) {
+            this.mmStatusListener();
         }
     }
 

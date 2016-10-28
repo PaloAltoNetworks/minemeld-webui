@@ -4,6 +4,7 @@ import { INodeDetailResolverService } from '../../app/services/nodedetailresolve
 import { IMinemeldConfigService } from '../../app/services/config';
 import { NodeDetailInfoController } from './nodedetail.info.controller';
 import { IMinemeldStatusService } from  '../../app/services/status';
+import { IThrottleService } from '../../app/services/throttle';
 
 /** @ngInject */
 function credentialsListConfig($stateProvider: ng.ui.IStateProvider) {
@@ -13,11 +14,40 @@ function credentialsListConfig($stateProvider: ng.ui.IStateProvider) {
             controller: NodeDetailCredentialsInfoController,
             controllerAs: 'nodedetailinfo'
         })
+        .state('nodedetail.phishmeinfo', {
+            templateUrl: 'app/nodedetail/credentials.info.html',
+            controller: NodeDetailCredentialsInfoController,
+            controllerAs: 'nodedetailinfo',
+            params: {
+                secretName: {
+                    value: 'API KEY'
+                },
+                secretField: {
+                    value: 'api_key'
+                }
+            }
+        })
         .state('nodedetail.anomaliinfo', {
             templateUrl: 'app/nodedetail/credentials.info.html',
             controller: NodeDetailCredentialsInfoController,
             controllerAs: 'nodedetailinfo',
             params: {
+                secretName: {
+                    value: 'API KEY'
+                },
+                secretField: {
+                    value: 'api_key'
+                }
+            }
+        })
+        .state('nodedetail.vtinfo', {
+            templateUrl: 'app/nodedetail/credentials.info.html',
+            controller: NodeDetailCredentialsInfoController,
+            controllerAs: 'nodedetailinfo',
+            params: {
+                usernameEnabled: {
+                    value: false
+                },
                 secretName: {
                     value: 'API KEY'
                 },
@@ -130,9 +160,51 @@ function credentialsRegisterClasses(NodeDetailResolver: INodeDetailResolverServi
             active: false
         }]
     });
+
+    NodeDetailResolver.registerClass('minemeld.ft.vt.Notifications', {
+        tabs: [{
+            icon: 'fa fa-circle-o',
+            tooltip: 'INFO',
+            state: 'nodedetail.vtinfo',
+            active: false
+        },
+        {
+            icon: 'fa fa-area-chart',
+            tooltip: 'STATS',
+            state: 'nodedetail.stats',
+            active: false
+        },
+        {
+            icon: 'fa fa-asterisk',
+            tooltip: 'GRAPH',
+            state: 'nodedetail.graph',
+            active: false
+        }]
+    });
+
+    NodeDetailResolver.registerClass('minemeld.ft.phishme.Intelligence', {
+        tabs: [{
+            icon: 'fa fa-circle-o',
+            tooltip: 'INFO',
+            state: 'nodedetail.phishmeinfo',
+            active: false
+        },
+        {
+            icon: 'fa fa-area-chart',
+            tooltip: 'STATS',
+            state: 'nodedetail.stats',
+            active: false
+        },
+        {
+            icon: 'fa fa-asterisk',
+            tooltip: 'GRAPH',
+            state: 'nodedetail.graph',
+            active: false
+        }]
+    });
 }
 
-class NodeDetailCredentialsInfoController extends NodeDetailInfoController {
+export class NodeDetailCredentialsInfoController extends NodeDetailInfoController {
     MinemeldConfigService: IMinemeldConfigService;
     secret: string;
     username: string;
@@ -148,8 +220,13 @@ class NodeDetailCredentialsInfoController extends NodeDetailInfoController {
         moment: moment.MomentStatic, $scope: angular.IScope,
         $compile: angular.ICompileService, $state: angular.ui.IStateService,
         $stateParams: angular.ui.IStateParamsService, MinemeldConfigService: IMinemeldConfigService,
-        $modal: angular.ui.bootstrap.IModalService) {
-        super(toastr, $interval, MinemeldStatusService, moment, $scope, $compile, $state, $stateParams);
+        $modal: angular.ui.bootstrap.IModalService,
+        $rootScope: angular.IRootScopeService,
+        ThrottleService: IThrottleService) {
+        super(
+            toastr, $interval, MinemeldStatusService, moment, $scope,
+            $compile, $state, $stateParams, $rootScope, ThrottleService
+        );
 
         this.MinemeldConfigService = MinemeldConfigService;
         this.$modal = $modal;
@@ -169,25 +246,7 @@ class NodeDetailCredentialsInfoController extends NodeDetailInfoController {
 
     loadSideConfig(): void {
         this.MinemeldConfigService.getDataFile(this.nodename + '_side_config')
-        .then((result: any) => {
-            if (!result) {
-                this.username = undefined;
-                this.secret = undefined;
-
-                return;
-            }
-            if (result[this.secretField]) {
-                this.secret = result[this.secretField];
-            } else {
-                this.secret = undefined;
-            }
-
-            if (this.usernameEnabled && result.username) {
-                this.username = result.username;
-            } else {
-                this.username = undefined;
-            }
-        }, (error: any) => {
+        .then(this.restoreSideConfig.bind(this), (error: any) => {
             this.toastr.error('ERROR RETRIEVING NODE SIDE CONFIG: ' + error.status);
             this.secret = undefined;
             this.username = undefined;
@@ -195,14 +254,9 @@ class NodeDetailCredentialsInfoController extends NodeDetailInfoController {
     }
 
     saveSideConfig(): angular.IPromise<any> {
-        var side_config: any = {};
+        var side_config: any;
 
-        if (this.secret) {
-            side_config[this.secretField] = this.secret;
-        }
-        if (this.username && this.usernameEnabled) {
-            side_config.username = this.username;
-        }
+        side_config = this.prepareSideConfig();
 
         return this.MinemeldConfigService.saveDataFile(
             this.nodename + '_side_config',
@@ -261,12 +315,46 @@ class NodeDetailCredentialsInfoController extends NodeDetailInfoController {
             this.username = result.username;
 
             return this.saveSideConfig();
+        }, (error: any) => {
+            this.toastr.error('ERROR SETTING USERNAME: ' + error.statusText);
         })
         .then((result: any) => {
             this.toastr.success('USERNAME SET');
-        }, (error: any) => {
-            this.toastr.error('ERROR SETTING USERNAME: ' + error.status);
         });
+    }
+
+    protected restoreSideConfig(result: any) {
+        if (!result) {
+            this.username = undefined;
+            this.secret = undefined;
+
+            return;
+        }
+
+        if (result[this.secretField]) {
+            this.secret = result[this.secretField];
+        } else {
+            this.secret = undefined;
+        }
+
+        if (this.usernameEnabled && result.username) {
+            this.username = result.username;
+        } else {
+            this.username = undefined;
+        }
+    }
+
+    protected prepareSideConfig(): any {
+        var side_config: any = {};
+
+        if (this.secret) {
+            side_config[this.secretField] = this.secret;
+        }
+        if (this.username && this.usernameEnabled) {
+            side_config.username = this.username;
+        }
+
+        return side_config;
     }
 }
 
@@ -277,6 +365,13 @@ class CredentialsSetPasswordController {
 
     password: string;
     password2: string;
+
+    /** @ngInject */
+    constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance,
+                secretName: string) {
+        this.$modalInstance = $modalInstance;
+        this.secretName = secretName;
+    }
 
     valid(): boolean {
         if (this.password !== this.password2) {
@@ -293,13 +388,6 @@ class CredentialsSetPasswordController {
         }
 
         return true;
-    }
-
-    /** @ngInject */
-    constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance,
-                secretName: string) {
-        this.$modalInstance = $modalInstance;
-        this.secretName = secretName;
     }
 
     save() {
@@ -320,18 +408,18 @@ class CredentialsSetUsernameController {
 
     username: string;
 
+    /** @ngInject */
+    constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance, username: string) {
+        this.$modalInstance = $modalInstance;
+        this.username = username;
+    }
+
     valid(): boolean {
         if (!this.username) {
             return false;
         }
 
         return true;
-    }
-
-    /** @ngInject */
-    constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance, username: string) {
-        this.$modalInstance = $modalInstance;
-        this.username = username;
     }
 
     save() {

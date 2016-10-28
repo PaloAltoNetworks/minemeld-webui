@@ -17,6 +17,10 @@
   padding-left: 10px;
 }
 
+.btn-modal-action {
+  @include button-variant(darken($body-bg, 80%), lighten($body-bg, 2%), lighten($body-bg, 2%));
+}
+
 .ui-select-bootstrap .ui-select-choices-row.active>a {
   background-color: darken($body-bg, 10%) !important;
   color: darken($body-bg, 80%);
@@ -27,8 +31,20 @@
   color: darken($body-bg, 80%);
 }
 
+.ui-select-bootstrap .ui-select-no-choice {
+  font-size: 12px !important;
+  color: darken($body-bg, 80%);
+  padding: 3px 20px;
+  font-style: italic;
+}
+
 .ui-select-multiple.ui-select-bootstrap .ui-select-match .close {
   line-height: 1 !important;
+}
+
+.ui-select-multiple.ui-select-bootstrap > div > input.ui-select-search[disabled] {
+    display: initial !important;
+    cursor: not-allowed;
 }
 
 .no-padding {
@@ -80,15 +96,17 @@ div.main-container {
 }
 
 .nvtooltip {
-    border-radius: 0px !important;
-    border-color: $minemeld-system;
-    border-width: 1px;
+    max-width: $tooltip-max-width;
+    padding: 3px 8px;
+    color: $tooltip-color;
+    background-color: $tooltip-bg;
+    border-radius: $border-radius-base;
 }
 
 .nvtooltip strong, .nvtooltip td {
-    font-family: $font-family-sans-serif;
-    font-size: 10px;
-    font-weight: 500 !important;
+    @include reset-text;
+    font-size: $font-size-small;
+    font-weight: normal !important;
 }
 
 .d3-container {
@@ -188,4 +206,8 @@ div.main-container {
   top: 100%;
   left: 0;
   text-align: center;
+}
+
+.dataTables_filter > label > input {
+    margin-left: 5px;
 }

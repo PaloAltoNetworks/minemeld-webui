@@ -1,8 +1,9 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldStatusService } from  '../../app/services/status';
+import { IMinemeldStatusService, IMinemeldStatus } from  '../../app/services/status';
 import { IMinemeldMetricsService } from '../../app/services/metrics';
 import { IMinemeldStatusNode } from '../../app/services/status';
+import { IThrottled, IThrottleService } from '../../app/services/throttle';
 
 interface INGMinemeldStatusNode extends IMinemeldStatusNode {
     indicators: number;
@@ -33,6 +34,9 @@ export class NodeDetailStatsController {
     nodename: string;
 
     nodeState: INGMinemeldStatusNode;
+
+    mmStatusListener: any;
+    mmThrottledUpdate: IThrottled;
 
     chartOptions: any = {
         chart: {
@@ -75,16 +79,15 @@ export class NodeDetailStatsController {
     updateNodeMetricsPromise: angular.IPromise<any>;
     updateNodeMetricsInterval: number = 5 * 60 * 1000;
 
-    updateMinemeldStatusPromise: angular.IPromise<any>;
-    updateMinemeldStatusInterval: number = 5 * 60 * 1000;
-
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
         MinemeldStatusService: IMinemeldStatusService,
         MinemeldMetricsService: IMinemeldMetricsService,
         moment: moment.MomentStatic, $scope: angular.IScope,
         $compile: angular.ICompileService, $state: angular.ui.IStateService,
-        $stateParams: angular.ui.IStateParamsService) {
+        $stateParams: angular.ui.IStateParamsService,
+        $rootScope: angular.IRootScopeService,
+        ThrottleService: IThrottleService) {
         this.toastr = toastr;
         this.mmstatus = MinemeldStatusService;
         this.mmmetrics = MinemeldMetricsService;
@@ -98,6 +101,14 @@ export class NodeDetailStatsController {
         this.nodename = $scope.$parent['nodedetail']['nodename'];
 
         this.updateMinemeldStatus();
+        this.mmThrottledUpdate = ThrottleService.throttle(
+            this.updateMinemeldStatus.bind(this),
+            500
+        );
+        this.mmStatusListener = $rootScope.$on(
+            'mm-status-changed',
+            this.mmThrottledUpdate
+        );
         this.updateNodeMetrics();
 
         this.$scope.$on('$destroy', this.destroy.bind(this));
@@ -186,34 +197,21 @@ export class NodeDetailStatsController {
     }
 
     private updateMinemeldStatus() {
-        var vm: any = this;
-
-        vm.mmstatus.getMinemeld()
-        .then(function(result: any) {
-            var ns: IMinemeldStatusNode;
-
-            ns = <IMinemeldStatusNode>(result.filter(function(x: any) { return x.name === vm.nodename; })[0]);
-            vm.nodeState = ns;
-            vm.nodeState.indicators = ns.length;
-        }, function(error: any) {
-            vm.toastr.error('ERROR RETRIEVING MINEMELD STATUS: ' + error.status);
-        })
-        .finally(function() {
-            vm.updateMinemeldStatusPromise = vm.$interval(
-                vm.updateMinemeldStatus.bind(vm),
-                vm.updateMinemeldStatusInterval,
-                1
-            );
-        })
-        ;
+        this.mmstatus.getStatus().then((currentStatus: IMinemeldStatus) => {
+            this.nodeState = <INGMinemeldStatusNode>currentStatus[this.nodename];
+            this.nodeState.indicators = this.nodeState.length;
+        });
     }
 
     private destroy() {
+        if (this.mmThrottledUpdate) {
+            this.mmThrottledUpdate.cancel();
+        }
+        if (this.mmStatusListener) {
+            this.mmStatusListener();
+        }
         if (this.updateNodeMetricsPromise) {
             this.$interval.cancel(this.updateNodeMetricsPromise);
-        }
-        if (this.updateMinemeldStatusPromise) {
-            this.$interval.cancel(this.updateMinemeldStatusPromise);
         }
     }
 }

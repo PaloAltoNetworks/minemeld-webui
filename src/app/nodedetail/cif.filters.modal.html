@@ -1,0 +1,52 @@
+<div class="modal-header">
+    <h1 class="modal-title">CIF FILTERS <span ng-if="vm.changed">*</span></h1>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <form class="config-add-form form-horizontal m-t-xs">
+            <div class="form-group" id="fgOtype">
+                <label class="col-xs-4 control-label">OTYPE</label>
+                <div class="col-xs-6">
+                    <ui-select ng-model="vm.otype"
+                               theme="bootstrap"
+                               reset-search-input="false"
+                               style="width: 100%;"
+                               on-select="vm.changed = true"
+                               on-remove="vm.changed = true">
+                        <ui-select-match placeholder="Not set">{{$select.selected}}</ui-select-match>
+                        <ui-select-choices repeat="otype in vm.otypes | filter: $select.search">
+                            <span ng-bind-html="otype | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="form-group" id="fgConfidence">
+                <label class="col-xs-4 control-label">CONFIDENCE</label>
+                <div class="col-xs-6">
+                    <div class="input-group">
+                        <div class="input-group-addon">&gt;=</div>
+                        <input type="text" class="form-control" ng-change="vm.changed = true" placeholder="Not set" ng-model="vm.confidence">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" id="fgTags">
+                <label class="col-xs-4 control-label">TAGS</label>
+                <div class="col-xs-6">
+                    <ui-select multiple ng-model="vm.tags" theme="bootstrap" tagging tagging-label="false"
+                               on-select="vm.changed = true" on-remove="vm.changed = true">
+                        <ui-select-match placeholder="Not set">{{$item}}</ui-select-match>
+                        <ui-select-choices repeat="tag as tag in vm.defaultTags | filter: $select.search">
+                            <div>
+                                <span ng-bind-html="tag | highlight: $select.search"></span>
+                            </div>
+                        </ui-select-choices>
+                </ui-select>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal-footer">
+    <button ng-disabled="!vm.valid()" class="btn btn-primary btn-sm" type="button" ng-click="vm.save()">OK</button>
+    <button class="btn btn-warning btn-sm" type="button" ng-click="vm.cancel()">CANCEL</button>
+</div>

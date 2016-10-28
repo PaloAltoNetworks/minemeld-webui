@@ -1,3 +1,18 @@
+<!-- patterns for chart fills -->
+<svg height="6" width="6" xmlns="http://www.w3.org/2000/svg" version="1.1">
+  <defs>
+    <pattern id="pattern-added" patternUnits="userSpaceOnUse" width="3" height="3">
+      <path d='M0 3L3 0M-1 1L1 -1M2 4L4 2' stroke='#586994' stroke-width='1'/>
+    </pattern>
+    <pattern id="pattern-removed" patternUnits="userSpaceOnUse" width="3" height="3">
+      <path d='M0 3L3 0M-1 1L1 -1M2 4L4 2' stroke='#977390' stroke-width='1'/>
+    </pattern>
+    <pattern id="pattern-indicators" patternUnits="userSpaceOnUse" width="3" height="3">
+      <path d='M0 3L3 0M-1 1L1 -1M2 4L4 2' stroke='#91B7C7' stroke-width='1'/>
+    </pattern>
+  </defs>
+</svg>
+
 <!-- nodes -->
 <div class="row dashboard-row">
   <div class="col-sm-3 col-md-3">
@@ -35,7 +50,7 @@
     <div class="row dashboard-row-processor">
       <div class="col-xs-12 dashboard-chart-column">
         <div class="dashboard-chart-title small m-t-xs"># OF INDICATORS (LAST {{dashboard.chartRange}})</div>
-        <nvd3 ng-if="dashboard.minemeldMetrics.length" api="dashboard.minemeldMetricsLengthAPI" 
+        <nvd3 class="dashboard-indicators-chart" ng-if="dashboard.minemeldMetrics.length" api="dashboard.minemeldMetricsLengthAPI"
           options="dashboard.indicatorsOptions" data="dashboard.minemeldMetrics.length"></nvd3>
         <div ng-if="!dashboard.minemeldMetrics.length" class="dashboard-chart-placeholder">NO STATS YET</div>
       </div>
@@ -52,7 +67,7 @@
       </div>
       <div class="col-xs-6 dashboard-main-statistic text-center">
         <h2 class="m-b-xs" ng-bind="(dashboard.minersStats.length|megaNumber)||0"></h2>
-        <small>TOTAL</small>
+        <small># OF INDICATORS</small>
       </div>
       <div class="col-xs-2">
         <div class="dashboard-added">
@@ -70,7 +85,7 @@
     <div class="row dashboard-row-miner">
       <div class="col-xs-12 dashboard-chart-column">
         <div class="dashboard-chart-title small m-t-xs"># OF INDICATORS (LAST {{dashboard.chartRange}})</div>
-        <nvd3 ng-if="dashboard.minersMetrics.length" options="dashboard.indicatorsOptions"
+        <nvd3 class="dashboard-indicators-chart" ng-if="dashboard.minersMetrics.length" options="dashboard.indicatorsOptions"
           api="dashboard.minersMetricsLengthAPI" data="dashboard.minersMetrics.length"></nvd3>
         <div ng-if="!dashboard.minersMetrics.length" class="dashboard-chart-placeholder">NO STATS YET</div>
       </div>
@@ -80,7 +95,7 @@
     <div class="row dashboard-row-miner">
       <div class="col-xs-12 dashboard-chart-column">
         <div class="dashboard-chart-title small m-t-xs">ADDED/AGED OUT (LAST {{dashboard.chartRange}})</div>
-        <nvd3 ng-if="dashboard.minersMetrics.ar" options="dashboard.arOptions"
+        <nvd3 class="dashboard-ar-chart" ng-if="dashboard.minersMetrics.ar" options="dashboard.arOptions"
           api="dashboard.minersMetricsArAPI" data="dashboard.minersMetrics.ar"></nvd3>
         <div ng-if="!dashboard.minersMetrics.ar" class="dashboard-chart-placeholder">NO STATS YET</div>
       </div>
@@ -97,7 +112,7 @@
       </div>
       <div class="col-xs-6 dashboard-main-statistic text-center">
         <h2 class="m-b-xs" ng-bind="(dashboard.outputsStats.length|megaNumber)||0"></h2>
-        <small>TOTAL</small>
+        <small># OF INDICATORS</small>
       </div>
       <div class="col-xs-4">
         <div class="dashboard-added">
@@ -115,7 +130,7 @@
     <div class="row dashboard-row-output">
       <div class="col-xs-12 dashboard-chart-column">
         <div class="dashboard-chart-title small m-t-xs"># OF INDICATORS (LAST {{dashboard.chartRange}})</div>
-        <nvd3 ng-if="dashboard.outputsMetrics.length" options="dashboard.indicatorsOptions"
+        <nvd3 class="dashboard-indicators-chart" ng-if="dashboard.outputsMetrics.length" options="dashboard.indicatorsOptions"
           api="dashboard.outputsMetricsLengthAPI" data="dashboard.outputsMetrics.length"></nvd3>
         <div ng-if="!dashboard.outputsMetrics.length" class="dashboard-chart-placeholder">NO STATS YET</div>
       </div>
@@ -125,7 +140,7 @@
     <div class="row dashboard-row-output">
       <div class="col-xs-12 dashboard-chart-column">
         <div class="dashboard-chart-title small m-t-xs">ADDED/REMOVED (LAST {{dashboard.chartRange}})</div>
-        <nvd3 ng-if="dashboard.outputsMetrics.ar" options="dashboard.arOptions"
+        <nvd3 class="dashboard-ar-chart" ng-if="dashboard.outputsMetrics.ar" options="dashboard.arOptions"
           api="dashboard.outputsMetricsArAPI" data="dashboard.outputsMetrics.ar"></nvd3>
         <div ng-if="!dashboard.outputsMetrics.ar" class="dashboard-chart-placeholder">NO STATS YET</div>
       </div>

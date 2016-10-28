@@ -43,15 +43,20 @@
         <div class="form-group">
             <label class="col-sm-2 col-md-2 control-label">INPUTS</label>
             <div class="col-sm-6 col-md-6">
-                <ui-select multiple ng-model="vm.inputs" theme="bootstrap">
-                    <ui-select-match placeholder="Select inputs...">{{$item}}</ui-select-match>
-                    <ui-select-choices repeat="input in vm.availableInputs | filter:$select.search">
-                        {{input}}
+                <ui-select multiple ng-model="vm.inputs" theme="bootstrap"
+                           ng-disabled="vm.inputsDisabled"
+                           on-select="vm.inputsChanged()" on-remove="vm.inputsChanged()">
+                    <ui-select-match placeholder="Select input nodes...">{{$item.name}}</ui-select-match>
+                    <ui-select-choices group-by="'nodeType'" repeat="input.name as input in vm.availableInputs | filter: {'name':$select.search}">
+                        <div>
+                            <span ng-bind-html="input.name | highlight: $select.search"></span>
+                        </div>
                     </ui-select-choices>
+                    <ui-select-no-choice><i>{{ vm.noInputsChoiceMessage }}</i></ui-select-no-choice>
                 </ui-select>
             </div>
         </div>
-        <div class="form-group">
+        <div ng-if="false" class="form-group">
             <label class="col-sm-2 col-md-2 control-label">OUTPUT</label>
             <div class="col-sm-6 col-md-6">
                 <span ng-if="!vm.output" class="btn config-btn-disabled btn-sm" type="button" ng-click="vm.output = true">DISABLED</span>

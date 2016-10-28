@@ -1,6 +1,7 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldStatusService, IMinemeldStatusNode } from  '../../app/services/status';
+import { IMinemeldStatusService, IMinemeldStatusNode, IMinemeldStatus } from  '../../app/services/status';
+import { IThrottled, IThrottleService } from '../../app/services/throttle';
 
 interface INGMinemeldStatusNode extends IMinemeldStatusNode {
     indicators: number;
@@ -17,13 +18,13 @@ export class NodeDetailInfoController {
     $state: angular.ui.IStateService;
     $stateParams: angular.ui.IStateParamsService;
 
+    mmStatusListener: any;
+    mmThrottledUpdate: IThrottled;
+
     nodename: string;
 
     nodeState: INGMinemeldStatusNode;
     nodeConfig: any;
-
-    updateMinemeldStatusPromise: angular.IPromise<any>;
-    updateMinemeldStatusInterval: number = 60 * 1000;
 
     updateMinemeldConfigPromise: angular.IPromise<any>;
     updateMinemeldConfigInterval: number = 60 * 1000;
@@ -33,7 +34,9 @@ export class NodeDetailInfoController {
         MinemeldStatusService: IMinemeldStatusService,
         moment: moment.MomentStatic, $scope: angular.IScope,
         $compile: angular.ICompileService, $state: angular.ui.IStateService,
-        $stateParams: angular.ui.IStateParamsService) {
+        $stateParams: angular.ui.IStateParamsService,
+        $rootScope: angular.IRootScopeService,
+        ThrottleService: IThrottleService) {
         this.toastr = toastr;
         this.mmstatus = MinemeldStatusService;
         this.$interval = $interval;
@@ -46,6 +49,15 @@ export class NodeDetailInfoController {
         this.nodename = $scope.$parent['nodedetail']['nodename'];
 
         this.updateMinemeldStatus();
+
+        this.mmThrottledUpdate = ThrottleService.throttle(
+            this.updateMinemeldStatus.bind(this),
+            250
+        );
+        this.mmStatusListener = $rootScope.$on(
+            'mm-status-changed',
+            this.mmThrottledUpdate
+        );
         this.updateMinemeldConfig();
 
         this.$scope.$on('$destroy', this.destroy.bind(this));
@@ -60,7 +72,7 @@ export class NodeDetailInfoController {
     public run(): void {
         this.mmstatus.hup(this.nodename)
             .then(() => {
-                this.toastr.success('NEW RUN FOR ' + this.nodename + ' SUCCESSFUL SCHEDULED');
+                this.toastr.success('NEW RUN FOR ' + this.nodename + ' SUCCESSFULLY SCHEDULED');
             })
             .catch((error: any) => {
                 this.toastr.error('ERROR HUPPING NODE: ' + error.status);
@@ -68,25 +80,11 @@ export class NodeDetailInfoController {
     }
 
     private updateMinemeldStatus() {
-        var vm: any = this;
+        var vm: NodeDetailInfoController = this;
 
-        vm.mmstatus.getMinemeld()
-        .then(function(result: any) {
-            var ns: IMinemeldStatusNode;
-
-            ns = <IMinemeldStatusNode>(result.filter(function(x: any) { return x.name === vm.nodename; })[0]);
-            vm.renderState(vm, ns);
-        }, function(error: any) {
-            vm.toastr.error('ERROR RETRIEVING MINEMELD STATUS: ' + error.status);
-        })
-        .finally(function() {
-            vm.updateMinemeldStatusPromise = vm.$interval(
-                vm.updateMinemeldStatus.bind(vm),
-                vm.updateMinemeldStatusInterval,
-                1
-            );
-        })
-        ;
+        this.mmstatus.getStatus().then((currentStatus: IMinemeldStatus) => {
+            vm.renderState(vm, currentStatus[vm.nodename]);
+        });
     }
 
     private updateMinemeldConfig() {
@@ -99,7 +97,9 @@ export class NodeDetailInfoController {
                 vm.nodeConfig.config = null;
             }
         }, function(error: any) {
-            vm.toastr.error('ERROR RETRIEVING MINEMELD CONFIG: ' + error.status);
+            if (!error.cancelled) {
+                vm.toastr.error('ERROR RETRIEVING MINEMELD CONFIG: ' + error.status);
+            }
         })
         .finally(function() {
             vm.updateMinemeldConfigPromise = vm.$interval(
@@ -112,8 +112,11 @@ export class NodeDetailInfoController {
     }
 
     private destroy() {
-        if (this.updateMinemeldStatusPromise) {
-            this.$interval.cancel(this.updateMinemeldStatusPromise);
+        if (this.mmThrottledUpdate) {
+            this.mmThrottledUpdate.cancel();
+        }
+        if (this.mmStatusListener) {
+            this.mmStatusListener();
         }
         if (this.updateMinemeldConfigPromise) {
             this.$interval.cancel(this.updateMinemeldConfigPromise);

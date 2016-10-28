@@ -1,10 +1,12 @@
 import { IMineMeldAPIService } from './services/minemeldapi';
+import { IMinemeldStatusService } from './services/status';
 
 /** @ngInject */
 export function minemeldInit($state: angular.ui.IStateService,
                              $rootScope: any,
                              $cookies: angular.cookies.ICookiesService,
-                             MineMeldAPIService: IMineMeldAPIService) {
+                             MineMeldAPIService: IMineMeldAPIService,
+                             MinemeldStatusService: IMinemeldStatusService) {
     document.getElementById('loader').style.display = 'none';
 
     $rootScope.mmBack = (state?: string) => {
@@ -16,6 +18,13 @@ export function minemeldInit($state: angular.ui.IStateService,
         $state.go(state);
         return;
     };
+
+    $rootScope.$on('$stateChangeStart', (event: any, toState: any, toParams: any) => {
+        if (toState.name !== 'login' && !MineMeldAPIService.isLoggedIn()) {
+            event.preventDefault();
+            $state.go('login');
+        }
+    });
 
     $rootScope.$on('$stateChangeSuccess', (event: any, toState: any, toParams: any, fromState: any, fromParams: any) => {
         $rootScope.mmPreviousState = {

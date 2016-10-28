@@ -50,6 +50,12 @@ export class MinemeldPrototypeService implements IMinemeldPrototypeService {
         this.$state = $state;
         this.$q = $q;
         this.MineMeldAPIService = MineMeldAPIService;
+
+        this.MineMeldAPIService.onLogin(this.fillCache.bind(this));
+        if (this.MineMeldAPIService.isLoggedIn()) {
+            this.fillCache();
+        }
+        this.MineMeldAPIService.onLogout(this.emptyCache.bind(this));
     }
 
     public getPrototypeLibraries(): angular.IPromise<any> {
@@ -90,7 +96,11 @@ export class MinemeldPrototypeService implements IMinemeldPrototypeService {
             defer = this.$q.defer();
 
             if (this.prototypesDict[toks[0]]) {
-                defer.resolve(this.prototypesDict[toks[0]][toks[1]]);
+                if (this.prototypesDict[toks[0]].prototypes[toks[1]]) {
+                    defer.resolve(this.prototypesDict[toks[0]].prototypes[toks[1]]);
+                } else {
+                    defer.resolve(undefined);
+                }
             } else {
                 defer.resolve(undefined);
             }
@@ -100,7 +110,13 @@ export class MinemeldPrototypeService implements IMinemeldPrototypeService {
 
         return this.getPrototypes().then((result: any) => {
             if (this.prototypesDict[toks[0]]) {
-                return this.prototypesDict[toks[0]][toks[1]];
+                if (this.prototypesDict[toks[0]].prototypes[toks[1]]) {
+                    defer.resolve(this.prototypesDict[toks[0]].prototypes[toks[1]]);
+                } else {
+                    defer.resolve(undefined);
+                }
+            } else {
+                defer.resolve(undefined);
             }
 
             return undefined;
@@ -165,14 +181,18 @@ export class MinemeldPrototypeService implements IMinemeldPrototypeService {
         this.prototypesDict = undefined;
     }
 
-    private getPrototypes() {
+    private getPrototypes(cancellable?: boolean) {
         var prototypes: angular.resource.IResourceClass<angular.resource.IResource<any>>;
+
+        if (typeof cancellable === 'undefined') {
+            cancellable = true;
+        }
 
         prototypes = this.MineMeldAPIService.getAPIResource('/prototype', {}, {
             get: {
                 method: 'GET'
             }
-        });
+        }, cancellable);
 
         return prototypes.get().$promise
             .then((result: any) => {
@@ -180,5 +200,13 @@ export class MinemeldPrototypeService implements IMinemeldPrototypeService {
 
                 return this.prototypesDict;
             });
+    }
+
+    private fillCache() {
+        this.getPrototypes(false);
+    }
+
+    private emptyCache() {
+        this.prototypesDict = undefined;
     }
 }

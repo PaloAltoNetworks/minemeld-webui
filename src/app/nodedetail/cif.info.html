@@ -29,18 +29,33 @@
                         <span ng-switch-default class="label label-warning">{{ nodedetailinfo.nodeState.stateAsString }}</span>
                     </td>
                 </tr>
-                <tr ng-if="nodedetailinfo.usernameEnabled">
-                    <td>USERNAME</td>
-                    <td tooltip="set username" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setUsername()">
-                        <span ng-if="!nodedetailinfo.username"><em>Not set</em></span>
-                        <span ng-if="nodedetailinfo.username">{{ nodedetailinfo.username }}</span>
+                <tr>
+                    <td>REMOTE</td>
+                    <td tooltip="set remote" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setRemote()">
+                        <span ng-if="!nodedetailinfo.remote"><em>Not set</em></span>
+                        <span ng-if="nodedetailinfo.remote">{{ nodedetailinfo.remote }}</span>
                     </td>
                 </tr>
                 <tr>
-                    <td>{{ nodedetailinfo.secretName }}</td>
+                    <td>VERIFY CERT</td>
+                    <td tooltip="toggle Cert Verification" class="nodedetail-info-clickable" ng-click="nodedetailinfo.toggleCertificateVerification()">
+                        <span ng-if="nodedetailinfo.verify_cert === undefined"><em>Not set (default enabled)</em></span>
+                        <span ng-if="nodedetailinfo.verify_cert !== undefined && !nodedetailinfo.verify_cert" class="label label-default"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></span>
+                        <span ng-if="nodedetailinfo.verify_cert" class="label label-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>TOKEN</td>
                     <td tooltip="set {{ vm.secretName|lowercase }}" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setPassword()">
                         <span ng-if="!nodedetailinfo.secret"><em>Not set</span></span>
                         <span ng-if="nodedetailinfo.secret" class="label label-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>FILTERS</td>
+                    <td tooltip="set filter" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setFilters()">
+                        <span ng-if="!nodedetailinfo.flattenedFilters"><em>Not set</span></span>
+                        <span ng-if="nodedetailinfo.flattenedFilters">{{ nodedetailinfo.flattenedFilters }}</span>
                     </td>
                 </tr>
                 <tr ng-if="nodedetailinfo.nodeState.last_run">

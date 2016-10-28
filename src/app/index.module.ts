@@ -14,6 +14,8 @@ import { PrototypesController } from './prototypes/prototypes.controller';
 import { PrototypedetailController } from './prototypedetail/prototypedetail.controller';
 import { PrototypeAddController } from './prototypeadd/prototypeadd.controller';
 import { ConfigController } from './config/config.controller';
+import { ConfigureImportController } from './config/configimport.controller';
+import { ConfigureExportController } from './config/configexport.controller';
 import { ConfigAddController } from './config/configadd.controller';
 import { AboutController } from './about/about.controller';
 import { IndicatorAddController } from './indicatoradd/indicatoradd.controller';
@@ -31,6 +33,7 @@ import { MinemeldSupervisorService } from './services/supervisor';
 import { ConfirmService } from './services/confirm';
 import { MinemeldEventsService } from './services/events';
 import { MinemeldTracedService } from './services/traced';
+import { ThrottleService } from './services/throttle';
 import { megaNumber } from './filters/megaNumber';
 import { minemeldOptions } from '../app/components/options/options.directive';
 import { nodeConfig } from '../app/components/nodeconfig/nodeconfig.directive';
@@ -75,6 +78,8 @@ module minemeldWebui {
   .controller('PrototypedetailController', PrototypedetailController)
   .controller('PrototypeAddController', PrototypeAddController)
   .controller('ConfigController', ConfigController)
+  .controller('ConfigureImportController', ConfigureImportController)
+  .controller('ConfigureExportController', ConfigureExportController)
   .controller('ConfigAddController', ConfigAddController)
   .controller('IndicatorAddController', IndicatorAddController)
   .controller('AboutController', AboutController)
@@ -94,6 +99,7 @@ module minemeldWebui {
   .service('MinemeldValidateService', MinemeldValidateService)
   .service('MinemeldEventsService', MinemeldEventsService)
   .service('MinemeldTracedService', MinemeldTracedService)
+  .service('ThrottleService', ThrottleService)
   .filter('megaNumber', megaNumber)
   .run(minemeldInit)
   ;

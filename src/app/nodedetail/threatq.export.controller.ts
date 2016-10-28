@@ -5,6 +5,7 @@ import { IMinemeldConfigService } from '../../app/services/config';
 import { NodeDetailInfoController } from './nodedetail.info.controller';
 import { IMinemeldStatusService } from  '../../app/services/status';
 import { IConfirmService } from '../../app/services/confirm';
+import { IThrottleService } from '../../app/services/throttle';
 
 /** @ngInject */
 function threatqExportConfig($stateProvider: ng.ui.IStateProvider) {
@@ -54,13 +55,18 @@ class NodeDetailThreatQExportInfoController extends NodeDetailInfoController {
         moment: moment.MomentStatic, $scope: angular.IScope,
         $compile: angular.ICompileService, $state: angular.ui.IStateService,
         $stateParams: angular.ui.IStateParamsService, MinemeldConfigService: IMinemeldConfigService,
+        $rootScope: angular.IRootScopeService,
+        ThrottleService: IThrottleService,
         $modal: angular.ui.bootstrap.IModalService,
         ConfirmService: IConfirmService) {
         this.MinemeldConfigService = MinemeldConfigService;
         this.$modal = $modal;
         this.ConfirmService = ConfirmService;
 
-        super(toastr, $interval, MinemeldStatusService, moment, $scope, $compile, $state, $stateParams);
+        super(
+            toastr, $interval, MinemeldStatusService, moment, $scope,
+            $compile, $state, $stateParams, $rootScope, ThrottleService
+        );
 
         this.loadSideConfig();
     }
@@ -68,13 +74,13 @@ class NodeDetailThreatQExportInfoController extends NodeDetailInfoController {
     loadSideConfig(): void {
         this.MinemeldConfigService.getDataFile(this.nodename + '_side_config')
         .then((result: any) => {
-            if (typeof result.url != 'undefined') {
+            if (typeof result.url !== 'undefined') {
                 this.url = result.url;
             } else {
                 this.url = undefined;
             }
 
-            if (typeof result.verify_cert != 'undefined') {
+            if (typeof result.verify_cert !== 'undefined') {
                 if (result.verify_cert) {
                     this.verify_cert = true;
                 } else {
@@ -93,10 +99,10 @@ class NodeDetailThreatQExportInfoController extends NodeDetailInfoController {
     saveSideConfig(): angular.IPromise<any> {
         var side_config: any = {};
 
-        if (typeof this.url != 'undefined') {
+        if (typeof this.url !== 'undefined') {
             side_config.url = this.url;
         }
-        if (typeof this.verify_cert != 'undefined') {
+        if (typeof this.verify_cert !== 'undefined') {
             side_config.verify_cert = this.verify_cert;
         }
 
@@ -138,7 +144,7 @@ class NodeDetailThreatQExportInfoController extends NodeDetailInfoController {
         var p: angular.IPromise<any>;
         var new_value: boolean;
 
-        if (typeof this.verify_cert == 'undefined' || this.verify_cert) {
+        if (typeof this.verify_cert === 'undefined' || this.verify_cert) {
             new_value = false;
             p = this.ConfirmService.show(
                 'THREATQ EXPORT CERT VERIFICATION',
