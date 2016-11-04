@@ -137,7 +137,7 @@ class NodeDetailDagPusherDevicesController {
     }
 
     private saveDeviceList(): angular.IPromise<any> {
-        return this.MinemeldConfigService.saveDataFile(this.cfd_device_list, this.device_list)
+        return this.MinemeldConfigService.saveDataFile(this.cfd_device_list, this.device_list, this.nodename)
             .then((result: any) => {
                 this.dtDevices.reloadData();
             });
