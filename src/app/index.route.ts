@@ -104,6 +104,25 @@ export function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterPro
       controller: 'LogsController',
       controllerAs: 'vm'
     })
+    .state('admin', {
+      abstract: true,
+      url: '/admin',
+      templateUrl: 'app/admin/view.html',
+      controller: 'AdminController',
+      controllerAs: 'vm'
+    })
+    .state('admin.users', {
+      url: '/users',
+      templateUrl: 'app/admin/view.users.html',
+      controller: 'AdminUsersController',
+      controllerAs: 'vm'
+    })
+    .state('admin.fusers', {
+      url: '/fusers',
+      templateUrl: 'app/admin/view.fusers.html',
+      controller: 'AdminFUsersController',
+      controllerAs: 'vm'
+    })
     ;
 
   $urlRouterProvider.otherwise('/login');

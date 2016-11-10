@@ -32,7 +32,7 @@
             <div class="form-group" id="fgTags">
                 <label class="col-xs-4 control-label">TAGS</label>
                 <div class="col-xs-6">
-                    <ui-select multiple ng-model="vm.tags" theme="bootstrap" tagging tagging-label="false"
+                    <ui-select multiple ng-model="vm.tags" theme="bootstrap" tagging tagging-label=""
                                on-select="vm.changed = true" on-remove="vm.changed = true">
                         <ui-select-match placeholder="Not set">{{$item}}</ui-select-match>
                         <ui-select-choices repeat="tag as tag in vm.defaultTags | filter: $select.search">

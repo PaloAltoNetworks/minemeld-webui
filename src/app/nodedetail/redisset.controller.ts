@@ -1,10 +1,10 @@
 /// <reference path="../../../typings/main.d.ts" />
 
 import { INodeDetailResolverService } from '../../app/services/nodedetailresolver';
-import { IMinemeldStatusNode } from '../../app/services/status';
-import { NodeDetailInfoController } from './nodedetail.info.controller';
+import { IMinemeldStatusService, IMinemeldStatusNode } from '../../app/services/status';
+import { NodeDetailFeedInfoController } from './feed.controller';
 
-class NodeDetailRedisSetInfoController extends NodeDetailInfoController {
+class NodeDetailRedisSetInfoController extends NodeDetailFeedInfoController {
     public renderState(vm: any, ns: IMinemeldStatusNode) {
         var clocation: string;
 
