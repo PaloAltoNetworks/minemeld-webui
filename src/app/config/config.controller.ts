@@ -393,7 +393,9 @@ export class ConfigController {
         return this.MinemeldPrototypeService.getPrototypeLibraries().then((result: any) => {
             return this.refreshConfig();
         }, (error: any) => {
-            this.toastr.error('ERROR LOADING PROTOTYPES: ' + error.statusText);
+            if (!error.cancelled) {
+                this.toastr.error('ERROR LOADING PROTOTYPES: ' + error.statusText);
+            }
 
             throw error;
         });

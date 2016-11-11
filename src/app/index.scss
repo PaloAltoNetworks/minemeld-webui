@@ -100,3 +100,14 @@ $icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap/"
   background-color: $panw-green;
   height: 4px;
 }
+
+.tag-minemeld {
+  font-size: 90% !important;
+  font-weight: 600 !important;
+  border-radius: 0 !important;
+  @include label-variant($minemeld-processor);
+}
+
+.cursor-pointer {
+  cursor: pointer !important;
+}

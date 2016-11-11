@@ -1,0 +1,14 @@
+<div class="row">
+    <div class="col-xs-1 nodedetail-tabs-col">
+        <tabset vertical="true">
+            <tab ng-repeat="tab in vm.tabs" active="tab.active" select="vm.select(tab.state)">
+                <tab-heading tooltip="{{ tab.tooltip }}" tooltip-placement="right" tooltip-popup-delay="500">
+                    <span class="{{ tab.icon }}"></span>
+                </tab-heading>
+            </tab>
+        </tabset>
+    </div>
+    <div class="col-xs-11 nodedetails-content-col">
+        <div ui-view></div>
+    </div>
+</div>
