@@ -15,6 +15,7 @@ export class AdminUsersController {
     $modal: angular.ui.bootstrap.IModalService;
     ConfirmService: IConfirmService;
     MinemeldAAAService: IMinemeldAAAService;
+    $timeout: angular.ITimeoutService;
 
     dtUsers: any = {};
     dtColumns: any[];
@@ -28,7 +29,7 @@ export class AdminUsersController {
                 $scope: angular.IScope, DTOptionsBuilder: any,
                 DTColumnBuilder: any, $compile: angular.ICompileService,
                 $modal: angular.ui.bootstrap.IModalService,
-                ConfirmService: IConfirmService) {
+                ConfirmService: IConfirmService, $timeout: angular.ITimeoutService) {
         this.MinemeldAAAService = MinemeldAAAService;
         this.$scope = $scope;
         this.toastr = toastr;
@@ -37,12 +38,19 @@ export class AdminUsersController {
         this.$compile = $compile;
         this.$modal = $modal;
         this.ConfirmService = ConfirmService;
+        this.$timeout = $timeout;
 
         this.setupUsersTable();
     }
 
     reload(): void {
         this.dtUsers.reloadData();
+    }
+
+    delayedReload(): void {
+        this.$timeout(700).then((_: any) => {
+            this.dtUsers.reloadData();
+        });
     }
 
     removeUser(unum: number): void {
@@ -64,10 +72,10 @@ export class AdminUsersController {
         p.then((result: any) => {
             this.MinemeldAAAService.deleteUser('api', u).then((result: any) => {
                 this.toastr.success('USER ' + u + ' DELETED');
-                this.dtUsers.reloadData();
+                this.delayedReload();
             }, (error: any) => {
                 this.toastr.error('ERROR REMOVING USER: ' + error.statusText);
-                this.dtUsers.reloadData();
+                this.delayedReload();
             });
         });
     }
@@ -112,10 +120,10 @@ export class AdminUsersController {
                 this.users[unum].username,
                 this.users[unum].attributes
             ).then((result: any) => {
-                this.dtUsers.reloadData();
+                this.delayedReload();
             }, (error: any) => {
                 this.toastr.error('ERROR SAVING COMMENT: ' + error.statusText);
-                this.dtUsers.reloadData();
+                this.delayedReload();
             });
         });
     }
@@ -151,10 +159,10 @@ export class AdminUsersController {
                 result.password
             ).then((ignored: any) => {
                 this.toastr.success('PASSWORD FOR USER ' + result.username + ' SET');
-                this.dtUsers.reloadData();
+                this.delayedReload();
             }, (error: any) => {
                 this.toastr.error('ERROR SETTING PASSWORD: ' + error.statusText);
-                this.dtUsers.reloadData();
+                this.delayedReload();
             });
         });
     }
@@ -190,10 +198,10 @@ export class AdminUsersController {
                 result.password
             ).then((ignored: any) => {
                 this.toastr.success('USER ' + result.username + ' ADDED');
-                this.dtUsers.reloadData();
+                this.delayedReload();
             }, (error: any) => {
                 this.toastr.error('ERROR ADDING USER: ' + error.statusText);
-                this.dtUsers.reloadData();
+                this.delayedReload();
             });
         });
     }
