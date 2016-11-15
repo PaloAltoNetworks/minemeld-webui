@@ -1,0 +1,19 @@
+<div class="modal-header">
+    <h1 class="modal-title">CISCO ISE HOSTNAME</h1>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <form class="config-add-form form-horizontal m-t-xs">
+            <div class="form-group">
+                <label class="col-xs-4 control-label">HOSTNAME</label>
+                <div class="col-xs-6">
+                    <textarea ng-model="vm.hostname" rows="3" class="form-control" placeholder="Cisco ISE Hostname"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal-footer">
+    <button ng-disabled="!vm.valid()" class="btn btn-primary btn-sm" type="button" ng-click="vm.save()">OK</button>
+    <button class="btn btn-warning btn-sm" type="button" ng-click="vm.cancel()">CANCEL</button>
+</div>
