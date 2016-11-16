@@ -18,6 +18,9 @@ import { ConfigureImportController } from './config/configimport.controller';
 import { ConfigureExportController } from './config/configexport.controller';
 import { ConfigAddController } from './config/configadd.controller';
 import { AboutController } from './about/about.controller';
+import { AdminController } from './admin/admin.controller';
+import { AdminUsersController } from './admin/admin.users.controller';
+import { AdminFUsersController } from './admin/admin.fusers.controller';
 import { IndicatorAddController } from './indicatoradd/indicatoradd.controller';
 import { LogsController } from './logs/logs.controller';
 import { appNavbar } from '../app/components/navbar/navbar.directive';
@@ -34,6 +37,7 @@ import { ConfirmService } from './services/confirm';
 import { MinemeldEventsService } from './services/events';
 import { MinemeldTracedService } from './services/traced';
 import { ThrottleService } from './services/throttle';
+import { MinemeldAAAService } from './services/aaa';
 import { megaNumber } from './filters/megaNumber';
 import { minemeldOptions } from '../app/components/options/options.directive';
 import { nodeConfig } from '../app/components/nodeconfig/nodeconfig.directive';
@@ -84,6 +88,9 @@ module minemeldWebui {
   .controller('IndicatorAddController', IndicatorAddController)
   .controller('AboutController', AboutController)
   .controller('LogsController', LogsController)
+  .controller('AdminController', AdminController)
+  .controller('AdminUsersController', AdminUsersController)
+  .controller('AdminFUsersController', AdminFUsersController)
   .directive('minemeldOptions', minemeldOptions)
   .directive('nodeConfig', nodeConfig)
   .directive('appNavbar', appNavbar)
@@ -99,6 +106,7 @@ module minemeldWebui {
   .service('MinemeldValidateService', MinemeldValidateService)
   .service('MinemeldEventsService', MinemeldEventsService)
   .service('MinemeldTracedService', MinemeldTracedService)
+  .service('MinemeldAAAService', MinemeldAAAService)
   .service('ThrottleService', ThrottleService)
   .filter('megaNumber', megaNumber)
   .run(minemeldInit)

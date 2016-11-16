@@ -322,7 +322,7 @@ export class ConfigController {
             this.DTColumnBuilder.newColumn(null).withTitle('TYPE').renderWith(function(data: any, type: any, full: any) {
                 var v, c, nt: string;
 
-                if (typeof full.properties.node_type === 'undefined') {
+                if (typeof full.properties.node_type === 'undefined' || full.properties.node_type === 'UNKNOWN') {
                     return '<span class="label label-default">UNKNOWN</span>';
                 }
 
@@ -393,7 +393,9 @@ export class ConfigController {
         return this.MinemeldPrototypeService.getPrototypeLibraries().then((result: any) => {
             return this.refreshConfig();
         }, (error: any) => {
-            this.toastr.error('ERROR LOADING PROTOTYPES: ' + error.statusText);
+            if (!error.cancelled) {
+                this.toastr.error('ERROR LOADING PROTOTYPES: ' + error.statusText);
+            }
 
             throw error;
         });

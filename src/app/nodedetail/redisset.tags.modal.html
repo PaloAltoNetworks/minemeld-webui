@@ -1,0 +1,26 @@
+<div class="modal-header">
+    <h1 class="modal-title">SET TAGS <span ng-if="vm.changed">*</span></h1>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-2">
+            TAGS
+        </div>
+        <div class="col-xs-10">
+            <ui-select multiple ng-model="vm.tags" theme="bootstrap" on-select="vm.changed = true"
+                       on-remove="vm.changed = true" tagging tagging-label="">
+                <ui-select-match placeholder="Add tags...">{{ $item }}</ui-select-match>
+                <ui-select-choices repeat="tag as tag in vm.availableTags | filter: $select.search">
+                    <div>
+                        <span ng-bind-html="tag | highlight: $select.search"></span>
+                    </div>
+                </ui-select-choices>
+                <ui-select-no-choice><i>Type to add a new tag</i></ui-select-no-choice>
+            </ui-select>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button ng-disabled="!vm.changed" class="btn btn-primary btn-sm" type="button" ng-click="vm.save()">OK</button>
+    <button class="btn btn-warning btn-sm" type="button" ng-click="vm.cancel()">CANCEL</button>
+</div>

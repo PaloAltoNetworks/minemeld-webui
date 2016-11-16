@@ -287,7 +287,7 @@ export class ConfigAddController {
                 return;
             }
             p.push(this.MinemeldPrototypeService.getPrototype(nc.properties.prototype).then((result: any) => {
-                if (result.node_type) {
+                if (result && result.node_type) {
                     return {
                         name: nc.name,
                         nodeType: result.node_type.toUpperCase()
