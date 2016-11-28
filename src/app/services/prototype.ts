@@ -13,6 +13,8 @@ export interface IMinemeldPrototypeLibrary {
 export interface IMinemeldPrototypeMetadata {
     description?: string;
     nodeType?: string;
+    indicatorTypes?: string[];
+    tags?: string[];
     developmentStatus?: string;
     author?: string;
 }

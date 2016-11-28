@@ -108,6 +108,27 @@ $icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap/"
   @include label-variant($minemeld-processor);
 }
 
+.tag-prototype {
+  font-size: 75% !important;
+  font-weight: 600 !important;
+  border-radius: 0 !important;
+  @include label-variant(darken($body-bg, 50%));
+}
+
+.label-indicator-type {
+  @include label-variant($minemeld-system);
+}
+
+.label-container {
+  line-height: 1.7;
+}
+
+.label-container > .label {
+  line-height: 1.5;
+  display: inline-block;
+  vertical-align: 0.2em;
+}
+
 .cursor-pointer {
   cursor: pointer !important;
 }
