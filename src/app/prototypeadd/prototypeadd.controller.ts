@@ -83,7 +83,6 @@ export class PrototypeAddController {
             this.developmentStatus = result.developmentStatus;
             this.config = result.config;
             this.indicatorTypes = result.indicatorTypes;
-            console.log(this.indicatorTypes);
             this.tags = result.tags;
             this.availableTags = angular.copy(result.tags);
         }, (error: any) => {
