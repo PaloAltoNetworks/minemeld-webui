@@ -59,6 +59,33 @@
                 <input ng-disabled="true" type="text" ng-model="vm.class" class="form-control" placeholder="Class (required)" required>
             </div>
         </div>
+        <div class="form-group">
+            <label class="col-sm-2 col-md-2 control-label">INDICATOR TYPES</label>
+            <div class="col-sm-6 col-md-6">
+                <ui-select multiple ng-model="vm.indicatorTypes" theme="bootstrap" on-select="vm.itypesSelected()">
+                    <ui-select-match placeholder="Add indicator type...">{{ $item }}</ui-select-match>
+                    <ui-select-choices repeat="itype as itype in vm.availableITypes | filter: $select.search">
+                        <div>
+                            <span ng-bind-html="itype | highlight: $select.search"></span>
+                        </div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 col-md-2 control-label">TAGS</label>
+            <div class="col-sm-6 col-md-6">
+                <ui-select multiple ng-model="vm.tags" theme="bootstrap" tagging tagging-label="">
+                    <ui-select-match placeholder="Add tags...">{{ $item }}</ui-select-match>
+                    <ui-select-choices repeat="tag as tag in vm.availableTags | filter: $select.search">
+                        <div>
+                            <span ng-bind-html="tag | highlight: $select.search"></span>
+                        </div>
+                    </ui-select-choices>
+                    <ui-select-no-choice><i>Type to add a new tag</i></ui-select-no-choice>
+                </ui-select>
+            </div>
+        </div>
         <div id="#fgConfig" class="form-group">
             <label class="col-sm-2 col-md-2 control-label">CONFIG</label>
             <div class="col-sm-6 col-md-6">
