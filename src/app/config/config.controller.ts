@@ -435,6 +435,9 @@ export class ConfigController {
                         if (result.node_type) {
                             node.properties.node_type = result.node_type;
                         }
+                        if (result.indicator_types) {
+                            node.properties.indicator_types = result.indicator_types;
+                        }
                     }
 
                     return node;
@@ -506,6 +509,7 @@ export class ConfigureInputsController {
     nodeConfig: IMinemeldConfigNode;
     nodeType: string;
     nodeTypeLimit: number;
+    indicatorTypes: string[];
 
     noChoiceMessage: string;
 
@@ -524,6 +528,9 @@ export class ConfigureInputsController {
         this.nodeConfig = this.MinemeldConfigService.nodesConfig[nodenum];
         if (typeof this.nodeConfig.properties.node_type !== 'undefined') {
             this.nodeType = this.nodeConfig.properties.node_type;
+        }
+        if (typeof this.nodeConfig.properties.indicator_types !== 'undefined') {
+            this.indicatorTypes = this.nodeConfig.properties.indicator_types;
         }
         if (this.nodeType === 'output') {
             this.nodeTypeLimit = 1;
@@ -650,6 +657,28 @@ export class ConfigureInputsController {
 
                 return true;
             });
+        }
+        if (!this.expertMode && this.indicatorTypes) {
+            if (this.indicatorTypes.length !== 0 && this.indicatorTypes[0] !== 'any') {
+                t = t.filter((x: IMinemeldConfigNode) => {
+                    var x_it: string[];
+
+                    if (!x.properties.indicator_types) {
+                        return true;
+                    }
+                    x_it = x.properties.indicator_types;
+
+                    if (x_it.length === 0 || x_it[0] === 'any') {
+                        return true;
+                    }
+                    for (var j: number = 0; j < x_it.length; j++) {
+                        if (this.indicatorTypes.indexOf(x_it[j]) !== -1) {
+                            return true;
+                        }
+                    }
+                    return false;
+                });
+            }
         }
 
         this.availableInputs = t.map((x: IMinemeldConfigNode) => {

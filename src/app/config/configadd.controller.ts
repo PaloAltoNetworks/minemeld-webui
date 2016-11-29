@@ -11,11 +11,13 @@ interface IPrototypesDescription {
     libraryDescription?: string;
     developmentStatus?: string;
     nodeType?: string;
+    indicatorTypes?: string[];
 }
 
 interface IInputNode {
     name: string;
     nodeType: string;
+    indicatorTypes: string[];
 }
 
 export class ConfigAddController {
@@ -71,6 +73,7 @@ export class ConfigAddController {
             var l: string;
             var p: string;
             var nt: string;
+            var it: string[];
             var curproto: IPrototypesDescription;
 
             for (l in result) {
@@ -88,6 +91,11 @@ export class ConfigAddController {
                         nt = result[l].prototypes[p].node_type.toUpperCase();
                     }
 
+                    it = [];
+                    if (result[l].prototypes[p].indicator_types) {
+                        it = result[l].prototypes[p].indicator_types;
+                    }
+
                     curproto = {
                         name: l + '.' + p,
                         libraryName: l,
@@ -95,7 +103,8 @@ export class ConfigAddController {
                         libraryDescription: result[l].description,
                         prototypeDescription: result[l].prototypes[p].description,
                         developmentStatus: result[l].prototypes[p].development_status,
-                        nodeType: nt
+                        nodeType: nt,
+                        indicatorTypes: it
                     };
                     this.availablePrototypes.push(curproto);
 
@@ -248,6 +257,28 @@ export class ConfigAddController {
                 }
                 return false;
             });
+            if (this.selectedPrototype && this.selectedPrototype.indicatorTypes) {
+                if (this.selectedPrototype.indicatorTypes.length !== 0 &&  this.selectedPrototype.indicatorTypes[0] !== 'any') {
+                    result = result.filter((x: IInputNode) => {
+                        var x_it: string[];
+
+                        if (!x.indicatorTypes) {
+                            return true;
+                        }
+                        x_it = x.indicatorTypes;
+
+                        if (x_it.length === 0 || x_it[0] === 'any') {
+                            return true;
+                        }
+                        for (var j: number = 0; j < x_it.length; j++) {
+                            if (this.selectedPrototype.indicatorTypes.indexOf(x_it[j]) !== -1) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    });
+                }
+            }
 
             if (this.inputsLimit && this.inputs.length >= this.inputsLimit) {
                 result = result.filter((x: IInputNode) => {
@@ -281,19 +312,23 @@ export class ConfigAddController {
                 p.push(this.$q((resolve: angular.IQResolveReject<any>) => {
                     resolve({
                         name: nc.name,
-                        nodeType: 'UNKNOWN'
+                        nodeType: 'UNKNOWN',
+                        indicatorTypes: []
                     });
                 }));
                 return;
             }
             p.push(this.MinemeldPrototypeService.getPrototype(nc.properties.prototype).then((result: any) => {
+                var nt: string = 'UNKNOWN';
+                var it: string[] = [];
+
                 if (result && result.node_type) {
-                    return {
-                        name: nc.name,
-                        nodeType: result.node_type.toUpperCase()
-                    };
+                    nt = result.node_type.toUpperCase();
                 }
-                return { name: nc.name, nodeType: 'UNKNOWN' };
+                if (result && result.indicator_types) {
+                    it = result.indicator_types;
+                }
+                return { name: nc.name, nodeType: nt, indicatorTypes: it };
             }));
         });
 
