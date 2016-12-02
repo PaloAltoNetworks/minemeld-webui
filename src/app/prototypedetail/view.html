@@ -59,6 +59,24 @@
         <div>{{ vm.prototype.class }}</div>
     </div>
 </div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 prototypedetail-section">
+        <h4>INDICATOR TYPES</h4>
+        <div>
+            <span ng-if="!vm.prototype.indicator_types"><i>None</i></span>
+            <span ng-if="vm.prototype.indicator_types || vm.prototype.indicator_types.length == 0" ng-repeat="itype in vm.prototype.indicator_types" class="label label-indicator-type m-r-xs">{{ itype }}</span>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 prototypedetail-section">
+        <h4>TAGS</h4>
+        <div>
+            <span ng-if="vm.prototype.tags" ng-repeat="tag in vm.prototype.tags" class="label tag-prototype m-r-xs">{{ tag }}</span>
+            <span ng-if="!vm.prototype.tags || vm.prototype.tags.length == 0"><i>None</i></span>
+        </div>
+    </div>
+</div>
 <div class="row" ng-if="vm.prototype.config">
     <div class="col-sm-12 col-md-12 prototypedetail-section">
         <h4 class="m-b-xs">CONFIG</h4>

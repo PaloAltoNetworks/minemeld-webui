@@ -15,9 +15,14 @@ export function nodeConfig(): ng.IDirective {
 /** @ngInject */
 export class NodeConfigController {
     config: any;
+    num_properties: number;
 
     constructor() {
         ;
+    }
+
+    $onInit() {
+        this.num_properties = Object.keys(this.config).length;
     }
 
     typeOf(o: any) {

@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldPrototypeService } from '../../app/services/prototype';
+import { IMinemeldPrototypeService, IMinemeldPrototype } from '../../app/services/prototype';
 
 declare var he: any;
 
@@ -43,8 +43,8 @@ export class PrototypesController {
                 .then((result: any) => {
                     var l, p: string;
                     var curlibrary, curprototype: any;
-                    var nt: string;
-                    var author: string;
+                    var nt, author, ds: string;
+                    var its, tags: string[];
                     var rprotos: any = [];
 
                     for (l in result) {
@@ -68,16 +68,34 @@ export class PrototypesController {
                                 nt = curprototype.node_type;
                             }
 
+                            its = [];
+                            if (curprototype.indicator_types) {
+                                its = curprototype.indicator_types;
+                            }
+
+                            tags = [];
+                            if (curprototype.tags) {
+                                tags = curprototype.tags;
+                            }
+
                             author = undefined;
                             if (curprototype.author) {
                                 author = curprototype.author;
+                            }
+
+                            ds = '';
+                            if (curprototype.development_status) {
+                                ds = curprototype.development_status;
                             }
 
                             rprotos.push({
                                 name: l + '.' + p,
                                 prototypeName: p,
                                 libraryName: l,
+                                developmentStatus: ds,
                                 nodeType: nt,
+                                indicatorTypes: its,
+                                tags: tags,
                                 libraryDescription: curlibrary.description,
                                 prototypeDescription: curprototype.description,
                                 author: author
@@ -125,8 +143,9 @@ export class PrototypesController {
         ;
 
         this.dtColumns = [
-            this.DTColumnBuilder.newColumn('name').withTitle('NAME').renderWith(function(data: any, type: any, full: any) {
+            this.DTColumnBuilder.newColumn('name').withTitle('NAME').renderWith(function(data: any, type: any, full: IMinemeldPrototype) {
                 var r: string;
+                var sname: string;
                 var iconclass, labelclass: string;
 
                 iconclass = 'glyphicon glyphicon-user';
@@ -135,14 +154,16 @@ export class PrototypesController {
                 if (full.author) {
                     iconclass = 'mm-community';
                     labelclass = 'prototypes-label-community';
-                    if (full.author == 'MineMeld Core Team') {
+                    if (full.author === 'MineMeld Core Team') {
                         iconclass = 'mm-minemeld';
                         labelclass = 'prototypes-label-minemeld';
                     }
                 }
 
-                r = '<div><span class="label ' + labelclass + ' mm-label"><i class="' + iconclass + '"></i></span> ';
-                r += he.encode(data, { strict: true }) + '</div>';
+                sname = he.encode(data, { strict: true });
+                r = '<div tooltip="' + sname + '" class="prototypes-name"><span class="label ' + labelclass + ' mm-label"><i class="' + iconclass + '"></i></span> ';
+                r += sname;
+                r += '</div>';
 
                 if (full.author) {
                     r += '<div class="prototypes-author">' + he.encode(full.author.toUpperCase(), { strict: true }) + '</div>';
@@ -170,14 +191,40 @@ export class PrototypesController {
 
                 return '<span class="label ' + c + '">' + v + '</span>';
             }),
+            this.DTColumnBuilder.newColumn('indicatorTypes').withTitle('INDICATORS').renderWith(function(data: string[], type: any, full: any) {
+                var r: string[] = [
+                    '<div class="label-container">'
+                ];
+
+                angular.forEach(data, (itype: string) => {
+                    r.push('<span class="label label-indicator-type">' + itype + '</span>');
+                });
+
+                r.push('</div>');
+
+                return r.join(' ');
+            }),
             this.DTColumnBuilder.newColumn(null).withTitle('DESCRIPTION').renderWith(function(data: any, type: any, full: any) {
                 var r: string = '';
+
+                if (full.developmentStatus === 'EXPERIMENTAL') {
+                    r += '<div class="prototypes-author m-b-xs"><i class="text-danger glyphicon glyphicon-warning-sign"></i> <span class="text-danger">EXPERIMENTAL</span></div>';
+                }
 
                 if (full.libraryDescription) {
                     r += '<div class="m-b-xs"><strong>' + he.encode(full.libraryName) + '</strong> ' + he.encode(full.libraryDescription) + '</div>';
                 }
                 if (full.prototypeDescription) {
                     r += '<div><strong>' + he.encode(full.libraryName) + '.' + he.encode(full.prototypeName) + '</strong> ' + he.encode(full.prototypeDescription) + '</div>';
+                }
+
+                if (full.tags.length !== 0) {
+                    r += '<div class="prototypes-author m-t-xs">TAGS</div>';
+                    r += '<div class="label-container">';
+                    angular.forEach(full.tags, (tag: string) => {
+                        r += '<span class="label tag-prototype">' + he.encode(tag) + '</span> ';
+                    });
+                    r += '</div>';
                 }
 
                 return r;

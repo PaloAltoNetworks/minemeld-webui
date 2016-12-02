@@ -25,3 +25,10 @@
 .prototypes-label-unk {
     background-color: $minemeld-system;
 }
+
+.prototypes-name {
+    white-space: nowrap;
+    max-width: 300px;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+}

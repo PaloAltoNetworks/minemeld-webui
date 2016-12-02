@@ -1,4 +1,7 @@
-<table class="table table-condensed">
+<div ng-if="vm.num_properties == 0">
+    <i>Default</i>
+</div>
+<table ng-if="vm.num_properties != 0" class="table table-condensed">
     <colgroup>
         <col style="width: 15%">
         <col>

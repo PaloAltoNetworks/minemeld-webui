@@ -13,12 +13,16 @@ export class PrototypeAddController {
     localLibrary: IMinemeldPrototypeLibrary;
     prototype: string;
 
+    availableTags: string[] = [];
+
     name: string;
     class: string;
     description: string;
     nodeType: string;
     developmentStatus: string;
     config: string;
+    indicatorTypes: string[];
+    tags: string[];
 
     saving: boolean = false;
 
@@ -26,6 +30,18 @@ export class PrototypeAddController {
         'miner',
         'processor',
         'output'
+    ];
+
+    availableITypes: string[] = [
+        'md5',
+        'sha256',
+        'sha1',
+        'ssdeep',
+        'URL',
+        'domain',
+        'IPv4',
+        'IPv6',
+        'any'
     ];
 
     availableDevelopmentStatuses: string[] = [
@@ -66,6 +82,9 @@ export class PrototypeAddController {
             this.nodeType = result.nodeType;
             this.developmentStatus = result.developmentStatus;
             this.config = result.config;
+            this.indicatorTypes = result.indicatorTypes;
+            this.tags = result.tags;
+            this.availableTags = angular.copy(result.tags);
         }, (error: any) => {
             toastr.error('ERROR RETRIEVING PROTOTYPE ' + this.prototype + ': ' + error.statusText);
         });
@@ -80,6 +99,12 @@ export class PrototypeAddController {
         angular.element('.ace_text-input').on('blur', (event: any) => {
             angular.element(event.currentTarget.parentNode).removeClass('ace-focus');
         });
+    }
+
+    itypesSelected(): void {
+        if (this.indicatorTypes.indexOf('any') !== -1) {
+            this.indicatorTypes = ['any'];
+        }
     }
 
     valid(): boolean {
@@ -137,6 +162,14 @@ export class PrototypeAddController {
 
         if (this.nodeType) {
             optionalParams.nodeType = this.nodeType;
+        }
+
+        if (this.indicatorTypes) {
+            optionalParams.indicatorTypes = this.indicatorTypes;
+        }
+
+        if (this.tags) {
+            optionalParams.tags = this.tags;
         }
 
         this.saving = true;

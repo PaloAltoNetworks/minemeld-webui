@@ -58,6 +58,7 @@ export class ConfigureExportController {
             oconfig[currentNode.name] = angular.copy(currentNode.properties);
 
             delete oconfig[currentNode.name]['node_type'];
+            delete oconfig[currentNode.name]['indicator_types'];
 
             if (typeof oconfig[currentNode.name].inputs !== 'undefined' && !(oconfig[currentNode.name].inputs instanceof Array)) {
                 delete oconfig[currentNode.name]['inputs'];
