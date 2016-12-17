@@ -39,7 +39,7 @@ export interface ISubscriptionsCallbacks {
     onerror?: Function;
 }
 
-declare var pfEventSource: IEventSource;
+declare var EventSource: IEventSource;
 
 export class MinemeldEventsService implements IMinemeldEventsService {
     authorizationSet: boolean = false;
@@ -107,7 +107,7 @@ export class MinemeldEventsService implements IMinemeldEventsService {
     }
 
     private onMessage(subtype: string, event: string, e: any) {
-        if ((e.data === 'ok') || (e.data === 'ko')) {
+        if ((e.data === 'ok') || (e.data === 'ko') || (e.data == 'ping')) {
             return;
         }
         angular.forEach(this.subscriptions, (sub: ISubscription) => {
@@ -190,7 +190,7 @@ export class MinemeldEventsService implements IMinemeldEventsService {
         headers['Cache-Control'] = 'no-cache';
         headers['X-Requested-With'] = 'XMLHttpRequest';
 
-        new_es = new pfEventSource('/status/events/' + ruri, {
+        new_es = new EventSource('/status/events/' + ruri, {
             getArgs: null
         });
 

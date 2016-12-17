@@ -144,8 +144,20 @@ export class ConfigAddController {
     valid(): boolean {
         var namere = /^[a-zA-Z0-9_\-]+$/;
         var ci: IInputNode;
+        var existcheck: boolean = false;
 
         if (this.name.length === 0) {
+            return false;
+        }
+
+        this.configNodes.forEach((x: IInputNode) => {
+            if (x.name == this.name) {
+                existcheck = true;
+            }
+        });
+        if (existcheck) {
+            angular.element('#nodename').addClass('has-error');
+
             return false;
         }
 
