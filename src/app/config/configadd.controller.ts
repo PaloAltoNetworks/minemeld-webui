@@ -150,6 +150,9 @@ export class ConfigAddController {
             return false;
         }
 
+        if (typeof(this.configNodes) === 'undefined') {
+            return false;
+        }
         this.configNodes.forEach((x: IInputNode) => {
             if (x.name == this.name) {
                 existcheck = true;

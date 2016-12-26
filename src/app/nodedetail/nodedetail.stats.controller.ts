@@ -140,7 +140,7 @@ export class NodeDetailStatsController {
             nmetrics[m] = [cm];
         }
         vm.metrics = nmetrics;
-        vm.metrics_names = Object.keys(nmetrics);
+        vm.updateMetricsNames();
 
         if (!vm.$scope.$$phase) {
             vm.$scope.$digest();
@@ -174,6 +174,15 @@ export class NodeDetailStatsController {
         }
     }
 
+    private updateMetricsNames() {
+        this.metrics_names = Object.keys(this.metrics);
+        angular.forEach(Object.keys(this.nodeState.statistics), (key: string) => {
+            if (this.metrics_names.indexOf(key) === -1) {
+                this.metrics_names.push(key);
+            }
+        });
+    }
+
     private updateNodeMetrics() {
         var vm: any = this;
 
@@ -199,6 +208,7 @@ export class NodeDetailStatsController {
     private updateMinemeldStatus() {
         this.mmstatus.getStatus().then((currentStatus: IMinemeldStatus) => {
             this.nodeState = <INGMinemeldStatusNode>currentStatus[this.nodename];
+            this.updateMetricsNames();
             this.nodeState.indicators = this.nodeState.length;
         });
     }

@@ -59,8 +59,12 @@
                     <td>{{ nodedetailstats.nodeState.statistics[name] || 0 }}</td>
                     <td>
                         <div class="nodedetail-nvd3-container">
-                            <nvd3 class="nodedetail-metric-chart" api="nodedetailstats.chartApi[name]" options="nodedetailstats.chartOptions"
+                            <nvd3 ng-if="nodedetailstats.metrics[name]" class="nodedetail-metric-chart"
+                                api="nodedetailstats.chartApi[name]" options="nodedetailstats.chartOptions"
                                 data="nodedetailstats.metrics[name]"></nvd3>
+                            <div ng-if="!nodedetailstats.metrics[name]">
+                                <i>No history yet</i>
+                            </div>
                         </div>
                     </td>
                 </tr>

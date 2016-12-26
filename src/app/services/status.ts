@@ -210,6 +210,10 @@ export class MinemeldStatusService implements IMinemeldStatusService {
             return;
         }
 
+        if (e.source[0] === '<') {
+            return;
+        }
+
         if (e.timestamp < this.statusUpdated) {
             console.log('old message, ignored');
             return;
