@@ -2,7 +2,7 @@
 
 import { IMineMeldAPIService } from './minemeldapi';
 
-export interface IMinemeldConfigInfo {
+export interface IMinemeldCandidateConfigInfo {
     fabric: boolean;
     mgmtbus: boolean;
     next_node_id: number;
@@ -10,18 +10,31 @@ export interface IMinemeldConfigInfo {
     changed: boolean;
 }
 
-export interface IMinemeldConfigNode {
+export interface IMinemeldCandidateConfigNode {
     name: string;
     properties: any;
     version: string;
     deleted?: boolean;
 }
 
+export interface IMinemeldConfigNode {
+    prototype?: string;
+    inputs?: string[];
+    output?: boolean;
+    config?: Object;
+}
+
+export interface IMinemeldConfig {
+    nodes: { [id: string]: IMinemeldConfigNode };
+}
+
 export interface IMinemeldConfigService {
-    configInfo: IMinemeldConfigInfo;
-    nodesConfig: IMinemeldConfigNode[];
+    configInfo: IMinemeldCandidateConfigInfo;
+    nodesConfig: IMinemeldCandidateConfigNode[];
     changed: boolean;
 
+    runningConfig(): angular.IPromise<IMinemeldConfig>;
+    committedConfig(): angular.IPromise<IMinemeldConfig>;
     refresh(): angular.IPromise<any>;
     reload(config?: string): angular.IPromise<any>;
     saveNodeConfig(noden: number): angular.IPromise<any>;
@@ -40,15 +53,15 @@ interface IMinemeldConfigResource extends angular.resource.IResourceClass<angula
 }
 
 export class MinemeldConfigService implements IMinemeldConfigService {
-    deletedNode: IMinemeldConfigNode = {
+    deletedNode: IMinemeldCandidateConfigNode = {
         'name': '',
         'properties': {},
         'deleted': true,
         'version': ''
     };
 
-    configInfo: IMinemeldConfigInfo;
-    nodesConfig: IMinemeldConfigNode[];
+    configInfo: IMinemeldCandidateConfigInfo;
+    nodesConfig: IMinemeldCandidateConfigNode[];
     changed: boolean;
 
     $state: angular.ui.IStateService;
@@ -66,6 +79,34 @@ export class MinemeldConfigService implements IMinemeldConfigService {
         this.MineMeldAPIService.onLogout(this.emptyCache.bind(this));
     }
 
+    runningConfig(): angular.IPromise<IMinemeldConfig> {
+        var r: angular.resource.IResourceClass<angular.resource.IResource<any>>;
+
+        r = this.MineMeldAPIService.getAPIResource('/config/running', {}, {
+            get: {
+                method: 'GET'
+            }
+        });
+
+        return r.get().$promise.then((result: any) => {
+            return result.result;
+        });
+    }
+
+    committedConfig(): angular.IPromise<IMinemeldConfig> {
+        var r: angular.resource.IResourceClass<angular.resource.IResource<any>>;
+
+        r = this.MineMeldAPIService.getAPIResource('/config/committed', {}, {
+            get: {
+                method: 'GET'
+            }
+        });
+
+        return r.get().$promise.then((result: any) => {
+            return result.result;
+        });
+    }
+
     refresh() {
         var r: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
@@ -76,9 +117,9 @@ export class MinemeldConfigService implements IMinemeldConfigService {
         });
 
         return r.get().$promise.then((result: any) => {
-            var nodesConfig: IMinemeldConfigNode[];
+            var nodesConfig: IMinemeldCandidateConfigNode[];
 
-            nodesConfig = result.result.nodes.map((x: IMinemeldConfigNode) => {
+            nodesConfig = result.result.nodes.map((x: IMinemeldCandidateConfigNode) => {
                 if (x === null) {
                     return this.deletedNode;
                 }
@@ -147,7 +188,7 @@ export class MinemeldConfigService implements IMinemeldConfigService {
 
     addNode(name: string, properties: any): angular.IPromise<any> {
         var r: IMinemeldConfigResource;
-        var config: IMinemeldConfigNode;
+        var config: IMinemeldCandidateConfigNode;
 
         config = {
             name: name,

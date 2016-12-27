@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldConfigService, IMinemeldConfigNode } from  '../../app/services/config';
+import { IMinemeldConfigService, IMinemeldCandidateConfigNode } from  '../../app/services/config';
 
 declare var jsyaml: any;
 
@@ -51,7 +51,7 @@ export class ConfigureExportController {
     private dumpYaml(): void {
         var oconfig: any = {};
 
-        this.MinemeldConfigService.nodesConfig.forEach((currentNode: IMinemeldConfigNode) => {
+        this.MinemeldConfigService.nodesConfig.forEach((currentNode: IMinemeldCandidateConfigNode) => {
             if (currentNode.deleted) {
                 return;
             }
