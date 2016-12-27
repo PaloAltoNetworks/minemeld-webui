@@ -35,6 +35,7 @@ export interface IMinemeldPrototypeService {
     getPrototypeYaml(prototypename: string): angular.IPromise<any>;
     setPrototypeYaml(prototypename: string, pclass: string, config: string,
                      optionalParams?: IMinemeldPrototypeMetadata): angular.IPromise<any>;
+    deletePrototype(prototypename: string): angular.IPromise<any>;
     invalidateCache(): void;
 }
 
@@ -171,6 +172,26 @@ export class MinemeldPrototypeService implements IMinemeldPrototypeService {
         prototype.config = config;
 
         return prototypeYaml.post({}, JSON.stringify(prototype)).$promise.then((result: any) => {
+            if ('result' in result) {
+                return result.result;
+            }
+
+            return {};
+        });
+    }
+
+    public deletePrototype(prototypename: string): angular.IPromise<any> {
+        var apiResource: any;
+
+        apiResource = this.MineMeldAPIService.getAPIResource('/prototype/:prototypename', {
+            prototypename: prototypename
+        }, {
+            delete: {
+                method: 'DELETE'
+            }
+        }, false);
+
+        return apiResource.delete({}).$promise.then((result: any) => {
             if ('result' in result) {
                 return result.result;
             }

@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldConfigService, IMinemeldConfigNode } from  '../../app/services/config';
+import { IMinemeldConfigService, IMinemeldCandidateConfigNode } from  '../../app/services/config';
 import { IMinemeldPrototypeService, IMinemeldPrototypeLibrary } from '../../app/services/prototype';
 import { IConfirmService } from '../../app/services/confirm';
 
@@ -301,7 +301,7 @@ export class ConfigureImportController {
         var numRow: number;
         var duplicate: boolean = false;
         var annotations: ConfigAnnotations = new ConfigAnnotations();
-        var node: IMinemeldConfigNode;
+        var node: IMinemeldCandidateConfigNode;
 
         this.progressMax = Object.keys(this.pconfig.nodes).length;
         this.progressValue = 0;
@@ -370,7 +370,7 @@ export class ConfigureImportController {
     }
 
     private deleteAllNodes(): angular.IPromise<any> {
-        return this.MinemeldConfigService.nodesConfig.reduce((prevPromise: angular.IPromise<any>, currentNode: IMinemeldConfigNode, currentIndex: number) => {
+        return this.MinemeldConfigService.nodesConfig.reduce((prevPromise: angular.IPromise<any>, currentNode: IMinemeldCandidateConfigNode, currentIndex: number) => {
             this.progressValue += 1;
 
             if (currentNode.deleted) {

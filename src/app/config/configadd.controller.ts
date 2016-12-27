@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldConfigService, IMinemeldConfigNode } from  '../../app/services/config';
+import { IMinemeldConfigService, IMinemeldCandidateConfigNode } from  '../../app/services/config';
 import { IMinemeldPrototypeService } from '../../app/services/prototype';
 
 interface IPrototypesDescription {
@@ -311,18 +311,18 @@ export class ConfigAddController {
     }
 
     private decorateConfigNodes(): angular.IPromise<any> {
-        var t: IMinemeldConfigNode[];
+        var t: IMinemeldCandidateConfigNode[];
         var p: angular.IPromise<any>[] = [];
 
         t = this.MinemeldConfigService.nodesConfig
-            .filter((x: IMinemeldConfigNode) => {
+            .filter((x: IMinemeldCandidateConfigNode) => {
                 if (x.deleted) {
                     return false;
                 }
                 return true;
             });
 
-        angular.forEach(t, (nc: IMinemeldConfigNode) => {
+        angular.forEach(t, (nc: IMinemeldCandidateConfigNode) => {
             if (typeof nc.properties.prototype === 'undefined') {
                 p.push(this.$q((resolve: angular.IQResolveReject<any>) => {
                     resolve({
