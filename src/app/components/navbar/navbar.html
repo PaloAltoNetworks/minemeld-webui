@@ -25,7 +25,7 @@
         </li>
         <li>
           <a ui-sref="system">
-            <span tooltip-popup-delay="100" tooltip="engine is {{ vm.engineStatename|lowercase }}" tooltip-placement="bottom">
+            <span tooltip-popup-delay="100" tooltip="engine: {{ vm.engineStatename|lowercase }}" tooltip-placement="bottom">
               <span class="glyphicon navbar-system-icon-{{ vm.engineStateIcon }}"></span> SYSTEM
               <div ng-if="vm.engineStateIcon == 'stopped'" class="pull-right navbar-system-badge-stopped"></div>
             </span>

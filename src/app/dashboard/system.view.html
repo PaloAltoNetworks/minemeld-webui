@@ -22,6 +22,7 @@
       <div class="col-xs-5 text-center dashboard-main-statistic">
         <h3 ng-switch="vm.supervisor.processes['minemeld-engine']['statename']">
           <span class="label label-success" ng-switch-when="RUNNING">{{ vm.supervisor.processes['minemeld-engine']['statename'] }}</span>
+          <span class="label label-success" ng-switch-when="STARTING">{{ vm.supervisor.processes['minemeld-engine']['statename'] }}</span>
           <span class="label label-danger" ng-switch-when="STOPPED">{{ vm.supervisor.processes['minemeld-engine']['statename'] }}</span>
           <span class="label label-danger" ng-switch-when="STOPPING">{{ vm.supervisor.processes['minemeld-engine']['statename'] }}</span>
           <span class="label label-default" ng-switch-default>{{ vm.supervisor.processes['minemeld-engine']['statename'] }}</span>
@@ -31,6 +32,16 @@
       <div class="col-xs-5 text-center dashboard-main-statistic">
         <h2 class="m-b-xs" ng-bind="(vm.supervisor.processes['minemeld-engine']['children'])||N/A"></h2>
         <small># of chassis</small>
+      </div>
+      <div class="system-button-bar">
+        <a tooltip-popup-delay="500" tooltip="download engine logs" type="button"
+                class="btn btn-system-action btn-xs" href="/logs/minemeld-engine.log">
+            <span class="glyphicon glyphicon-list"></span> LOGS
+        </a>
+        <button tooltip-popup-delay="500" tooltip="restart the engine" type="button"
+                class="btn btn-system-action btn-xs" ng-click="vm.engineRestart()">
+            <span class="glyphicon glyphicon-refresh"></span> RESTART
+        </button>
       </div>
     </div>
   </div>
@@ -42,6 +53,12 @@
       <div class="col-xs-10 text-center dashboard-main-statistic">
         <h2 class="m-b-xs" ng-bind="(vm.supervisor.processes['minemeld-web']['children'])||N/A"></h2>
         <small># of API processes</small>
+      </div>
+      <div class="system-button-bar">
+        <a tooltip-popup-delay="500" tooltip="download API logs" type="button"
+                class="btn btn-system-action btn-xs" href="/logs/minemeld-web.log">
+            <span class="glyphicon glyphicon-list"></span> LOGS
+        </a>
       </div>
     </div>
   </div>
