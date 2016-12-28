@@ -210,7 +210,8 @@ export class MinemeldStatusService implements IMinemeldStatusService {
             return;
         }
 
-        if (e.source[0] === '<') {
+        if (e.source === '<minemeld-engine>') {
+            this.$rootScope.$broadcast('mm-inner-engine-status-changed', e.status);
             return;
         }
 

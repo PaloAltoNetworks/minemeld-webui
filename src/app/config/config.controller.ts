@@ -4,6 +4,7 @@ import { IMinemeldConfigService, IMinemeldCandidateConfigInfo, IMinemeldCandidat
 import { IConfirmService } from '../../app/services/confirm';
 import { IMinemeldPrototypeService } from '../../app/services/prototype';
 import { IMinemeldSupervisorService } from '../../app/services/supervisor';
+import { IMineMeldEngineStatusService, IMineMeldEngineStatus } from '../../app/services/enginestatus';
 
 declare var he: any;
 
@@ -19,6 +20,7 @@ export class ConfigController {
     MinemeldConfigService: IMinemeldConfigService;
     MinemeldPrototypeService: IMinemeldPrototypeService;
     MinemeldSupervisorService: IMinemeldSupervisorService;
+    MineMeldEngineStatusService: IMineMeldEngineStatusService;
     ConfirmService: IConfirmService;
 
     expertMode: boolean = false;
@@ -39,6 +41,7 @@ export class ConfigController {
                 MinemeldConfigService: IMinemeldConfigService,
                 MinemeldSupervisorService: IMinemeldSupervisorService,
                 MinemeldPrototypeService: IMinemeldPrototypeService,
+                MineMeldEngineStatusService: IMineMeldEngineStatusService,
                 $state: angular.ui.IStateService, $q: angular.IQService,
                 $modal: angular.ui.bootstrap.IModalService,
                 ConfirmService: IConfirmService) {
@@ -53,6 +56,7 @@ export class ConfigController {
         this.MinemeldConfigService = MinemeldConfigService;
         this.MinemeldPrototypeService = MinemeldPrototypeService;
         this.MinemeldSupervisorService = MinemeldSupervisorService;
+        this.MineMeldEngineStatusService = MineMeldEngineStatusService;
         this.ConfirmService = ConfirmService;
 
         this.setupNodesTable();
@@ -192,9 +196,38 @@ export class ConfigController {
     }
 
     commit() {
+        this.inCommit = true;
+        this.MineMeldEngineStatusService.getStatus().then((result: IMineMeldEngineStatus) => {
+            if (result.statename == 'STARTING' || result.statename == 'STOPPING') {
+                this.toastr.error('COMMIT CANCELLED: ENIGNE IS ' + result.statename);
+                this.inCommit = false;
+                return;
+            }
+
+            this.doCommit();
+        }, (error: any) => {
+            this.inCommit = false;
+        });
+    }
+
+    toggleExpert() {
+        if (this.expertMode) {
+            this.expertMode = false;
+        } else {
+            this.expertMode = true;
+        }
+
+        angular.element('#configTable thead tr th:nth-child(6)').toggle();
+        angular.element('#configTable tbody tr td:nth-child(6)').toggle();
+
+        angular.element('.config-table-miner')
+            .toggleClass('config-table-clickable')
+            .toggleClass('config-table-disabled');
+    }
+
+    private doCommit() {
         var p: angular.IPromise<any>;
 
-        this.inCommit = true;
         p = this.MinemeldConfigService.commit().then((result: any) => {
             this.toastr.success('COMMIT SUCCESSFUL');
             this.dtNodes.reloadData();
@@ -211,21 +244,6 @@ export class ConfigController {
             this.dtNodes.reloadData();
         })
         .finally(() => { this.inCommit = false; });
-    }
-
-    toggleExpert() {
-        if (this.expertMode) {
-            this.expertMode = false;
-        } else {
-            this.expertMode = true;
-        }
-
-        angular.element('#configTable thead tr th:nth-child(6)').toggle();
-        angular.element('#configTable tbody tr td:nth-child(6)').toggle();
-
-        angular.element('.config-table-miner')
-            .toggleClass('config-table-clickable')
-            .toggleClass('config-table-disabled');
     }
 
     private setupNodesTable() {

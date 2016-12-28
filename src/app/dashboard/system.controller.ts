@@ -15,6 +15,8 @@ export class SystemController {
         barColor: '#977390'
     };
 
+    engineStatusSubscription: () => void;
+
     system: any;
     systemUpdateInterval: number = 30000;
     systemUpdatePromise: angular.IPromise<any>;
@@ -26,6 +28,7 @@ export class SystemController {
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
                 MinemeldStatusService: IMinemeldStatusService, $scope: angular.IScope,
+                $rootScope: angular.IRootScopeService,
                 moment: moment.MomentStatic,
                 MinemeldSupervisorService: IMinemeldSupervisorService, $state: angular.ui.IStateService) {
         this.toastr = toastr;
@@ -36,12 +39,20 @@ export class SystemController {
         this.moment = moment;
 
         this.updateSystem();
-        this.updateSupervisor();
+        this.periodicUpdateSupervisor();
 
+        this.engineStatusSubscription = $rootScope.$on(
+            'mm-engine-status-changed',
+            this.updateSupervisor.bind(this)
+        );
         this.$scope.$on('$destroy', this.destroy.bind(this));
     }
 
     private destroy() {
+        if (this.engineStatusSubscription) {
+            this.engineStatusSubscription();
+        }
+
         if (this.systemUpdatePromise) {
             this.$interval.cancel(this.systemUpdatePromise);
         }
@@ -73,10 +84,22 @@ export class SystemController {
         });
     }
 
-    private updateSupervisor(): void {
+    private periodicUpdateSupervisor(): void {
         var vm: SystemController = this;
 
-        vm.MinemeldSupervisorService.getStatus()
+        vm.updateSupervisor().finally(function() {
+            vm.supervisorUpdatePromise = vm.$interval(
+                vm.periodicUpdateSupervisor.bind(vm),
+                vm.supervisorUpdateInterval,
+                1
+            );
+        });
+    }
+
+    private updateSupervisor(): angular.IPromise<any> {
+        var vm: SystemController = this;
+
+        return vm.MinemeldSupervisorService.getStatus()
         .then(
             function(result: any) {
                 var p: string;
@@ -94,13 +117,6 @@ export class SystemController {
                     vm.toastr.error('ERROR RETRIEVING SUPERVISOR STATUS: ' + error.statusText);
                 }
             }
-        )
-        .finally(function() {
-            vm.supervisorUpdatePromise = vm.$interval(
-                vm.updateSupervisor.bind(vm),
-                vm.supervisorUpdateInterval,
-                1
-            );
-        });
+        );
     }
 }

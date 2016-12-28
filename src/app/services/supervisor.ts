@@ -3,7 +3,7 @@
 import { IMineMeldAPIService } from './minemeldapi';
 
 export interface IMinemeldSupervisorService {
-    getStatus(): angular.IPromise<any>;
+    getStatus(cancellable?: boolean): angular.IPromise<any>;
     startEngine(): angular.IPromise<any>;
     stopEngine(): angular.IPromise<any>;
     restartEngine(): angular.IPromise<any>;
@@ -20,14 +20,18 @@ export class MinemeldSupervisorService implements IMinemeldSupervisorService {
         this.MineMeldAPIService = MineMeldAPIService;
     }
 
-    public getStatus(): angular.IPromise<any> {
+    public getStatus(cancellable?: boolean): angular.IPromise<any> {
         var system: angular.resource.IResourceClass<angular.resource.IResource<any>>;
+
+        if (typeof cancellable === 'undefined') {
+            cancellable = true;
+        }
 
         system = this.MineMeldAPIService.getAPIResource('/supervisor', {}, {
             get: {
                 method: 'GET'
             }
-        });
+        }, cancellable);
 
         return system.get().$promise.then((result: any) => {
             if ('result' in result) {
