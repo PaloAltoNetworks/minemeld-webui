@@ -1,0 +1,54 @@
+.navbar-system-icon-running {
+    @extend .glyphicon-hdd;
+}
+
+.navbar-system-icon-starting {
+    @extend .glyphicon-hdd;
+    -webkit-animation: navbar-fade 1000ms infinite linear;
+    animation: navbar-fade 1000ms infinite linear;
+}
+
+.navbar-system-icon-stopping {
+    @extend .glyphicon-remove;
+    -webkit-animation: navbar-fade 1000ms infinite linear;
+    animation: navbar-fade 1000ms infinite linear;
+}
+
+.navbar-system-icon-stopped {
+    @extend .glyphicon-remove;
+}
+
+.navbar-system-badge-stopped {
+    display: inline-block;
+    position: relative;
+    left: -($font-size-base/10)*4;
+    height: ($font-size-base/10)*7;
+    width: ($font-size-base/10)*7;
+    border-radius: 50%;
+    background-color: $brand-danger;
+    -webkit-animation: navbar-fade 1000ms infinite linear;
+    animation: navbar-fade 1000ms infinite linear;
+}
+
+@-webkit-keyframes navbar-fade {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+@keyframes navbar-fade {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}

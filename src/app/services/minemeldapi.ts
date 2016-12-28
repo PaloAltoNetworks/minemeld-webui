@@ -149,15 +149,15 @@ export class MineMeldAPIService implements IMineMeldAPIService {
     public logOut(): angular.IPromise<any> {
         var logoutResource: IMineMeldAPIResourceLogOut;
 
-        this.setLoggedIn(false);
-
         logoutResource = <IMineMeldAPIResourceLogOut>this.$resource('/logout', {}, {
             get: {
                 method: 'GET'
             }
         });
 
-        return logoutResource.get().$promise;
+        return logoutResource.get().$promise.finally(() => {
+            this.setLoggedIn(false);
+        });
     }
 
     public isLoggedIn(): boolean {
@@ -192,6 +192,7 @@ export class MineMeldAPIService implements IMineMeldAPIService {
             this.$rootScope.$emit('mm-login');
         } else {
             this.$cookies.remove('mm-ec-login');
+            this.$cookies.remove('mm-session');
             this.$rootScope.$emit('mm-logout');
         }
     }

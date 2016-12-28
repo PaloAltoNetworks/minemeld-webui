@@ -23,7 +23,6 @@ import { AdminUsersController } from './admin/admin.users.controller';
 import { AdminFUsersController } from './admin/admin.fusers.controller';
 import { IndicatorAddController } from './indicatoradd/indicatoradd.controller';
 import { LogsController } from './logs/logs.controller';
-import { appNavbar } from '../app/components/navbar/navbar.directive';
 import { LoginController } from './login/login.controller';
 import { MineMeldAPIService } from './services/minemeldapi';
 import { MinemeldStatusService } from './services/status';
@@ -38,7 +37,9 @@ import { MinemeldEventsService } from './services/events';
 import { MinemeldTracedService } from './services/traced';
 import { ThrottleService } from './services/throttle';
 import { MinemeldAAAService } from './services/aaa';
+import { MineMeldEngineStatusService } from './services/enginestatus';
 import { megaNumber } from './filters/megaNumber';
+import { appNavbar } from '../app/components/navbar/navbar.directive';
 import { minemeldOptions } from '../app/components/options/options.directive';
 import { nodeConfig } from '../app/components/nodeconfig/nodeconfig.directive';
 import { prototypeTooltip } from'../app/components/prototypetooltip/prototypetooltip.directive';
@@ -108,6 +109,7 @@ module minemeldWebui {
   .service('MinemeldTracedService', MinemeldTracedService)
   .service('MinemeldAAAService', MinemeldAAAService)
   .service('ThrottleService', ThrottleService)
+  .service('MineMeldEngineStatusService', MineMeldEngineStatusService)
   .filter('megaNumber', megaNumber)
   .run(minemeldInit)
   ;

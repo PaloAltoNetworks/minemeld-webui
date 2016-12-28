@@ -24,7 +24,12 @@
           <a ui-sref="admin.users"><span class="glyphicon glyphicon-user"></span> ADMIN</a>
         </li>
         <li>
-          <a ui-sref="system"><span class="glyphicon glyphicon-hdd"></span> SYSTEM</a>
+          <a ui-sref="system">
+            <span tooltip-popup-delay="100" tooltip="engine is {{ vm.engineStatename|lowercase }}" tooltip-placement="bottom">
+              <span class="glyphicon navbar-system-icon-{{ vm.engineStateIcon }}"></span> SYSTEM
+              <div ng-if="vm.engineStateIcon == 'stopped'" class="pull-right navbar-system-badge-stopped"></div>
+            </span>
+          </a>
         </li>
         <li>
           <a title="logout" href="#" ng-click="vm.logout()"><span class="glyphicon glyphicon-log-out"></span></a>
