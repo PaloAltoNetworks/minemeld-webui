@@ -199,7 +199,7 @@ export class ConfigController {
         this.inCommit = true;
         this.MineMeldEngineStatusService.getStatus().then((result: IMineMeldEngineStatus) => {
             if (result.statename == 'STARTING' || result.statename == 'STOPPING') {
-                this.toastr.error('COMMIT CANCELLED: ENIGNE IS ' + result.statename);
+                this.toastr.error('COMMIT CANCELLED: ENGINE IS ' + result.statename);
                 this.inCommit = false;
                 return;
             }
