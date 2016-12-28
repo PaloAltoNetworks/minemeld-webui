@@ -166,3 +166,15 @@
 .dashboard-indicators-chart .nv-series-0 > .nv-area {
     fill: url(#pattern-indicators);
 }
+
+.system-button-bar {
+    padding-right: ($grid-gutter-width / 2)+2px;
+    position: absolute;
+    right: 0;
+}
+
+.btn-system-action {
+    @include button-variant(darken(#fff, 80%), #fff, #fff);
+    margin-left: 5px;
+    margin-top: 2px;
+}

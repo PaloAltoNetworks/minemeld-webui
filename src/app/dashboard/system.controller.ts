@@ -2,10 +2,12 @@
 
 import { IMinemeldStatusService } from  '../../app/services/status';
 import { IMinemeldSupervisorService } from '../../app/services/supervisor';
+import { IConfirmService } from '../../app/services/confirm';
 
 export class SystemController {
     mmstatus: IMinemeldStatusService;
     MinemeldSupervisorService: IMinemeldSupervisorService;
+    ConfirmService: IConfirmService;
     toastr: any;
     $interval: angular.IIntervalService;
     $scope: angular.IScope;
@@ -28,12 +30,14 @@ export class SystemController {
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
                 MinemeldStatusService: IMinemeldStatusService, $scope: angular.IScope,
+                ConfirmService: IConfirmService,
                 $rootScope: angular.IRootScopeService,
                 moment: moment.MomentStatic,
                 MinemeldSupervisorService: IMinemeldSupervisorService, $state: angular.ui.IStateService) {
         this.toastr = toastr;
         this.mmstatus = MinemeldStatusService;
         this.MinemeldSupervisorService = MinemeldSupervisorService;
+        this.ConfirmService = ConfirmService;
         this.$interval = $interval;
         this.$scope = $scope;
         this.moment = moment;
@@ -46,6 +50,22 @@ export class SystemController {
             this.updateSupervisor.bind(this)
         );
         this.$scope.$on('$destroy', this.destroy.bind(this));
+    }
+
+    engineRestart() {
+        this.ConfirmService.show(
+            'RESTART ENGINE',
+            'Are you sure you want to restart the MineMeld engine ?'
+        ).then((result: any) => {
+            this.MinemeldSupervisorService.restartEngine().then((result: any) => {
+                this.toastr.success('ENGINE RESTART INITIATED');
+            }, (error: any) => {
+                this.toastr.error('ERROR INITIATING ENGINE RESTART: '+error.data.error.message);
+            });
+        });
+    }
+
+    downloadLogs() {
     }
 
     private destroy() {

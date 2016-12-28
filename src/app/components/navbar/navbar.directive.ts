@@ -106,13 +106,13 @@ export class NavbarController {
     }
 
     if (this.engineStatename === 'RUNNING' || this.engineStatename === 'STARTING') {
-      this.lastToast = this.toastr.success('ENGINE IS ' + this.engineStatename);
+      this.lastToast = this.toastr.success('ENGINE STATUS: ' + this.engineStatename);
       return;
     }
     if (this.engineStatename === 'STOPPING') {
-      this.lastToast = this.toastr.warning('ENGINE IS ' + this.engineStatename);
+      this.lastToast = this.toastr.warning('ENGINE STATUS: ' + this.engineStatename);
       return;
     }
-    this.lastToast = this.toastr.error('ENGINE IS ' + this.engineStatename);
+    this.lastToast = this.toastr.error('ENGINE STATUS: ' + this.engineStatename);
   }
 }
