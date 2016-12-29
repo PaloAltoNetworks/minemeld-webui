@@ -66,14 +66,16 @@ export class NavbarController {
     this.MineMeldEngineStatusService.getStatus().then((result: IMineMeldEngineStatus) => {
       if (result.statename != this.engineStatename) {
         this.$timeout(() => {
-          var firstStatus: boolean;
+          var firstStatus, newStatus: boolean;
 
           firstStatus = (typeof this.engineStatename === 'undefined');
+          newStatus = (this.engineStatename != result.statename);
+
           this.engineStatename = result.statename;
 
           this.updateEngineStateIcon();
 
-          if (!firstStatus || (this.engineStatename !== 'RUNNING')) {
+          if ((firstStatus && (this.engineStatename !== 'RUNNING')) || (!firstStatus && newStatus)) {
             this.showNotification();
           }
         });
@@ -100,7 +102,8 @@ export class NavbarController {
   }
 
   private showNotification(): void {
-    if (this.lastToast && this.lastToast.isOpened) {
+    if (this.lastToast) {
+      (<JQuery>this.lastToast.el).hide();
       this.lastToast.scope.close(true);
       this.lastToast = undefined;
     }
