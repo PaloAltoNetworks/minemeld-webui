@@ -68,7 +68,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr ng-if="nodedetailstats.metrics_names.length <= 1">
+                <tr ng-if="nodedetailstats.metrics_names.length == 0 || ((nodedetailstats.metrics_names.length == 1) && (nodedetailstats.metrics_names[0] == 'indicators'))">
                     <td colspan="4"><i>No metrics yet</i></td>
                 </tr>
             </tbody>
