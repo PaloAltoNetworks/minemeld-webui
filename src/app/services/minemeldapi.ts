@@ -66,6 +66,18 @@ export class MineMeldAPIService implements IMineMeldAPIService {
         angular.forEach(actions, (action: angular.resource.IActionDescriptor, actionName: string) => {
             action.cancellable = true;
             action.timeout = 45000;
+
+            if (typeof action.headers === 'undefined') {
+                action.headers = {};
+            }
+            action.headers['If-Modified-Since'] = 'Mon, 26 Jul 1997 05:00:00 GMT';
+            action.headers['Cache-Control'] = 'no-cache';
+            action.headers['Pragma'] = 'no-cache';
+
+            if (typeof action.params === 'undefined') {
+                action.params = {};
+            }
+            action.params['_'] = (): string => { return ''+Math.floor(Date.now() / 1000); };
         });
 
         result = <IMineMeldAPIResource>this.$resource(url, paramDefaults, actions);
