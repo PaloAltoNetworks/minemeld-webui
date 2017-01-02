@@ -13,6 +13,7 @@ export interface IMinemeldPrototypeLibrary {
 export interface IMinemeldPrototypeMetadata {
     description?: string;
     nodeType?: string;
+    node_type?: string;  // XXX this should disappear
     indicatorTypes?: string[];
     tags?: string[];
     developmentStatus?: string;
@@ -61,8 +62,12 @@ export class MinemeldPrototypeService implements IMinemeldPrototypeService {
         this.MineMeldAPIService.onLogout(this.emptyCache.bind(this));
     }
 
-    public getPrototypeLibraries(): angular.IPromise<any> {
+    public getPrototypeLibraries(cancellable?: boolean): angular.IPromise<any> {
         var defer: any;
+
+        if (typeof cancellable === 'undefined') {
+            cancellable = true;
+        }
 
         if (this.prototypesDict) {
             defer = this.$q.defer();
@@ -70,7 +75,7 @@ export class MinemeldPrototypeService implements IMinemeldPrototypeService {
             return defer.promise;
         }
 
-        return this.getPrototypes().then((result: any) => {
+        return this.getPrototypes(cancellable).then((result: any) => {
             return this.prototypesDict;
         });
     }

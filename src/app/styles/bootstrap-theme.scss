@@ -157,6 +157,11 @@ div.main-container {
     fill-opacity: .8;
 }
 
+.mw-sankey-node-unknown circle {
+    fill: $gray-light;
+    fill-opacity: .8;
+}
+
 .mw-sankey-node .node-overlay {
     fill: white;
     fill-opacity: 0;

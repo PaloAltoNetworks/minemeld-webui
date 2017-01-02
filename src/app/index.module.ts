@@ -38,6 +38,7 @@ import { MinemeldTracedService } from './services/traced';
 import { ThrottleService } from './services/throttle';
 import { MinemeldAAAService } from './services/aaa';
 import { MineMeldEngineStatusService } from './services/enginestatus';
+import { MineMeldRunningConfigStatusService } from './services/runningconfigstatus';
 import { megaNumber } from './filters/megaNumber';
 import { appNavbar } from '../app/components/navbar/navbar.directive';
 import { minemeldOptions } from '../app/components/options/options.directive';
@@ -110,6 +111,7 @@ module minemeldWebui {
   .service('MinemeldAAAService', MinemeldAAAService)
   .service('ThrottleService', ThrottleService)
   .service('MineMeldEngineStatusService', MineMeldEngineStatusService)
+  .service('MineMeldRunningConfigStatusService', MineMeldRunningConfigStatusService)
   .filter('megaNumber', megaNumber)
   .run(minemeldInit)
   ;
