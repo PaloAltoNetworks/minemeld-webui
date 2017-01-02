@@ -23,6 +23,8 @@ export interface IMinemeldStatusNode {
     inputs: string[];
     output: boolean;
     state: number;
+    sub_state?: string;
+    sub_state_message?: string;
     statistics: {
         [key: string]: number;
     };

@@ -33,7 +33,7 @@ export interface IMinemeldConfigService {
     nodesConfig: IMinemeldCandidateConfigNode[];
     changed: boolean;
 
-    runningConfig(): angular.IPromise<IMinemeldConfig>;
+    runningConfig(cancellable?: boolean): angular.IPromise<IMinemeldConfig>;
     committedConfig(): angular.IPromise<IMinemeldConfig>;
     refresh(): angular.IPromise<any>;
     reload(config?: string): angular.IPromise<any>;
@@ -79,14 +79,18 @@ export class MinemeldConfigService implements IMinemeldConfigService {
         this.MineMeldAPIService.onLogout(this.emptyCache.bind(this));
     }
 
-    runningConfig(): angular.IPromise<IMinemeldConfig> {
+    runningConfig(cancellable?: boolean): angular.IPromise<IMinemeldConfig> {
         var r: angular.resource.IResourceClass<angular.resource.IResource<any>>;
+
+        if (typeof cancellable === 'undefined') {
+            cancellable = true;
+        }
 
         r = this.MineMeldAPIService.getAPIResource('/config/running', {}, {
             get: {
                 method: 'GET'
             }
-        });
+        }, cancellable);
 
         return r.get().$promise.then((result: any) => {
             return result.result;
