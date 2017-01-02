@@ -35,6 +35,7 @@ export interface IMinemeldConfigService {
 
     runningConfig(cancellable?: boolean): angular.IPromise<IMinemeldConfig>;
     committedConfig(): angular.IPromise<IMinemeldConfig>;
+    candidateConfig(): angular.IPromise<IMinemeldCandidateConfigNode[]>;
     refresh(): angular.IPromise<any>;
     reload(config?: string): angular.IPromise<any>;
     saveNodeConfig(noden: number): angular.IPromise<any>;
@@ -109,6 +110,14 @@ export class MinemeldConfigService implements IMinemeldConfigService {
         return r.get().$promise.then((result: any) => {
             return result.result;
         });
+    }
+
+    candidateConfig(): angular.IPromise<IMinemeldCandidateConfigNode[]> {
+        if (this.nodesConfig) {
+            return this.$q.when(this.nodesConfig);
+        }
+
+        return this.refresh();
     }
 
     refresh() {

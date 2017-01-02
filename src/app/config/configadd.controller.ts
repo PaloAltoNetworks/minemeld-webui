@@ -114,9 +114,9 @@ export class ConfigAddController {
                 }
             }
         }).then((result: any) => {
-            return this.MinemeldConfigService.refresh();
-        }).then((result: any) => {
-            return this.decorateConfigNodes();
+            return this.MinemeldConfigService.candidateConfig();
+        }).then((cconfig: IMinemeldCandidateConfigNode[]) => {
+            return this.decorateConfigNodes(cconfig);
         }).then((result: any) => {
             this.configNodes = result;
             this.loadAvailableInputs();
@@ -310,12 +310,11 @@ export class ConfigAddController {
         this.availableInputs = result;
     }
 
-    private decorateConfigNodes(): angular.IPromise<any> {
+    private decorateConfigNodes(cconfig: IMinemeldCandidateConfigNode[]): angular.IPromise<any> {
         var t: IMinemeldCandidateConfigNode[];
         var p: angular.IPromise<any>[] = [];
 
-        t = this.MinemeldConfigService.nodesConfig
-            .filter((x: IMinemeldCandidateConfigNode) => {
+        t = cconfig.filter((x: IMinemeldCandidateConfigNode) => {
                 if (x.deleted) {
                     return false;
                 }
