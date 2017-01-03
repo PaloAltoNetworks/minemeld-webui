@@ -29,6 +29,8 @@
               <span class="glyphicon navbar-system-icon-{{ vm.engineStateIcon }}"></span> SYSTEM
               <div ng-if="vm.engineStateIcon == 'stopped'" class="pull-right navbar-system-badge-stopped"></div>
             </span>
+            <div ng-if="vm.engineStateIcon == 'stopping'" class="navbar-system-bar-stopping"></div>
+            <div ng-if="vm.engineStateIcon == 'starting'" class="navbar-system-bar-starting"></div>
           </a>
         </li>
         <li>
