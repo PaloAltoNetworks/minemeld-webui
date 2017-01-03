@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMineMeldAPIService } from './minemeldapi';
+import { IMineMeldAPIService, IMineMeldAPIResource } from './minemeldapi';
 import { IMinemeldEventsService } from './events';
 
 export interface IMinemeldStatusService {
@@ -12,6 +12,7 @@ export interface IMinemeldStatusService {
     getMinemeld(): angular.IPromise<any>;
     getConfig(): angular.IPromise<any>;
     hup(nodename: string): angular.IPromise<any>;
+    signal(nodename: string, signal: string, params?: any): angular.IPromise<string>;
     initStatusMonitor(): void;
     destroyStatusMonitor(): void;
 }
@@ -32,6 +33,10 @@ export interface IMinemeldStatusNode {
 
 export interface IMinemeldStatus {
     [key: string]: IMinemeldStatusNode;
+}
+
+interface IStatusAPIResource extends IMineMeldAPIResource {
+    post(params: Object, data: Object): angular.resource.IResource<any>;
 }
 
 export class MinemeldStatusService implements IMinemeldStatusService {
@@ -199,6 +204,28 @@ export class MinemeldStatusService implements IMinemeldStatusService {
             }
 
             return new Array();
+        });
+    }
+
+    public signal(nodename: string, signal: string, params?: any): angular.IPromise<string> {
+        var result: IStatusAPIResource;
+        var params: any = {
+            nodename: nodename,
+            signal: signal
+        };
+
+        result = <IStatusAPIResource>this.MineMeldAPIService.getAPIResource('/status/:nodename/signal/:signal', {}, {
+            post: {
+                method: 'POST'
+            }
+        }, false);
+
+        return result.post(params, JSON.stringify(params)).$promise.then((result: any) => {
+            if ('result' in result) {
+                return result.result;
+            }
+
+            return 'ok';
         });
     }
 

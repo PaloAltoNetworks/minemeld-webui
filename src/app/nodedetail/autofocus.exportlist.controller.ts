@@ -5,6 +5,7 @@ import { IMinemeldConfigService } from '../../app/services/config';
 import { NodeDetailInfoController } from './nodedetail.info.controller';
 import { IMinemeldStatusService } from  '../../app/services/status';
 import { IThrottleService } from '../../app/services/throttle';
+import { IConfirmService } from '../../app/services/confirm';
 
 /** @ngInject */
 function autofocusExportListConfig($stateProvider: ng.ui.IStateProvider) {
@@ -43,6 +44,7 @@ function autofocusELRegisterClass(NodeDetailResolver: INodeDetailResolverService
 
 class NodeDetailAutofocusELInfoController extends NodeDetailInfoController {
     MinemeldConfigService: IMinemeldConfigService;
+    ConfirmService: IConfirmService;
     api_key: string;
     label: string;
     $modal: angular.ui.bootstrap.IModalService;
@@ -55,8 +57,10 @@ class NodeDetailAutofocusELInfoController extends NodeDetailInfoController {
         $stateParams: angular.ui.IStateParamsService, MinemeldConfigService: IMinemeldConfigService,
         $modal: angular.ui.bootstrap.IModalService,
         $rootScope: angular.IRootScopeService,
-        ThrottleService: IThrottleService) {
+        ThrottleService: IThrottleService,
+        ConfirmService: IConfirmService) {
         this.MinemeldConfigService = MinemeldConfigService;
+        this.ConfirmService = ConfirmService;
         this.$modal = $modal;
 
         super(
@@ -67,9 +71,26 @@ class NodeDetailAutofocusELInfoController extends NodeDetailInfoController {
         this.loadSideConfig();
     }
 
+    flush(): void {
+        this.ConfirmService.show(
+            'FLUSH INDICATORS',
+            'Are you sure you want to flush indicators of ' + this.nodename + ' ?'
+        ).then((result: any) => {
+            this.mmstatus.signal(this.nodename, 'flush').then((result: string) => {
+                this.toastr.success('FLUSH SCHEDULED. THIS MAY TAKE A WHILE');
+            }, (error: any) => {
+                this.toastr.error('ERROR SCHEDULING FLUSH: '+error.statusText);
+            });
+        });
+    }
+
     loadSideConfig(): void {
         this.MinemeldConfigService.getDataFile(this.nodename + '_side_config')
         .then((result: any) => {
+            if (!result) {
+                return;
+            }
+
             if (result.api_key) {
                 this.api_key = result.api_key;
             } else {
@@ -90,18 +111,23 @@ class NodeDetailAutofocusELInfoController extends NodeDetailInfoController {
 
     saveSideConfig(): angular.IPromise<any> {
         var side_config: any = {};
+        var hupnode: string = this.nodename;
 
         if (this.api_key) {
             side_config.api_key = this.api_key;
+        } else {
+            hupnode = undefined;
         }
         if (this.label) {
             side_config.label = this.label;
+        } else {
+            hupnode = undefined;
         }
 
         return this.MinemeldConfigService.saveDataFile(
             this.nodename + '_side_config',
             side_config,
-            this.nodename
+            hupnode
         );
     }
 
@@ -120,12 +146,11 @@ class NodeDetailAutofocusELInfoController extends NodeDetailInfoController {
         mi.result.then((result: any) => {
             this.api_key = result.api_key;
 
-            return this.saveSideConfig();
-        })
-        .then((result: any) => {
-            this.toastr.success('API KEY SET');
-        }, (error: any) => {
-            this.toastr.error('ERROR SETTING API KEY: ' + error.status);
+            return this.saveSideConfig().then((result: any) => {
+                this.toastr.success('API KEY SET');
+            }, (error: any) => {
+                this.toastr.error('ERROR SETTING API KEY: ' + error.status);
+            });
         });
     }
 
@@ -147,12 +172,11 @@ class NodeDetailAutofocusELInfoController extends NodeDetailInfoController {
         mi.result.then((result: any) => {
             this.label = result.label;
 
-            return this.saveSideConfig();
-        })
-        .then((result: any) => {
-            this.toastr.success('LABEL SET');
-        }, (error: any) => {
-            this.toastr.error('ERROR SETTING LABEL: ' + error.status);
+            return this.saveSideConfig().then((result: any) => {
+                this.toastr.success('LABEL SET');
+            }, (error: any) => {
+                this.toastr.error('ERROR SETTING LABEL: ' + error.status);
+            });
         });
     }
 }
