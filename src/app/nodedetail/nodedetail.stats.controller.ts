@@ -174,7 +174,7 @@ export class NodeDetailStatsController {
         }
     }
 
-    private updateMetricsNames() {
+    protected updateMetricsNames() {
         this.metrics_names = Object.keys(this.metrics);
         angular.forEach(Object.keys(this.nodeState.statistics), (key: string) => {
             if (this.metrics_names.indexOf(key) === -1) {

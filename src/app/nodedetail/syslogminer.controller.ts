@@ -6,9 +6,28 @@ import { IConfirmService } from '../../app/services/confirm';
 import { IMinemeldValidateService } from '../../app/services/validate';
 import { IMinemeldStatusService, IMinemeldStatusNode, IMinemeldStatus } from '../../app/services/status';
 import { IThrottled, IThrottleService } from '../../app/services/throttle';
+import { NodeDetailStatsController } from './nodedetail.stats.controller';
 
 declare var he: any;
 declare var jsyaml: any;
+
+class SyslogMinerStatsController extends NodeDetailStatsController {
+    protected updateMetricsNames() {
+        this.metrics_names = Object.keys(this.metrics);
+        angular.forEach(Object.keys(this.nodeState.statistics), (key: string) => {
+            if (this.metrics_names.indexOf(key) === -1) {
+                this.metrics_names.push(key);
+            }
+        });
+        this.metrics_names = this.metrics_names.filter((metric: string) => {
+            if (metric.indexOf('rule.') === 0) {
+                return false;
+            }
+
+            return true;
+        });
+    }
+}
 
 class SyslogMinerRulesController {
     MinemeldConfigService: IMinemeldConfigService;
@@ -166,7 +185,7 @@ class SyslogMinerRulesController {
         var ns: IMinemeldStatusNode;
 
         this.MinemeldStatusService.getStatus().then((currentStatus: IMinemeldStatus) => {
-            ns = this.MinemeldStatusService.currentStatus[this.nodename];
+            ns = currentStatus[this.nodename];
             angular.forEach(ns.statistics, (value: number, key: any) => {
                 var metric: string;
 
@@ -457,6 +476,11 @@ function syslogMinerRouterConfig($stateProvider: ng.ui.IStateProvider) {
             controller: SyslogMinerRulesController,
             controllerAs: 'vm'
         })
+        .state('nodedetail.syslogminerstats', {
+            templateUrl: 'app/nodedetail/view.stats.html',
+            controller: SyslogMinerStatsController,
+            controllerAs: 'nodedetailstats'
+        })
         ;
 }
 
@@ -472,7 +496,7 @@ function syslogMinerRegisterClass(NodeDetailResolver: INodeDetailResolverService
         {
             icon: 'fa fa-area-chart',
             tooltip: 'STATS',
-            state: 'nodedetail.stats',
+            state: 'nodedetail.syslogminerstats',
             active: false
         },
         {
