@@ -25,7 +25,8 @@
     "he": "~0.5.0",
     "angular-ui-ace": "bower",
     "eventsource-polyfill": "^0.9.7",
-    "js-yaml": "^3.6.1"
+    "js-yaml": "^3.6.1",
+    "angular-file-upload": "^2.4.1"
   },
   "devDependencies": {
     "angular-mocks": "~1.5.8"

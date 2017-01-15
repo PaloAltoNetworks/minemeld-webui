@@ -1,0 +1,21 @@
+<div class="modal-header">
+    <h1 class="modal-title">UPLOAD EXTENSION</h1>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <form class="config-add-form form-horizontal m-t-xs">
+            <div class="form-group">
+                <label class="col-xs-4 control-label">EXTENSION FILE</label>
+                <div class="col-xs-6" style="padding-top: 7px">
+                    <input ng-disabled="vm.uploader.isUploading" type="file" nv-file-select="" uploader="vm.uploader">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal-footer">
+    <button ng-disabled="vm.uploader.queue.length == 0 || vm.uploader.isUploading"
+            class="btn btn-primary btn-sm" type="button"
+            ng-click="vm.uploader.uploadAll()">{{vm.uploader.isUploading ? 'UPLOADING' : 'UPLOAD'}}</button>
+    <button ng-disabled="vm.uploader.isUploading" class="btn btn-primary btn-sm" type="button" ng-click="vm.cancel()">CANCEL</button>
+</div>
