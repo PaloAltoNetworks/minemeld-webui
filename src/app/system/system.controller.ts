@@ -5,6 +5,16 @@ import { IMinemeldSupervisorService } from '../../app/services/supervisor';
 import { IConfirmService } from '../../app/services/confirm';
 
 export class SystemController {
+    $state: angular.ui.IStateService;
+    tabs: boolean[] = [true, false];
+
+    /* @ngInject */
+    constructor($state: angular.ui.IStateService) {
+        this.$state = $state;
+    }
+}
+
+export class SystemDashboardController {
     mmstatus: IMinemeldStatusService;
     MinemeldSupervisorService: IMinemeldSupervisorService;
     ConfirmService: IConfirmService;
@@ -42,6 +52,8 @@ export class SystemController {
         this.$scope = $scope;
         this.moment = moment;
 
+        (<any>this.$scope.$parent).vm.tabs = [true, false];
+
         this.updateSystem();
         this.periodicUpdateSupervisor();
 
@@ -65,7 +77,17 @@ export class SystemController {
         });
     }
 
-    downloadLogs() {
+    apiRestart() {
+        this.ConfirmService.show(
+            'RESTART API SERVICE',
+            'Are you sure you want to restart the MineMeld API service ?'
+        ).then((result: any) => {
+            this.MinemeldSupervisorService.hupAPI().then((result: any) => {
+                this.toastr.success('API SERVICE RESTART INITIATED');
+            }, (error: any) => {
+                this.toastr.error('ERROR INITIATING API RESTART: '+error.data.error.message);
+            });
+        });
     }
 
     private destroy() {
@@ -82,7 +104,7 @@ export class SystemController {
     }
 
     private updateSystem(): void {
-        var vm: SystemController = this;
+        var vm: SystemDashboardController = this;
 
         vm.mmstatus.getSystem()
         .then(
@@ -105,7 +127,7 @@ export class SystemController {
     }
 
     private periodicUpdateSupervisor(): void {
-        var vm: SystemController = this;
+        var vm: SystemDashboardController = this;
 
         vm.updateSupervisor().finally(function() {
             vm.supervisorUpdatePromise = vm.$interval(
@@ -117,7 +139,7 @@ export class SystemController {
     }
 
     private updateSupervisor(): angular.IPromise<any> {
-        var vm: SystemController = this;
+        var vm: SystemDashboardController = this;
 
         return vm.MinemeldSupervisorService.getStatus()
         .then(

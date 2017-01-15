@@ -1,5 +1,5 @@
 <!-- supervisor -->
-<div class="row dashboard-row">
+<div class="row dashboard-row system-first-row">
   <div class="col-sm-3 col-md-3">
     <div class="row dashboard-row-system">
       <div class="dashboard-label dashboard-label-system">
@@ -59,6 +59,10 @@
                 class="btn btn-system-action btn-xs" href="/logs/minemeld-web.log">
             <span class="glyphicon glyphicon-download-alt"></span> LOGS
         </a>
+        <button tooltip-popup-delay="500" tooltip="restart the api" type="button"
+                class="btn btn-system-action btn-xs" ng-click="vm.apiRestart()">
+            <span class="glyphicon glyphicon-refresh"></span> RESTART
+        </button>
       </div>
     </div>
   </div>

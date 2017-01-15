@@ -207,7 +207,7 @@ export class MinemeldStatusService implements IMinemeldStatusService {
         });
     }
 
-    public signal(nodename: string, signal: string, params?: any): angular.IPromise<string> {
+    public signal(nodename: string, signal: string, data?: any): angular.IPromise<string> {
         var result: IStatusAPIResource;
         var params: any = {
             nodename: nodename,
@@ -220,7 +220,7 @@ export class MinemeldStatusService implements IMinemeldStatusService {
             }
         }, false);
 
-        return result.post(params, JSON.stringify(params)).$promise.then((result: any) => {
+        return result.post(params, JSON.stringify(data)).$promise.then((result: any) => {
             if ('result' in result) {
                 return result.result;
             }

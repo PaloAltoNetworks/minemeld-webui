@@ -1,12 +1,13 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMineMeldAPIService } from './minemeldapi';
+import { IMineMeldAPIService, IMineMeldAPIResource } from './minemeldapi';
 
 export interface IMinemeldSupervisorService {
     getStatus(cancellable?: boolean): angular.IPromise<any>;
     startEngine(): angular.IPromise<any>;
     stopEngine(): angular.IPromise<any>;
     restartEngine(): angular.IPromise<any>;
+    hupAPI(): angular.IPromise<any>;
 }
 
 export class MinemeldSupervisorService implements IMinemeldSupervisorService {
@@ -93,6 +94,24 @@ export class MinemeldSupervisorService implements IMinemeldSupervisorService {
             }
 
             return new Array();
+        });
+    }
+
+    public hupAPI(): angular.IPromise<any> {
+        var api: IMineMeldAPIResource;
+
+        api = this.MineMeldAPIService.getAPIResource('/supervisor/minemeld-web/hup', {}, {
+            get: {
+                method: 'GET'
+            }
+        }, false);
+
+        return api.get().$promise.then((result: any) => {
+            if (result.result) {
+                return result.result;
+            }
+
+            return undefined;
         });
     }
 }

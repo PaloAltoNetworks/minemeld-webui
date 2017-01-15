@@ -1,0 +1,62 @@
+.extensions-name {
+    white-space: nowrap;
+    max-width: 300px;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+}
+
+.extensions-author {
+    color: darken($body-bg, 30%);
+    font-size: 9px;
+    font-weight: bold;
+}
+
+.system-first-row {
+    margin-top: ceil(($grid-gutter-width / 2));
+}
+
+.extensions-disabled {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc1JyBoZWlnaHQ9JzUnPgogIDxyZWN0IHdpZHRoPSc1JyBoZWlnaHQ9JzUnIGZpbGw9J3doaXRlJyBmaWxsLW9wYWNpdHk9IjAuMCIvPgogIDxwYXRoIGQ9J00wIDVMNSAwWk02IDRMNCA2Wk0tMSAxTDEgLTFaJyBzdHJva2U9JyNkZGQnIHN0cm9rZS13aWR0aD0nMScvPgo8L3N2Zz4K");
+    background-repeat: repeat;
+}
+
+.extensions-disabled:not(.config-table-clickable) {
+    cursor: default !important;
+}
+
+.extensions-running-job-icon {
+  width: 14px;
+  height: 14px;
+
+  border:  solid 2px transparent;
+  border-top-color:  darken($body-bg, 80%);
+  border-left-color: darken($body-bg, 80%);
+  border-radius: 50%;
+
+  -webkit-animation: extensions-spinner 400ms linear infinite;
+  -moz-animation:    extensions-spinner 400ms linear infinite;
+  -ms-animation:     extensions-spinner 400ms linear infinite;
+  -o-animation:      extensions-spinner 400ms linear infinite;
+  animation:         extensions-spinner 400ms linear infinite;
+}
+
+@-webkit-keyframes extensions-spinner {
+  0%   { -webkit-transform: rotate(0deg);   transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+}
+@-moz-keyframes extensions-spinner {
+  0%   { -moz-transform: rotate(0deg);   transform: rotate(0deg); }
+  100% { -moz-transform: rotate(360deg); transform: rotate(360deg); }
+}
+@-o-keyframes extensions-spinner {
+  0%   { -o-transform: rotate(0deg);   transform: rotate(0deg); }
+  100% { -o-transform: rotate(360deg); transform: rotate(360deg); }
+}
+@-ms-keyframes extensions-spinner {
+  0%   { -ms-transform: rotate(0deg);   transform: rotate(0deg); }
+  100% { -ms-transform: rotate(360deg); transform: rotate(360deg); }
+}
+@keyframes extensions-spinner {
+  0%   { transform: rotate(0deg);   transform: rotate(0deg); }
+  100% { transform: rotate(360deg); transform: rotate(360deg); }
+}

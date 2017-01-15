@@ -1,0 +1,47 @@
+<div class="modal-header">
+    <h1 class="modal-title">INSTALL EXTENSION FROM GIT</h1>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <form class="config-add-form form-horizontal m-t-xs">
+            <div class="form-group" id="fgEndpoint">
+                <label class="col-xs-4 control-label">REPOSITORY URL</label>
+                <div class="col-xs-6">
+                    <input ng-disabled="vm.retrieving" type="text"
+                           class="form-control" placeholder="(Should end with .git)"
+                           ng-change="vm.urlChanged()"
+                           ng-model="vm.endpoint">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <form class="config-add-form form-horizontal m-t-xs">
+            <div class="form-group">
+                <label class="col-xs-4 control-label">VERSION</label>
+                <div class="col-xs-6">
+                    <button ng-if="!vm.availableReferences"
+                            ng-disabled="!vm.endpoint || vm.retrieving || vm.invalidUrl"
+                            class="btn btn-primary btn-sm" type="button" ng-click="vm.retrieveRefs()">
+                        RETRIEVE
+                    </button>
+                    <ui-select ng-if="vm.availableReferences" ng-disabled="vm.retrieving" ng-model="vm.ref" theme="bootstrap">
+                        <ui-select-match placeholder="Select reference...">{{$select.selected}}</ui-select-match>
+                        <ui-select-choices repeat="ref as ref in vm.availableReferences | filter: $select.search">
+                            <div>
+                                <span ng-bind-html="ref | highlight: $select.search"></span>
+                            </div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal-footer">
+    <div ng-if="vm.retrieving" style="float: left; width: 70%;">
+        <progressbar style="margin-top: 5px; margin-bottom: 0px;" max="vm.progressMax" value="vm.progressValue" type="success"></progressbar>
+    </div>
+    <button ng-disabled="!vm.valid() || vm.retrieving" class="btn btn-primary btn-sm" type="button" ng-click="vm.install()">INSTALL</button>
+    <button ng-disabled="vm.retrieving" class="btn btn-primary btn-sm" type="button" ng-click="vm.cancel()">CANCEL</button>
+</div>
