@@ -43,6 +43,7 @@ import { MinemeldAAAService } from './services/aaa';
 import { MineMeldEngineStatusService } from './services/enginestatus';
 import { MineMeldRunningConfigStatusService } from './services/runningconfigstatus';
 import { MineMeldJobsService } from './services/jobs';
+import { MineMeldCurrentUserService } from './services/currentuser';
 import { megaNumber } from './filters/megaNumber';
 import { appNavbar } from '../app/components/navbar/navbar.directive';
 import { minemeldOptions } from '../app/components/options/options.directive';
@@ -121,6 +122,7 @@ module minemeldWebui {
   .service('MineMeldRunningConfigStatusService', MineMeldRunningConfigStatusService)
   .service('MineMeldExtensionsService', MineMeldExtensionsService)
   .service('MineMeldJobsService', MineMeldJobsService)
+  .service('MineMeldCurrentUserService', MineMeldCurrentUserService)
   .filter('megaNumber', megaNumber)
   .run(minemeldInit)
   ;

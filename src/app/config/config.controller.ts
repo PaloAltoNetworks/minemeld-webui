@@ -5,6 +5,7 @@ import { IConfirmService } from '../../app/services/confirm';
 import { IMinemeldPrototypeService } from '../../app/services/prototype';
 import { IMinemeldSupervisorService } from '../../app/services/supervisor';
 import { IMineMeldEngineStatusService, IMineMeldEngineStatus } from '../../app/services/enginestatus';
+import { IMineMeldCurrentUserService } from '../services/currentuser';
 
 declare var he: any;
 
@@ -21,6 +22,7 @@ export class ConfigController {
     MinemeldPrototypeService: IMinemeldPrototypeService;
     MinemeldSupervisorService: IMinemeldSupervisorService;
     MineMeldEngineStatusService: IMineMeldEngineStatusService;
+    MineMeldCurrentUserService: IMineMeldCurrentUserService;
     ConfirmService: IConfirmService;
 
     expertMode: boolean = false;
@@ -42,6 +44,7 @@ export class ConfigController {
                 MinemeldSupervisorService: IMinemeldSupervisorService,
                 MinemeldPrototypeService: IMinemeldPrototypeService,
                 MineMeldEngineStatusService: IMineMeldEngineStatusService,
+                MineMeldCurrentUserService: IMineMeldCurrentUserService,
                 $state: angular.ui.IStateService, $q: angular.IQService,
                 $modal: angular.ui.bootstrap.IModalService,
                 ConfirmService: IConfirmService) {
@@ -57,6 +60,7 @@ export class ConfigController {
         this.MinemeldPrototypeService = MinemeldPrototypeService;
         this.MinemeldSupervisorService = MinemeldSupervisorService;
         this.MineMeldEngineStatusService = MineMeldEngineStatusService;
+        this.MineMeldCurrentUserService = MineMeldCurrentUserService;
         this.ConfirmService = ConfirmService;
 
         this.setupNodesTable();

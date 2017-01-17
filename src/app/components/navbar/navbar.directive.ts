@@ -2,6 +2,7 @@
 
 import { IMineMeldAPIService } from '../../services/minemeldapi';
 import { IMineMeldEngineStatusService, IMineMeldEngineStatus } from '../../services/enginestatus';
+import { IMineMeldCurrentUserService } from '../../services/currentuser';
 
 /** @ngInject */
 export function appNavbar(): ng.IDirective {
@@ -23,10 +24,13 @@ export function appNavbar(): ng.IDirective {
 export class NavbarController {
   MineMeldAPIService: IMineMeldAPIService;
   MineMeldEngineStatusService: IMineMeldEngineStatusService;
+  MineMeldCurrentUserService: IMineMeldCurrentUserService;
   $state: angular.ui.IStateService;
   $timeout: angular.ITimeoutService;
   $rootScope: angular.IRootScopeService;
   toastr: any;
+
+  read_write: boolean = false;
 
   engineStatusChangeSubscription: () => void;
   lastToast: any;
@@ -42,16 +46,24 @@ export class NavbarController {
 
   constructor(MineMeldAPIService: IMineMeldAPIService,
               MineMeldEngineStatusService: IMineMeldEngineStatusService,
+              MineMeldCurrentUserService: IMineMeldCurrentUserService,
               $timeout: angular.ITimeoutService,
               $rootScope: angular.IRootScopeService,
               toastr: any,
               $state: angular.ui.IStateService) {
     this.MineMeldAPIService = MineMeldAPIService;
     this.MineMeldEngineStatusService = MineMeldEngineStatusService;
+    this.MineMeldCurrentUserService = MineMeldCurrentUserService;
     this.$rootScope = $rootScope;
     this.$state = $state;
     this.$timeout = $timeout;
     this.toastr = toastr;
+
+    this.MineMeldAPIService.onLogin(this.initReadWrite.bind(this));
+    this.MineMeldAPIService.onLogout(this.destroyReadWrite.bind(this));
+    if (this.MineMeldAPIService.isLoggedIn()) {
+        this.initReadWrite();
+    }
 
     this.updateEngineStatus();
   }
@@ -117,5 +129,16 @@ export class NavbarController {
       return;
     }
     this.lastToast = this.toastr.error('ENGINE STATUS: ' + this.engineStatename);
+  }
+
+  private initReadWrite() {
+    this.MineMeldCurrentUserService.getReadWrite().then((result: boolean) => {
+      this.read_write = result;
+      console.log('read write', result);
+    });
+  }
+
+  private destroyReadWrite() {
+    this.read_write = false;
   }
 }

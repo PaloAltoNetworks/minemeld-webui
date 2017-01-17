@@ -4,6 +4,7 @@ import { IMinemeldStatusService, IMinemeldStatus, IMinemeldStatusNode } from  '.
 import { IThrottleService, IThrottled } from '../../app/services/throttle';
 import { IMineMeldRunningConfigStatusService, IMineMeldRunningConfigStatus, IMinemeldResolvedConfigNode } from '../../app/services/runningconfigstatus';
 import { IMinemeldPrototypeService } from '../../app/services/prototype';
+import { IMineMeldCurrentUserService } from '../services/currentuser';
 
 declare var he: any;
 
@@ -16,6 +17,7 @@ export class NodesController {
     mmstatus: IMinemeldStatusService;
     MineMeldRunningConfigStatusService: IMineMeldRunningConfigStatusService;
     MinemeldPrototypeService: IMinemeldPrototypeService;
+    MineMeldCurrentUserService: IMineMeldCurrentUserService;
     toastr: any;
     $interval: angular.IIntervalService;
     $scope: angular.IScope;
@@ -39,6 +41,7 @@ export class NodesController {
         MinemeldStatusService: IMinemeldStatusService,
         MineMeldRunningConfigStatusService: IMineMeldRunningConfigStatusService,
         MinemeldPrototypeService: IMinemeldPrototypeService,
+        MineMeldCurrentUserService: IMineMeldCurrentUserService,
         $scope: angular.IScope,
         DTOptionsBuilder: any,
         DTColumnBuilder: any,
@@ -52,6 +55,7 @@ export class NodesController {
         this.mmstatus = MinemeldStatusService;
         this.MineMeldRunningConfigStatusService = MineMeldRunningConfigStatusService;
         this.MinemeldPrototypeService = MinemeldPrototypeService;
+        this.MineMeldCurrentUserService = MineMeldCurrentUserService;
         this.$interval = $interval;
         this.$scope = $scope;
         this.DTColumnBuilder = DTColumnBuilder;
