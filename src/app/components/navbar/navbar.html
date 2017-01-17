@@ -20,7 +20,7 @@
         <li>
           <a ui-sref="logs"><span class="glyphicon glyphicon-list"></span> LOGS</a>
         </li>
-        <li>
+        <li ng-if="vm.read_write">
           <a ui-sref="admin.users"><span class="glyphicon glyphicon-user"></span> ADMIN</a>
         </li>
         <li>

@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMineMeldAPIService } from './minemeldapi';
+import { IMineMeldAPIService, IMineMeldAPIResource } from './minemeldapi';
 
 export interface IMinemeldAAAUserAttributes {
     comment?: string;
@@ -25,7 +25,13 @@ export interface IMinemeldAAAFeeds {
     };
 }
 
+export interface IMinemeldCurrentUser {
+    id: string;
+    read_write: boolean;
+}
+
 export interface IMinemeldAAAService {
+    getCurrentUser(): angular.IPromise<IMinemeldCurrentUser>;
     getUsers(subsystem: string): angular.IPromise<IMinemeldAAAUsers>;
     setUserPassword(subsystem: string, username: string, password: string): angular.IPromise<any>;
     setUserAttributes(subsystem: string, username: string, attributes: IMinemeldAAAUserAttributes): angular.IPromise<any>;
@@ -54,6 +60,21 @@ export class MinemeldAAAService implements IMinemeldAAAService {
         this.$state = $state;
         this.$q = $q;
         this.MineMeldAPIService = MineMeldAPIService;
+    }
+
+    getCurrentUser(): angular.IPromise<IMinemeldCurrentUser> {
+        var api: IMineMeldAPIResource;
+
+        api = <IMineMeldAPIResource>(this.MineMeldAPIService.getAPIResource('/aaa/users/current', {},
+        {
+            get: {
+                method: 'GET'
+            }
+        }, false));
+
+        return api.get().$promise.then((result: any) => {
+            return result.result;
+        });
     }
 
     getUsers(subsystem: string): angular.IPromise<IMinemeldAAAUsers> {

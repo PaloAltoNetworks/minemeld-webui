@@ -72,7 +72,14 @@ export class SystemDashboardController {
             this.MinemeldSupervisorService.restartEngine().then((result: any) => {
                 this.toastr.success('ENGINE RESTART INITIATED');
             }, (error: any) => {
-                this.toastr.error('ERROR INITIATING ENGINE RESTART: '+error.data.error.message);
+                var detail: string;
+
+                detail = error.statusText;
+                if (error.status == 400) {
+                    detail = error.data.error.message;
+                }
+
+                this.toastr.error('ERROR INITIATING ENGINE RESTART: ' + detail);
             });
         });
     }
@@ -85,7 +92,14 @@ export class SystemDashboardController {
             this.MinemeldSupervisorService.hupAPI().then((result: any) => {
                 this.toastr.success('API SERVICE RESTART INITIATED');
             }, (error: any) => {
-                this.toastr.error('ERROR INITIATING API RESTART: '+error.data.error.message);
+                var detail: string;
+
+                detail = error.statusText;
+                if (error.status == 400) {
+                    detail = error.data.error.message;
+                }
+
+                this.toastr.error('ERROR INITIATING API RESTART: ' + detail);
             });
         });
     }
