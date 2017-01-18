@@ -2,6 +2,8 @@
 
 import { IMinemeldStatusService } from  '../../app/services/status';
 import { IMinemeldSupervisorService } from '../../app/services/supervisor';
+import { IMinemeldTracedService } from '../services/traced';
+import { IMineMeldJobsService } from '../services/jobs';
 import { IConfirmService } from '../../app/services/confirm';
 
 export class SystemController {
@@ -17,6 +19,8 @@ export class SystemController {
 export class SystemDashboardController {
     mmstatus: IMinemeldStatusService;
     MinemeldSupervisorService: IMinemeldSupervisorService;
+    MinemeldTracedService: IMinemeldTracedService;
+    MineMeldJobsService: IMineMeldJobsService;
     ConfirmService: IConfirmService;
     toastr: any;
     $interval: angular.IIntervalService;
@@ -37,9 +41,13 @@ export class SystemDashboardController {
     supervisorUpdateInterval: number = 30000;
     supervisorUpdatePromise: angular.IPromise<any>;
 
+    purgingTraces: boolean = false;
+
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
                 MinemeldStatusService: IMinemeldStatusService, $scope: angular.IScope,
+                MinemeldTracedService: IMinemeldTracedService,
+                MineMeldJobsService: IMineMeldJobsService,
                 ConfirmService: IConfirmService,
                 $rootScope: angular.IRootScopeService,
                 moment: moment.MomentStatic,
@@ -47,6 +55,8 @@ export class SystemDashboardController {
         this.toastr = toastr;
         this.mmstatus = MinemeldStatusService;
         this.MinemeldSupervisorService = MinemeldSupervisorService;
+        this.MinemeldTracedService = MinemeldTracedService;
+        this.MineMeldJobsService = MineMeldJobsService;
         this.ConfirmService = ConfirmService;
         this.$interval = $interval;
         this.$scope = $scope;
@@ -100,6 +110,27 @@ export class SystemDashboardController {
                 }
 
                 this.toastr.error('ERROR INITIATING API RESTART: ' + detail);
+            });
+        });
+    }
+
+    purgeTraces() {
+        this.ConfirmService.show(
+            'PURGE LOGS',
+            'Are you sure you want to erase all logs ?'
+        ).then((result: any) => {
+            this.MinemeldTracedService.purgeAll().then((jobid: string) => {
+                this.toastr.success('LOGS REMOVAL SCHEDULED');
+                this.MineMeldJobsService.monitor('traced-purge', jobid);
+            }, (error: any) => {
+                var detail: string;
+
+                detail = error.statusText;
+                if (error.status == 400) {
+                    detail = error.data.error.message;
+                }
+
+                this.toastr.error('ERROR SCHEDULING LOGS REMOVAL: ' + detail);
             });
         });
     }

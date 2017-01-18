@@ -1,5 +1,13 @@
 <!-- supervisor -->
-<div class="row dashboard-row system-first-row">
+<div class="row m-t-xs">
+  <div class="col-sm-12 col-md-12">
+    <button tooltip-popup-delay="500" tooltip="purge logs" type="button"
+            class="config-action btn btn-config-action btn-sm" ng-disabled="vm.purgingTraces" ng-click="vm.purgeTraces()">
+        <span class="glyphicon glyphicon-erase"></span> PURGE LOGS
+    </button>
+  </div>
+</div>
+<div class="row dashboard-row m-t-xs">
   <div class="col-sm-3 col-md-3">
     <div class="row dashboard-row-system">
       <div class="dashboard-label dashboard-label-system">
