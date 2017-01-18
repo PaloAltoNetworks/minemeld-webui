@@ -175,7 +175,15 @@ export class SystemDashboardController {
                     this.generatingBackup = false;
                 });
             }, (error: any) => {
+                var detail: string;
+
                 this.generatingBackup = false;
+                detail = error.statusText;
+                if (error.status == 400) {
+                    detail = error.data.error.message;
+                }
+
+                this.toastr.error('ERROR SCHEDULING BACKUP: ' + detail);
             });
         });
     }
