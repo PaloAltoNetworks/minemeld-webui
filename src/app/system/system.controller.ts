@@ -26,6 +26,7 @@ export class SystemDashboardController {
     $interval: angular.IIntervalService;
     $scope: angular.IScope;
     moment: moment.MomentStatic;
+    $modal: angular.ui.bootstrap.IModalService;
 
     epOptions: any = {
         barColor: '#977390'
@@ -42,12 +43,14 @@ export class SystemDashboardController {
     supervisorUpdatePromise: angular.IPromise<any>;
 
     purgingTraces: boolean = false;
+    generatingBackup: boolean = false;
 
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
                 MinemeldStatusService: IMinemeldStatusService, $scope: angular.IScope,
                 MinemeldTracedService: IMinemeldTracedService,
                 MineMeldJobsService: IMineMeldJobsService,
+                $modal: angular.ui.bootstrap.IModalService,
                 ConfirmService: IConfirmService,
                 $rootScope: angular.IRootScopeService,
                 moment: moment.MomentStatic,
@@ -61,6 +64,7 @@ export class SystemDashboardController {
         this.$interval = $interval;
         this.$scope = $scope;
         this.moment = moment;
+        this.$modal = $modal;
 
         (<any>this.$scope.$parent).vm.tabs = [true, false];
 
@@ -119,18 +123,59 @@ export class SystemDashboardController {
             'PURGE LOGS',
             'Are you sure you want to erase all logs ?'
         ).then((result: any) => {
-            this.MinemeldTracedService.purgeAll().then((jobid: string) => {
+            this.purgingTraces = true;
+            return this.MinemeldTracedService.purgeAll().then((jobid: string) => {
                 this.toastr.success('LOGS REMOVAL SCHEDULED');
-                this.MineMeldJobsService.monitor('traced-purge', jobid);
+                this.MineMeldJobsService.monitor('traced-purge', jobid).finally(() => {
+                    this.purgingTraces = false;
+                });
             }, (error: any) => {
                 var detail: string;
 
+                this.purgingTraces = false;
                 detail = error.statusText;
                 if (error.status == 400) {
                     detail = error.data.error.message;
                 }
 
                 this.toastr.error('ERROR SCHEDULING LOGS REMOVAL: ' + detail);
+            });
+        });
+    }
+
+    generateLocalBackup(): void {
+        var mi: angular.ui.bootstrap.IModalServiceInstance;
+
+        mi = this.$modal.open({
+            templateUrl: 'app/system/backup.sp.modal.html',
+            controller: DashboardSetBackupPasswordController,
+            controllerAs: 'vm',
+            bindToController: true,
+            backdrop: 'static',
+            animation: false
+        });
+
+        mi.result.then((result: { password: string }) => {
+            this.generatingBackup = true;
+            this.mmstatus.generateLocalBackup(result.password).then((jobid: string) => {
+                this.toastr.success('BACKUP SCHEDULED');
+                this.MineMeldJobsService.monitor('status-backup', jobid).then((result: any) => {
+                    this.$modal.open({
+                        templateUrl: 'app/system/backup.download.modal.html',
+                        controller: DashboardDownloadBackupController,
+                        controllerAs: 'vm',
+                        bindToController: true,
+                        backdrop: 'static',
+                        animation: false,
+                        resolve: {
+                            jobid: (): string => { return jobid; }
+                        }
+                    });
+                }).finally(() => {
+                    this.generatingBackup = false;
+                });
+            }, (error: any) => {
+                this.generatingBackup = false;
             });
         });
     }
@@ -207,3 +252,61 @@ export class SystemDashboardController {
         );
     }
 }
+
+class DashboardSetBackupPasswordController {
+    $modalInstance: angular.ui.bootstrap.IModalServiceInstance;
+
+    password: string;
+    password2: string;
+
+    /** @ngInject */
+    constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance) {
+        this.$modalInstance = $modalInstance;
+    }
+
+    valid(): boolean {
+        if (this.password !== this.password2) {
+            angular.element('#fgPassword1').addClass('has-error');
+            angular.element('#fgPassword2').addClass('has-error');
+
+            return false;
+        }
+        angular.element('#fgPassword1').removeClass('has-error');
+        angular.element('#fgPassword2').removeClass('has-error');
+
+        if (!this.password) {
+            return false;
+        }
+
+        return true;
+    }
+
+    save() {
+        var result: any = {};
+
+        result.password = this.password;
+
+        this.$modalInstance.close(result);
+    }
+
+    cancel() {
+        this.$modalInstance.dismiss();
+    }
+};
+
+class DashboardDownloadBackupController {
+    $modalInstance: angular.ui.bootstrap.IModalServiceInstance;
+
+    backup_id: string;
+
+    /** @ngInject */
+    constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance,
+                jobid: string) {
+        this.$modalInstance = $modalInstance;
+        this.backup_id = jobid;
+    }
+
+    ok() {
+        this.$modalInstance.close('ok');
+    }
+};

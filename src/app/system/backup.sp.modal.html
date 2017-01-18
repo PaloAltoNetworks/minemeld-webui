@@ -1,0 +1,25 @@
+<div class="modal-header">
+    <h1 class="modal-title">GENERATE BACKUP</h1>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <form class="config-add-form form-horizontal m-t-xs">
+            <div class="form-group" id="fgPassword1">
+                <label class="col-xs-4 control-label">BACKUP PASSWORD</label>
+                <div class="col-xs-6">
+                    <input type="password" ng-model="vm.password" class="form-control" placeholder="Password for backup">
+                </div>
+            </div>
+            <div class="form-group" id="fgPassword2">
+                <label class="col-xs-4 control-label">REPEAT PASSWORD</label>
+                <div class="col-xs-6">
+                    <input type="password" ng-model="vm.password2" class="form-control" placeholder="Repeat password for backup">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal-footer">
+    <button ng-disabled="!vm.valid()" class="btn btn-primary btn-sm" type="button" ng-click="vm.save()">OK</button>
+    <button class="btn btn-warning btn-sm" type="button" ng-click="vm.cancel()">CANCEL</button>
+</div>
