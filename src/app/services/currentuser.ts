@@ -48,6 +48,10 @@ export class MineMeldCurrentUserService implements IMineMeldCurrentUserService {
             this.currentUser = result;
             this.readWriteDeferred.resolve(this.currentUser.read_write);
         }, (error: any) => {
+            if (error.status == 401) {
+                return;
+            }
+
             this.toastr.error('ERROR RETRIEVING CURRENT USER: ' + error.statusText);
         });
     }

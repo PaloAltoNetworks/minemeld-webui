@@ -248,7 +248,7 @@ export class MinemeldStatusService implements IMinemeldStatusService {
             }
 
             return undefined;
-        });        
+        });
     }
 
     private onEventsMessage(subtype: string, event: string, e: any): void {

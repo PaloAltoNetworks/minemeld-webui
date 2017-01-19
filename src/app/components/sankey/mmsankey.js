@@ -249,6 +249,10 @@ directive('mmSankey', ['$state', function($state) {
                     .on('mouseover', tip.show)
                     .on('mouseout', tip.hide)
                     .on('click', function(d) {
+                        if (d.name == scope.currentFt) {
+                            return;
+                        }
+
                         tip.hide();
                         $state.go('nodedetail.info', { nodename: d.name });
                     });
@@ -282,7 +286,8 @@ directive('mmSankey', ['$state', function($state) {
         strict: 'E',
         link: link_function,
         scope: {
-            fts: '='
+            fts: '=',
+            currentFt: '='
         }
     };
 }])

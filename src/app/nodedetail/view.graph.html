@@ -5,7 +5,7 @@
 </div>
 <div class="row">
     <div class="col-sm-12 col-md-12 d3-container">
-        <mm-sankey fts="vm.nodes" ng-if="vm.nodes.length > 1"></mm-sankey>
+        <mm-sankey fts="vm.nodes" current-ft="vm.nodename" ng-if="vm.nodes.length > 1"></mm-sankey>
         <div ng-if="vm.nodes && !(vm.nodes.length > 1)"><em>No graph. Node is not connected</em></div>
     </div>
 </div>
