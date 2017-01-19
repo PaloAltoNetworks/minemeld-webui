@@ -79,7 +79,7 @@ class NodeDetailAutofocusELInfoController extends NodeDetailInfoController {
             this.mmstatus.signal(this.nodename, 'flush').then((result: string) => {
                 this.toastr.success('FLUSH SCHEDULED. THIS MAY TAKE A WHILE');
             }, (error: any) => {
-                this.toastr.error('ERROR SCHEDULING FLUSH: '+error.statusText);
+                this.toastr.error('ERROR SCHEDULING FLUSH: ' + error.statusText);
             });
         });
     }

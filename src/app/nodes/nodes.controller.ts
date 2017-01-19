@@ -113,7 +113,7 @@ export class NodesController {
 
                         // running config doesn't contain the node (?) => set nodeType to LOADING
                         if (typeof rcnode === 'undefined') {
-                            console.log('no proto '+x.name+' '+rcnode);
+                            console.log('no proto ' + x.name + ' ' + rcnode);
                             nodes.push({
                                 status: x,
                                 nodeType: 'loading'
@@ -187,7 +187,7 @@ export class NodesController {
                 if (full.status.sub_state && full.status.sub_state === 'ERROR') {
                     result = result + ' <span';
                     if (full.status.sub_state_message) {
-                        result = result + ' tooltip="' + he.encode(full.status.sub_state_message, {strict: true}) +'"';
+                        result = result + ' tooltip="' + he.encode(full.status.sub_state_message, {strict: true}) + '"';
                     }
                     result = result + 'class="text-danger glyphicon glyphicon-exclamation-sign"></span>';
                 }
@@ -235,7 +235,7 @@ export class NodesController {
                     return '<span class="label nodes-label-loading"></span>';
                 }
 
-                return ''+full.status.length;
+                return '' + full.status.length;
             }),
             this.DTColumnBuilder.newColumn(null).withTitle('ADD/REM/AO').notSortable().renderWith(function(data: any, type: any, full: INodeStatus) {
                 var stats: string[] = ['<ul>'];

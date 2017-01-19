@@ -101,7 +101,7 @@ export class MinemeldTracedService implements IMinemeldTracedService {
             }
 
             return undefined;
-        });        
+        });
     }
 
     private sendQuery(qid: string, options?: IMinemeldTracedQueryOptions): any {

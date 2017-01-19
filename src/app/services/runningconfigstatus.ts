@@ -139,12 +139,12 @@ export class MineMeldRunningConfigStatusService implements IMineMeldRunningConfi
 
                     this.$rootScope.$broadcast('mm-running-config-changed');
                 }, (error: any) => {
-                    this.toastr.error('ERROR RESOLVING CONFIG PROTOTYPES: '+error.statusText);
+                    this.toastr.error('ERROR RESOLVING CONFIG PROTOTYPES: ' + error.statusText);
 
                     throw error;
                 });
             }, (error: any) => {
-                this.toastr.error('ERROR RETRIEVING PROTOTYPES LIBRARIES: '+error.statusText);
+                this.toastr.error('ERROR RETRIEVING PROTOTYPES LIBRARIES: ' + error.statusText);
 
                 throw error;
             });

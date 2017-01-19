@@ -1,7 +1,7 @@
 /// <reference path="../../../typings/main.d.ts" />
 
 import { INodeDetailResolverService } from '../../app/services/nodedetailresolver';
-import { IMinemeldStatusService, IMinemeldStatusNode } from '../../app/services/status';
+import { IMinemeldStatusNode } from '../../app/services/status';
 import { NodeDetailFeedInfoController } from './feed.controller';
 
 class NodeDetailRedisSetInfoController extends NodeDetailFeedInfoController {

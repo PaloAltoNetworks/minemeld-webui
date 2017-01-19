@@ -77,7 +77,7 @@ export class MineMeldAPIService implements IMineMeldAPIService {
             if (typeof action.params === 'undefined') {
                 action.params = {};
             }
-            action.params['_'] = (): string => { return ''+Math.floor(Date.now() / 1000); };
+            action.params['_'] = (): string => { return '' + Math.floor(Date.now() / 1000); };
         });
 
         result = <IMineMeldAPIResource>this.$resource(url, paramDefaults, actions);

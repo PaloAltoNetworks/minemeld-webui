@@ -1,7 +1,7 @@
 /// <reference path="../../../typings/main.d.ts" />
 
 import { IMineMeldExtensionsService, IMineMeldExtension } from '../services/extensions';
-import { IMineMeldJobsService, IMineMeldJob } from '../services/jobs';
+import { IMineMeldJobsService } from '../services/jobs';
 import { IMinemeldPrototypeService } from '../services/prototype';
 import { IConfirmService } from '../services/confirm';
 
@@ -347,7 +347,7 @@ export class SystemExtensionsController {
 
                 if (full.tags.indexOf('git') !== -1) {
                     r += '<div class="prototypes-author m-t-xs">PATH</div>';
-                    r += '<div class="m-b-xs">' + he.encode(full.path, { strict: true }) + '</div>';                    
+                    r += '<div class="m-b-xs">' + he.encode(full.path, { strict: true }) + '</div>';
                 }
 
                 if (full.tags.length > 0) {
@@ -477,7 +477,7 @@ export class InstallExtensionGitController {
         this.progressValue = 0;
         this.progressPromise = this.$interval(() => {
             this.progressValue = this.progressValue + 1;
-        }, 20000/this.progressMax, this.progressMax);
+        }, 20000 / this.progressMax, this.progressMax);
 
         this.MineMeldExtensionsService.gitRefs(this.endpoint).then((result: string[]) => {
             this.availableReferences = result;
@@ -487,7 +487,7 @@ export class InstallExtensionGitController {
                 return;
             }
 
-            this.toastr.error('ERROR ACCESSING GIT REPO: ' + error.statusText);            
+            this.toastr.error('ERROR ACCESSING GIT REPO: ' + error.statusText);
         }).finally(() => {
             this.retrieving = false;
             this.$interval.cancel(this.progressPromise);
