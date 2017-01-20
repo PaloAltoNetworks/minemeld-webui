@@ -3,7 +3,7 @@
 import { IMinemeldStatusService } from  '../../app/services/status';
 import { IMinemeldSupervisorService } from '../../app/services/supervisor';
 import { IMinemeldTracedService } from '../services/traced';
-import { IMineMeldJobsService } from '../services/jobs';
+import { IMineMeldJobsService, IMineMeldJob } from '../services/jobs';
 import { IConfirmService } from '../../app/services/confirm';
 
 export class SystemController {
@@ -159,7 +159,11 @@ export class SystemDashboardController {
             this.generatingBackup = true;
             this.mmstatus.generateLocalBackup(result.password).then((jobid: string) => {
                 this.toastr.success('BACKUP SCHEDULED');
-                this.MineMeldJobsService.monitor('status-backup', jobid).then((result: any) => {
+                this.MineMeldJobsService.monitor('status-backup', jobid).then((result: IMineMeldJob) => {
+                    if (result.status === 'ERROR') {
+                        return;
+                    }
+
                     this.$modal.open({
                         templateUrl: 'app/system/backup.download.modal.html',
                         controller: DashboardDownloadBackupController,
