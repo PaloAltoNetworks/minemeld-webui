@@ -30,7 +30,7 @@ export interface IMinemeldPrototypeLibraryDictionary {
 }
 
 export interface IMinemeldPrototypeService {
-    getPrototypeLibraries(): angular.IPromise<any>;
+    getPrototypeLibraries(cancellable?: boolean): angular.IPromise<any>;
     getPrototypeLibrary(library: string): angular.IPromise<any>;
     getPrototype(protofqdn: string): angular.IPromise<any>;
     getPrototypeYaml(prototypename: string): angular.IPromise<any>;

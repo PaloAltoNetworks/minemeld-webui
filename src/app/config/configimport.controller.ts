@@ -96,7 +96,9 @@ export class ConfigureImportController {
             this.prototypeLibrary = result;
             this.processing = false;
         }, (error: any) => {
-            this.toastr.error('ERROR RETRIEVING PROTOTYPES: ' + error.statusText);
+            if (!error.cancelled) {
+                this.toastr.error('ERROR RETRIEVING PROTOTYPES: ' + error.statusText);
+            }
             this.$modalInstance.dismiss();
         });
 

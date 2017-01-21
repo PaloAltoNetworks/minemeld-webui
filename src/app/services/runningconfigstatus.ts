@@ -97,7 +97,7 @@ export class MineMeldRunningConfigStatusService implements IMineMeldRunningConfi
 
     private updateRunningConfigStatus(): void {
         this.MinemeldConfigService.runningConfig(false).then((rconfig: IMinemeldConfig) => {
-            return this.MinemeldPrototypeService.getPrototypeLibraries().then((result: any) => {
+            return this.MinemeldPrototypeService.getPrototypeLibraries(false).then((result: any) => {
                 var resolvedNodes: ng.IPromise<IMinemeldResolvedConfigNode>[] = [];
 
                 angular.forEach(rconfig.nodes, (node: IMinemeldConfigNode, nodename: string) => {
@@ -139,17 +139,23 @@ export class MineMeldRunningConfigStatusService implements IMineMeldRunningConfi
 
                     this.$rootScope.$broadcast('mm-running-config-changed');
                 }, (error: any) => {
-                    this.toastr.error('ERROR RESOLVING CONFIG PROTOTYPES: ' + error.statusText);
+                    if (!error.cancelled) {
+                        this.toastr.error('ERROR RESOLVING CONFIG PROTOTYPES: ' + error.statusText);
+                    }
 
                     throw error;
                 });
             }, (error: any) => {
-                this.toastr.error('ERROR RETRIEVING PROTOTYPES LIBRARIES: ' + error.statusText);
+                if (!error.cancelled) {
+                    this.toastr.error('ERROR RETRIEVING PROTOTYPES LIBRARIES: ' + error.statusText);
+                }
 
                 throw error;
             });
         }, (error: any) => {
-            this.toastr.error('ERROR RETRIEVING MINEMELD RUNNING CONFIG: ' + error.statusText);
+            if (!error.cancelled) {
+                this.toastr.error('ERROR RETRIEVING MINEMELD RUNNING CONFIG: ' + error.statusText);
+            }
 
             throw error;
         });

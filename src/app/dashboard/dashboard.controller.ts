@@ -2,6 +2,11 @@
 
 import { IMinemeldStatusService, IMinemeldStatusNode, IMinemeldStatus } from  '../../app/services/status';
 import { IMinemeldMetricsService } from '../../app/services/metrics';
+import {
+    IMineMeldRunningConfigStatus,
+    IMineMeldRunningConfigStatusService,
+    IMinemeldResolvedConfigNode
+} from '../services/runningconfigstatus';
 
 interface ITNodeIndicatorsStats {
     length: number;
@@ -24,6 +29,7 @@ interface IMetricsDictionary {
 export class DashboardController {
     mmstatus: IMinemeldStatusService;
     mmmetrics: IMinemeldMetricsService;
+    MineMeldRunningConfigStatusService: IMineMeldRunningConfigStatusService;
     moment: moment.MomentStatic;
     toastr: any;
     $interval: angular.IIntervalService;
@@ -91,7 +97,8 @@ export class DashboardController {
         }
     };
 
-    mmStatusListener: any;
+    mmStatusListener: () => void;
+    runningConfigListener: () => void;
 
     numIndicators: number = 0;
 
@@ -120,11 +127,13 @@ export class DashboardController {
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
                 MinemeldStatusService: IMinemeldStatusService, MinemeldMetricsService: IMinemeldMetricsService,
+                MineMeldRunningConfigStatusService: IMineMeldRunningConfigStatusService,
                 moment: moment.MomentStatic, $scope: angular.IScope, $state: angular.ui.IStateService,
                 $rootScope: angular.IRootScopeService, $timeout: angular.ITimeoutService) {
         this.toastr = toastr;
         this.mmstatus = MinemeldStatusService;
         this.mmmetrics = MinemeldMetricsService;
+        this.MineMeldRunningConfigStatusService = MineMeldRunningConfigStatusService;
         this.$interval = $interval;
         this.moment = moment;
         this.$scope = $scope;
@@ -138,6 +147,13 @@ export class DashboardController {
             }
         );
 
+        this.runningConfigListener = this.$rootScope.$on(
+            'mm-running-config-changed',
+            () => {
+                $timeout(this.updateMinemeldStats.bind(this));
+            }
+        );
+
         this.updateNTMinersMetrics();
         this.updateNTOutputsMetrics();
         this.updateMinemeldMetrics();
@@ -145,12 +161,45 @@ export class DashboardController {
         this.$scope.$on('$destroy', this.destroy.bind(this));
     }
 
+    updateRunningConfigStatus(): void {
+        this.MineMeldRunningConfigStatusService.getStatus().then((status: IMineMeldRunningConfigStatus) => {
+            this.numMiners = 0;
+            this.numOutputs = 0;
+            this.numProcessors = 0;
+
+            angular.forEach(status.nodes, (node: IMinemeldResolvedConfigNode) => {
+                console.log(node.resolvedPrototype.node_type);
+
+                // XXX no view for unknowns
+                if (!node.resolvedPrototype.node_type) {
+                    return;
+                }
+
+                if (node.resolvedPrototype.node_type === 'processor') {
+                    this.numProcessors++;
+                    return;
+                }
+
+                if (node.resolvedPrototype.node_type === 'miner') {
+                    this.numMiners++;
+                    return;
+                }
+
+                if (node.resolvedPrototype.node_type === 'output') {
+                    this.numOutputs++;
+                    return;
+                }
+            });
+        });
+    }
+
     updateMinemeldStats(): void {
         var node: IMinemeldStatusNode;
+        var node_type: string;
 
         this.numMiners = 0;
-        this.numProcessors = 0;
         this.numOutputs = 0;
+        this.numProcessors = 0;
         this.numIndicators = 0;
 
         this.minersStats.length = 0;
@@ -161,44 +210,54 @@ export class DashboardController {
         this.outputsStats.added = 0;
         this.outputsStats.removed = 0;
 
-        this.mmstatus.getStatus().then((currentStatus: IMinemeldStatus) => {
-            Object.keys(currentStatus).forEach((nname: string) => {
-                node = currentStatus[nname];
+        this.MineMeldRunningConfigStatusService.getStatus().then((rcstatus: IMineMeldRunningConfigStatus) => {
+            this.mmstatus.getStatus().then((currentStatus: IMinemeldStatus) => {
+                Object.keys(currentStatus).forEach((nname: string) => {
+                    node = currentStatus[nname];
 
-                if (node.inputs.length === 0) {
-                    this.numMiners++;
+                    if (!(nname in rcstatus.nodes)) {
+                        return;
+                    }
+                    if (!rcstatus.nodes[nname].resolvedPrototype.node_type) {
+                        return;
+                    }
+                    node_type = rcstatus.nodes[nname].resolvedPrototype.node_type;
+
+                    if (node_type === 'miner') {
+                        this.numMiners++;
+
+                        if (node.length) {
+                            this.minersStats.length += node.length;
+                        }
+                        if (node.statistics && node.statistics['added']) {
+                            this.minersStats.added += node.statistics['added'];
+                        }
+                        if (node.statistics && node.statistics['removed']) {
+                            this.minersStats.removed += node.statistics['removed'];
+                        }
+                        if (node.statistics && node.statistics['aged_out']) {
+                            this.minersStats.aged_out += node.statistics['aged_out'];
+                        }
+                    } else if (node_type === 'output') {
+                        this.numOutputs++;
+
+                        if (node.length) {
+                            this.outputsStats.length += node.length;
+                        }
+                        if (node.statistics && node.statistics['added']) {
+                            this.outputsStats.added += node.statistics['added'];
+                        }
+                        if (node.statistics && node.statistics['removed']) {
+                            this.outputsStats.removed += node.statistics['removed'];
+                        }
+                    } else if (node_type === 'processor') {
+                        this.numProcessors++;
+                    }
 
                     if (node.length) {
-                        this.minersStats.length += node.length;
+                        this.numIndicators += node.length;
                     }
-                    if (node.statistics && node.statistics['added']) {
-                        this.minersStats.added += node.statistics['added'];
-                    }
-                    if (node.statistics && node.statistics['removed']) {
-                        this.minersStats.removed += node.statistics['removed'];
-                    }
-                    if (node.statistics && node.statistics['aged_out']) {
-                        this.minersStats.aged_out += node.statistics['aged_out'];
-                    }
-                } else if (!node.output) {
-                    this.numOutputs++;
-
-                    if (node.length) {
-                        this.outputsStats.length += node.length;
-                    }
-                    if (node.statistics && node.statistics['added']) {
-                        this.outputsStats.added += node.statistics['added'];
-                    }
-                    if (node.statistics && node.statistics['removed']) {
-                        this.outputsStats.removed += node.statistics['removed'];
-                    }
-                } else {
-                    this.numProcessors++;
-                }
-
-                if (node.length) {
-                    this.numIndicators += node.length;
-                }
+                });
             });
         });
     }
@@ -235,6 +294,9 @@ export class DashboardController {
     private destroy() {
         if (this.mmStatusListener) {
             this.mmStatusListener();
+        }
+        if (this.runningConfigListener) {
+            this.runningConfigListener();
         }
         if (this.minemeldMetricsUpdatePromise) {
             this.$interval.cancel(this.minemeldMetricsUpdatePromise);
