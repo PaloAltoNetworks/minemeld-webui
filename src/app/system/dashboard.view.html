@@ -11,6 +11,14 @@
     </button>
   </div>
 </div>
+<div ng-if="vm.system.disk >= 70" class="row m-t-xs">
+    <div class="col-sm-12 col-md-12">
+        <div class="alert alert-danger m-b-xs" role="alert">
+          <strong>Warning!</strong> disk space available less than 30%. Logging has been disabled to prevent data corruption.
+          <a style="cursor: pointer;" ng-click="vm.purgeTraces()">Purge logs</a> to free disk space and reactivate logging.
+        </div>
+    </div>
+</div>
 <div class="row dashboard-row m-t-xs">
   <div class="col-sm-3 col-md-3">
     <div class="row dashboard-row-system">
