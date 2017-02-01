@@ -4,7 +4,9 @@ import { config } from './index.config';
 import { routerConfig } from './index.route';
 import { minemeldInit } from './index.init';
 import { DashboardController } from './dashboard/dashboard.controller';
-import { SystemController } from './dashboard/system.controller';
+import { SystemController } from './system/system.controller';
+import { SystemDashboardController } from './system/system.controller';
+import { SystemExtensionsController } from './system/extensions.controller';
 import { NodesController } from './nodes/nodes.controller';
 import { NodeDetailController } from './nodedetail/nodedetail.controller';
 import { NodeDetailStatsController } from './nodedetail/nodedetail.stats.controller';
@@ -23,7 +25,6 @@ import { AdminUsersController } from './admin/admin.users.controller';
 import { AdminFUsersController } from './admin/admin.fusers.controller';
 import { IndicatorAddController } from './indicatoradd/indicatoradd.controller';
 import { LogsController } from './logs/logs.controller';
-import { appNavbar } from '../app/components/navbar/navbar.directive';
 import { LoginController } from './login/login.controller';
 import { MineMeldAPIService } from './services/minemeldapi';
 import { MinemeldStatusService } from './services/status';
@@ -33,12 +34,18 @@ import { MinemeldConfigService } from './services/config';
 import { MinemeldValidateService } from './services/validate';
 import { NodeDetailResolver } from './services/nodedetailresolver';
 import { MinemeldSupervisorService } from './services/supervisor';
+import { MineMeldExtensionsService } from './services/extensions';
 import { ConfirmService } from './services/confirm';
 import { MinemeldEventsService } from './services/events';
 import { MinemeldTracedService } from './services/traced';
 import { ThrottleService } from './services/throttle';
 import { MinemeldAAAService } from './services/aaa';
+import { MineMeldEngineStatusService } from './services/enginestatus';
+import { MineMeldRunningConfigStatusService } from './services/runningconfigstatus';
+import { MineMeldJobsService } from './services/jobs';
+import { MineMeldCurrentUserService } from './services/currentuser';
 import { megaNumber } from './filters/megaNumber';
+import { appNavbar } from '../app/components/navbar/navbar.directive';
 import { minemeldOptions } from '../app/components/options/options.directive';
 import { nodeConfig } from '../app/components/nodeconfig/nodeconfig.directive';
 import { prototypeTooltip } from'../app/components/prototypetooltip/prototypetooltip.directive';
@@ -65,13 +72,16 @@ module minemeldWebui {
     'easypiechart',
     'nvd3',
     'mmSankey',
-    'ui.select'
+    'ui.select',
+    'angularFileUpload'
   ])
   .constant('moment', moment)
   .config(config)
   .config(routerConfig)
   .controller('DashboardController', DashboardController)
   .controller('SystemController', SystemController)
+  .controller('SystemDashboardController', SystemDashboardController)
+  .controller('SystemExtensionsController', SystemExtensionsController)
   .controller('NodesController', NodesController)
   .controller('NodeDetailController', NodeDetailController)
   .controller('NodeDetailStatsController', NodeDetailStatsController)
@@ -108,6 +118,11 @@ module minemeldWebui {
   .service('MinemeldTracedService', MinemeldTracedService)
   .service('MinemeldAAAService', MinemeldAAAService)
   .service('ThrottleService', ThrottleService)
+  .service('MineMeldEngineStatusService', MineMeldEngineStatusService)
+  .service('MineMeldRunningConfigStatusService', MineMeldRunningConfigStatusService)
+  .service('MineMeldExtensionsService', MineMeldExtensionsService)
+  .service('MineMeldJobsService', MineMeldJobsService)
+  .service('MineMeldCurrentUserService', MineMeldCurrentUserService)
   .filter('megaNumber', megaNumber)
   .run(minemeldInit)
   ;

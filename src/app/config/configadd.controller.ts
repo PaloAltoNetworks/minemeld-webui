@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldConfigService, IMinemeldConfigNode } from  '../../app/services/config';
+import { IMinemeldConfigService, IMinemeldCandidateConfigNode } from  '../../app/services/config';
 import { IMinemeldPrototypeService } from '../../app/services/prototype';
 
 interface IPrototypesDescription {
@@ -114,9 +114,9 @@ export class ConfigAddController {
                 }
             }
         }).then((result: any) => {
-            return this.MinemeldConfigService.refresh();
-        }).then((result: any) => {
-            return this.decorateConfigNodes();
+            return this.MinemeldConfigService.candidateConfig();
+        }).then((cconfig: IMinemeldCandidateConfigNode[]) => {
+            return this.decorateConfigNodes(cconfig);
         }).then((result: any) => {
             this.configNodes = result;
             this.loadAvailableInputs();
@@ -144,8 +144,23 @@ export class ConfigAddController {
     valid(): boolean {
         var namere = /^[a-zA-Z0-9_\-]+$/;
         var ci: IInputNode;
+        var existcheck: boolean = false;
 
         if (this.name.length === 0) {
+            return false;
+        }
+
+        if (typeof(this.configNodes) === 'undefined') {
+            return false;
+        }
+        this.configNodes.forEach((x: IInputNode) => {
+            if (x.name == this.name) {
+                existcheck = true;
+            }
+        });
+        if (existcheck) {
+            angular.element('#nodename').addClass('has-error');
+
             return false;
         }
 
@@ -295,19 +310,18 @@ export class ConfigAddController {
         this.availableInputs = result;
     }
 
-    private decorateConfigNodes(): angular.IPromise<any> {
-        var t: IMinemeldConfigNode[];
+    private decorateConfigNodes(cconfig: IMinemeldCandidateConfigNode[]): angular.IPromise<any> {
+        var t: IMinemeldCandidateConfigNode[];
         var p: angular.IPromise<any>[] = [];
 
-        t = this.MinemeldConfigService.nodesConfig
-            .filter((x: IMinemeldConfigNode) => {
+        t = cconfig.filter((x: IMinemeldCandidateConfigNode) => {
                 if (x.deleted) {
                     return false;
                 }
                 return true;
             });
 
-        angular.forEach(t, (nc: IMinemeldConfigNode) => {
+        angular.forEach(t, (nc: IMinemeldCandidateConfigNode) => {
             if (typeof nc.properties.prototype === 'undefined') {
                 p.push(this.$q((resolve: angular.IQResolveReject<any>) => {
                     resolve({

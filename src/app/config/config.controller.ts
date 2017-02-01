@@ -1,9 +1,11 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMinemeldConfigService, IMinemeldConfigInfo, IMinemeldConfigNode } from  '../../app/services/config';
+import { IMinemeldConfigService, IMinemeldCandidateConfigInfo, IMinemeldCandidateConfigNode } from  '../../app/services/config';
 import { IConfirmService } from '../../app/services/confirm';
 import { IMinemeldPrototypeService } from '../../app/services/prototype';
 import { IMinemeldSupervisorService } from '../../app/services/supervisor';
+import { IMineMeldEngineStatusService, IMineMeldEngineStatus } from '../../app/services/enginestatus';
+import { IMineMeldCurrentUserService } from '../services/currentuser';
 
 declare var he: any;
 
@@ -19,6 +21,8 @@ export class ConfigController {
     MinemeldConfigService: IMinemeldConfigService;
     MinemeldPrototypeService: IMinemeldPrototypeService;
     MinemeldSupervisorService: IMinemeldSupervisorService;
+    MineMeldEngineStatusService: IMineMeldEngineStatusService;
+    MineMeldCurrentUserService: IMineMeldCurrentUserService;
     ConfirmService: IConfirmService;
 
     expertMode: boolean = false;
@@ -30,8 +34,8 @@ export class ConfigController {
     changed: boolean = false;
     inCommit: boolean = false;
 
-    configInfo: IMinemeldConfigInfo;
-    nodesConfig: IMinemeldConfigNode[];
+    configInfo: IMinemeldCandidateConfigInfo;
+    nodesConfig: IMinemeldCandidateConfigNode[];
 
     /** @ngInject */
     constructor(toastr: any, $scope: angular.IScope, DTOptionsBuilder: any,
@@ -39,6 +43,8 @@ export class ConfigController {
                 MinemeldConfigService: IMinemeldConfigService,
                 MinemeldSupervisorService: IMinemeldSupervisorService,
                 MinemeldPrototypeService: IMinemeldPrototypeService,
+                MineMeldEngineStatusService: IMineMeldEngineStatusService,
+                MineMeldCurrentUserService: IMineMeldCurrentUserService,
                 $state: angular.ui.IStateService, $q: angular.IQService,
                 $modal: angular.ui.bootstrap.IModalService,
                 ConfirmService: IConfirmService) {
@@ -53,6 +59,8 @@ export class ConfigController {
         this.MinemeldConfigService = MinemeldConfigService;
         this.MinemeldPrototypeService = MinemeldPrototypeService;
         this.MinemeldSupervisorService = MinemeldSupervisorService;
+        this.MineMeldEngineStatusService = MineMeldEngineStatusService;
+        this.MineMeldCurrentUserService = MineMeldCurrentUserService;
         this.ConfirmService = ConfirmService;
 
         this.setupNodesTable();
@@ -192,25 +200,18 @@ export class ConfigController {
     }
 
     commit() {
-        var p: angular.IPromise<any>;
-
         this.inCommit = true;
-        p = this.MinemeldConfigService.commit().then((result: any) => {
-            this.toastr.success('COMMIT SUCCESSFUL');
-            this.dtNodes.reloadData();
-            this.MinemeldSupervisorService.restartEngine().then(
-                (result: any) => { this.toastr.success('Restarting engine, could take some minutes. Check <a href="/#/system">SYSTEM</a>'); },
-                (error: any) => { this.toastr.error('ERROR RESTARTING ENGINE: ' + error.statusText); }
-            );
-        }, (error: any) => {
-            if (error.status === 402) {
-                this.toastr.error('COMMIT FAILED: ' + error.data.error.message.join(', '), '', { timeOut: 60000 });
-            } else {
-                this.toastr.error('ERROR IN COMMIT: ' + error.statusText);
+        this.MineMeldEngineStatusService.getStatus().then((result: IMineMeldEngineStatus) => {
+            if (result.statename == 'STARTING' || result.statename == 'STOPPING') {
+                this.toastr.error('COMMIT CANCELLED: ENGINE IS ' + result.statename);
+                this.inCommit = false;
+                return;
             }
-            this.dtNodes.reloadData();
-        })
-        .finally(() => { this.inCommit = false; });
+
+            this.doCommit();
+        }, (error: any) => {
+            this.inCommit = false;
+        });
     }
 
     toggleExpert() {
@@ -226,6 +227,27 @@ export class ConfigController {
         angular.element('.config-table-miner')
             .toggleClass('config-table-clickable')
             .toggleClass('config-table-disabled');
+    }
+
+    private doCommit() {
+        var p: angular.IPromise<any>;
+
+        p = this.MinemeldConfigService.commit().then((result: any) => {
+            this.toastr.success('COMMIT SUCCESSFUL');
+            this.dtNodes.reloadData();
+            this.MinemeldSupervisorService.restartEngine().then(
+                (result: any) => { this.toastr.success('Restarting engine, could take some minutes. Check <a href="/#/system/dashboard">SYSTEM</a>'); },
+                (error: any) => { this.toastr.error('ERROR RESTARTING ENGINE: ' + error.statusText); }
+            );
+        }, (error: any) => {
+            if (error.status === 402) {
+                this.toastr.error('COMMIT FAILED: ' + error.data.error.message.join(', '), '', { timeOut: 60000 });
+            } else {
+                this.toastr.error('ERROR IN COMMIT: ' + error.statusText);
+            }
+            this.dtNodes.reloadData();
+        })
+        .finally(() => { this.inCommit = false; });
     }
 
     private setupNodesTable() {
@@ -456,7 +478,7 @@ export class ConfigureOutputController {
     MinemeldConfigService: IMinemeldConfigService;
     $modalInstance: angular.ui.bootstrap.IModalServiceInstance;
 
-    nodeConfig: IMinemeldConfigNode;
+    nodeConfig: IMinemeldCandidateConfigNode;
     output: boolean;
     originalOutput: boolean;
 
@@ -506,7 +528,7 @@ export class ConfigureInputsController {
     $modalInstance: angular.ui.bootstrap.IModalServiceInstance;
 
     expertMode: boolean = false;
-    nodeConfig: IMinemeldConfigNode;
+    nodeConfig: IMinemeldCandidateConfigNode;
     nodeType: string;
     nodeTypeLimit: number;
     indicatorTypes: string[];
@@ -576,12 +598,12 @@ export class ConfigureInputsController {
     }
 
     private loadAvailableInputs(): void {
-        var t: IMinemeldConfigNode[];
+        var t: IMinemeldCandidateConfigNode[];
 
         if (!this.expertMode) {
             if (this.inputs.length >= this.nodeTypeLimit) {
                 this.availableInputs = this.inputs.map((i: string) => {
-                    var cn: IMinemeldConfigNode;
+                    var cn: IMinemeldCandidateConfigNode;
                     var nt: string = 'UNKNOWN';
 
                     for (cn of this.MinemeldConfigService.nodesConfig) {
@@ -606,7 +628,7 @@ export class ConfigureInputsController {
         }
 
         t = this.MinemeldConfigService.nodesConfig
-            .filter((x: IMinemeldConfigNode) => {
+            .filter((x: IMinemeldCandidateConfigNode) => {
                 /* first thing remove deleted nodes and itself */
                 if (x.name == this.nodeConfig.name) {
                     return false;
@@ -625,7 +647,7 @@ export class ConfigureInputsController {
             });
 
         if (!this.expertMode && typeof this.nodeType !== 'undefined') {
-            t = t.filter((x: IMinemeldConfigNode) => {
+            t = t.filter((x: IMinemeldCandidateConfigNode) => {
                 var x_nt: string;
 
                 if (typeof x.properties.node_type === 'undefined') {
@@ -660,7 +682,7 @@ export class ConfigureInputsController {
         }
         if (!this.expertMode && this.indicatorTypes) {
             if (this.indicatorTypes.length !== 0 && this.indicatorTypes[0] !== 'any') {
-                t = t.filter((x: IMinemeldConfigNode) => {
+                t = t.filter((x: IMinemeldCandidateConfigNode) => {
                     var x_it: string[];
 
                     if (!x.properties.indicator_types) {
@@ -681,7 +703,7 @@ export class ConfigureInputsController {
             }
         }
 
-        this.availableInputs = t.map((x: IMinemeldConfigNode) => {
+        this.availableInputs = t.map((x: IMinemeldCandidateConfigNode) => {
             var nt: string;
 
             nt = 'UNKNOWN';

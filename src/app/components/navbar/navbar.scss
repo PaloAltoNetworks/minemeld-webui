@@ -1,0 +1,132 @@
+.navbar-system-icon-running {
+    @extend .glyphicon-hdd;
+}
+
+.navbar-system-icon-starting {
+    @extend .glyphicon-hdd;
+    -webkit-animation: navbar-fade 1000ms infinite linear;
+    animation: navbar-fade 1000ms infinite linear;
+}
+
+.navbar-system-icon-stopping {
+    @extend .glyphicon-remove;
+    -webkit-animation: navbar-fade 1000ms infinite linear;
+    animation: navbar-fade 1000ms infinite linear;
+}
+
+.navbar-system-icon-stopped {
+    @extend .glyphicon-remove;
+}
+
+.navbar-system-badge-stopped {
+    display: inline-block;
+    position: relative;
+    left: -($font-size-base/10)*4;
+    height: ($font-size-base/10)*7;
+    width: ($font-size-base/10)*7;
+    border-radius: 50%;
+    background-color: $brand-danger;
+    -webkit-animation: navbar-fade 1000ms infinite linear;
+    animation: navbar-fade 1000ms infinite linear;
+}
+
+@mixin navbar-system-bar() {
+    pointer-events: none;
+    -webkit-pointer-events: none;
+    display: inline-block;
+    position: absolute;
+    height: 5px;
+    top: 0;
+    left: 0;
+    background-color: $navbar-default-brand-color;
+}
+
+a {
+    > .navbar-system-bar-stopping {
+        @include navbar-system-bar();
+    }
+    > .navbar-system-bar-stopping.ng-enter {
+        transition: width 300s linear;
+        width: 100%;
+    }
+    > .navbar-system-bar-stopping.ng-enter-active {
+        width: 0;
+    }
+
+    &:hover > .navbar-system-bar-stopping {
+        background-color: $navbar-default-brand-hover-color;
+    }
+
+    > .navbar-system-bar-starting {
+        @include navbar-system-bar();
+        width: 0;
+    }
+    > .navbar-system-bar-starting.ng-enter {
+        transition: width 30s linear;
+        width: 0;
+    }
+    > .navbar-system-bar-starting.ng-enter-active {
+        width: 100%;
+    }
+
+    &:hover > .navbar-system-bar-starting {
+        background-color: $navbar-default-brand-hover-color;
+    }
+}
+
+@-webkit-keyframes navbar-shrink {
+    0% {
+        width: 100%;
+    }
+    100% {
+        width: 0;
+    }
+}
+@keyframes navbar-shrink {
+    0% {
+        width: 100%;
+    }
+    100% {
+        width: 0;
+    }
+}
+
+@-webkit-keyframes navbar-expand {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 100%;
+    }
+}
+@keyframes navbar-expand {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+@-webkit-keyframes navbar-fade {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+@keyframes navbar-fade {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}

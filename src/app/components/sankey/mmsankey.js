@@ -45,13 +45,17 @@ directive('mmSankey', ['$state', function($state) {
     var ft_class = function(d) {
         var rclass = 'mw-sankey-node';
 
-        if (d.targetLinks.length === 0) {
+        if (d.nodeType === 'miner') {
             return rclass += ' mw-sankey-node-miner';
-        } else if (d.sourceLinks.length === 0) {
+        }
+        if (d.nodeType === 'output') {
             return rclass += ' mw-sankey-node-output';
         }
+        if (d.nodeType === 'processor') {
+            return rclass += ' mw-sankey-node-processor';
+        }
 
-        return rclass += ' mw-sankey-node-processor';
+        return rclass += ' mw-sankey-node-unknown';
     }
 
     var link_function = function(scope, elements, attrs) {
@@ -111,10 +115,11 @@ directive('mmSankey', ['$state', function($state) {
 
                 if (!nFTs) return;
 
-                angular.forEach(nFTs, function(ftstatus, ftindex) {
+                angular.forEach(nFTs, function(ftnode, ftindex) {
                     var uec;
                     var ftname;
                     var cupdates_emitted;
+                    var ftstatus = ftnode.status;
 
                     ftname = ftstatus.name;
                     cupdates_emitted = (ftstatus['statistics']['update.tx'] === undefined) ? 0 : ftstatus['statistics']['update.tx'];
@@ -127,6 +132,7 @@ directive('mmSankey', ['$state', function($state) {
 
                     fts.nodes.push({
                         name: ftname,
+                        nodeType: ftnode.nodeType,
                         value: Math.sqrt(ftstatus['length']),
                         num_indicators: ftstatus['length'],
                         updates_emitted: cupdates_emitted,
@@ -135,7 +141,8 @@ directive('mmSankey', ['$state', function($state) {
                     });
                 });
 
-                angular.forEach(nFTs, function(ftstatus, ftindex) {
+                angular.forEach(nFTs, function(ftnode, ftindex) {
+                    var ftstatus = ftnode.status;
                     var ftname = ftstatus.name;
 
                     angular.forEach(ftstatus.inputs, function(input) {
@@ -242,6 +249,10 @@ directive('mmSankey', ['$state', function($state) {
                     .on('mouseover', tip.show)
                     .on('mouseout', tip.hide)
                     .on('click', function(d) {
+                        if (d.name == scope.currentFt) {
+                            return;
+                        }
+
                         tip.hide();
                         $state.go('nodedetail.info', { nodename: d.name });
                     });
@@ -275,7 +286,8 @@ directive('mmSankey', ['$state', function($state) {
         strict: 'E',
         link: link_function,
         scope: {
-            fts: '='
+            fts: '=',
+            currentFt: '='
         }
     };
 }])

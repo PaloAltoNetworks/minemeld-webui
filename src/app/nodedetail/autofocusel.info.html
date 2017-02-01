@@ -63,7 +63,14 @@
                 </tr>
                 <tr>
                     <td># INDICATORS</td>
-                    <td>{{ nodedetailinfo.nodeState.indicators }}</td>
+                    <td>
+                        <span>{{ nodedetailinfo.nodeState.indicators }}</span>
+                        <span tooltip="flush indicators"
+                              tooltip-popup-delay="200"
+                              ng-if="nodedetailinfo.nodeState.sub_state != 'REBUILDING' && nodedetailinfo.nodeState.sub_state != 'POLLING'"
+                              ng-click="nodedetailinfo.flush()"
+                              class="nodedetail-info-icon fa fa-undo"></span>
+                    </td>
                 </tr>
             </tbody>
         </table>

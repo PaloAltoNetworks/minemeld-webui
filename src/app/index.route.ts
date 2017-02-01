@@ -15,8 +15,21 @@ export function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterPro
     })
     .state('system', {
       url: '/system',
-      templateUrl: 'app/dashboard/system.view.html',
+      templateUrl: 'app/system/view.html',
       controller: 'SystemController',
+      controllerAs: 'vm',
+      abstract: true
+    })
+    .state('system.dashboard', {
+      url: '/dashboard',
+      templateUrl: 'app/system/dashboard.view.html',
+      controller: 'SystemDashboardController',
+      controllerAs: 'vm'
+    })
+    .state('system.extensions', {
+      url: '/extensions',
+      templateUrl: 'app/system/extensions.view.html',
+      controller: 'SystemExtensionsController',
       controllerAs: 'vm'
     })
     .state('dashboard', {

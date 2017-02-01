@@ -73,6 +73,10 @@ div.main-container {
     margin-top: 5px;
 }
 
+.m-t-md {
+    margin-top: 15px;
+}
+
 .m-r-xs {
     margin-right: 5px;
 }
@@ -157,6 +161,11 @@ div.main-container {
     fill-opacity: .8;
 }
 
+.mw-sankey-node-unknown circle {
+    fill: $gray-light;
+    fill-opacity: .8;
+}
+
 .mw-sankey-node .node-overlay {
     fill: white;
     fill-opacity: 0;
@@ -214,4 +223,8 @@ div.main-container {
 
 .dataTables_filter > label > input {
     margin-left: 5px;
+}
+
+.toast-message a {
+    text-decoration: underline;
 }

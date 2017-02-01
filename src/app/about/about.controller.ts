@@ -1,7 +1,12 @@
 /// <reference path="../../../typings/main.d.ts" />
 
+import { IMineMeldCurrentUserService } from '../services/currentuser';
+
 export class AboutController {
-    constructor() {
-        ;
+    MineMeldCurrentUserService: IMineMeldCurrentUserService;
+
+    /** @ngInject */
+    constructor(MineMeldCurrentUserService: IMineMeldCurrentUserService) {
+        this.MineMeldCurrentUserService = MineMeldCurrentUserService;
     }
 }

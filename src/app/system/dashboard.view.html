@@ -1,5 +1,25 @@
 <!-- supervisor -->
-<div class="row dashboard-row">
+<div class="row m-t-xs">
+  <div class="col-sm-12 col-md-12">
+    <button tooltip-popup-delay="500" tooltip="export local backup" type="button"
+            class="config-action btn btn-config-action btn-sm" ng-disabled="vm.generatingBackup" ng-click="vm.generateLocalBackup()">
+        <span class="glyphicon glyphicon-floppy-save"></span> EXPORT BACKUP
+    </button>
+    <button tooltip-popup-delay="500" tooltip="purge logs" type="button"
+            class="config-action btn btn-config-action btn-sm" ng-disabled="vm.purgingTraces" ng-click="vm.purgeTraces()">
+        <span class="glyphicon glyphicon-erase"></span> PURGE LOGS
+    </button>
+  </div>
+</div>
+<div ng-if="vm.system.disk >= 70" class="row m-t-xs">
+    <div class="col-sm-12 col-md-12">
+        <div class="alert alert-danger m-b-xs" role="alert">
+          <strong>Warning!</strong> disk space available less than 30%. Logging has been disabled to prevent data corruption.
+          <a style="cursor: pointer;" ng-click="vm.purgeTraces()">Purge logs</a> to free disk space and reactivate logging.
+        </div>
+    </div>
+</div>
+<div class="row dashboard-row m-t-xs">
   <div class="col-sm-3 col-md-3">
     <div class="row dashboard-row-system">
       <div class="dashboard-label dashboard-label-system">
@@ -22,6 +42,7 @@
       <div class="col-xs-5 text-center dashboard-main-statistic">
         <h3 ng-switch="vm.supervisor.processes['minemeld-engine']['statename']">
           <span class="label label-success" ng-switch-when="RUNNING">{{ vm.supervisor.processes['minemeld-engine']['statename'] }}</span>
+          <span class="label label-success" ng-switch-when="STARTING">{{ vm.supervisor.processes['minemeld-engine']['statename'] }}</span>
           <span class="label label-danger" ng-switch-when="STOPPED">{{ vm.supervisor.processes['minemeld-engine']['statename'] }}</span>
           <span class="label label-danger" ng-switch-when="STOPPING">{{ vm.supervisor.processes['minemeld-engine']['statename'] }}</span>
           <span class="label label-default" ng-switch-default>{{ vm.supervisor.processes['minemeld-engine']['statename'] }}</span>
@@ -31,6 +52,16 @@
       <div class="col-xs-5 text-center dashboard-main-statistic">
         <h2 class="m-b-xs" ng-bind="(vm.supervisor.processes['minemeld-engine']['children'])||N/A"></h2>
         <small># of chassis</small>
+      </div>
+      <div class="system-button-bar">
+        <a tooltip-popup-delay="500" tooltip="download engine logs" type="button"
+                class="btn btn-system-action btn-xs" href="/logs/minemeld-engine.log">
+            <span class="glyphicon glyphicon-download-alt"></span> LOGS
+        </a>
+        <button tooltip-popup-delay="500" tooltip="restart the engine" type="button"
+                class="btn btn-system-action btn-xs" ng-click="vm.engineRestart()">
+            <span class="glyphicon glyphicon-refresh"></span> RESTART
+        </button>
       </div>
     </div>
   </div>
@@ -42,6 +73,16 @@
       <div class="col-xs-10 text-center dashboard-main-statistic">
         <h2 class="m-b-xs" ng-bind="(vm.supervisor.processes['minemeld-web']['children'])||N/A"></h2>
         <small># of API processes</small>
+      </div>
+      <div class="system-button-bar">
+        <a tooltip-popup-delay="500" tooltip="download API logs" type="button"
+                class="btn btn-system-action btn-xs" href="/logs/minemeld-web.log">
+            <span class="glyphicon glyphicon-download-alt"></span> LOGS
+        </a>
+        <button tooltip-popup-delay="500" tooltip="restart the api" type="button"
+                class="btn btn-system-action btn-xs" ng-click="vm.apiRestart()">
+            <span class="glyphicon glyphicon-refresh"></span> RESTART
+        </button>
       </div>
     </div>
   </div>

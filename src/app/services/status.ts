@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMineMeldAPIService } from './minemeldapi';
+import { IMineMeldAPIService, IMineMeldAPIResource } from './minemeldapi';
 import { IMinemeldEventsService } from './events';
 
 export interface IMinemeldStatusService {
@@ -12,8 +12,10 @@ export interface IMinemeldStatusService {
     getMinemeld(): angular.IPromise<any>;
     getConfig(): angular.IPromise<any>;
     hup(nodename: string): angular.IPromise<any>;
+    signal(nodename: string, signal: string, params?: any): angular.IPromise<string>;
     initStatusMonitor(): void;
     destroyStatusMonitor(): void;
+    generateLocalBackup(password: string): angular.IPromise<string>;
 }
 
 export interface IMinemeldStatusNode {
@@ -23,6 +25,8 @@ export interface IMinemeldStatusNode {
     inputs: string[];
     output: boolean;
     state: number;
+    sub_state?: string;
+    sub_state_message?: string;
     statistics: {
         [key: string]: number;
     };
@@ -30,6 +34,10 @@ export interface IMinemeldStatusNode {
 
 export interface IMinemeldStatus {
     [key: string]: IMinemeldStatusNode;
+}
+
+interface IStatusAPIResource extends IMineMeldAPIResource {
+    post(params: Object, data: Object): angular.resource.IResource<any>;
 }
 
 export class MinemeldStatusService implements IMinemeldStatusService {
@@ -200,6 +208,49 @@ export class MinemeldStatusService implements IMinemeldStatusService {
         });
     }
 
+    public signal(nodename: string, signal: string, data?: any): angular.IPromise<string> {
+        var result: IStatusAPIResource;
+        var params: any = {
+            nodename: nodename,
+            signal: signal
+        };
+
+        result = <IStatusAPIResource>this.MineMeldAPIService.getAPIResource('/status/:nodename/signal/:signal', {}, {
+            post: {
+                method: 'POST'
+            }
+        }, false);
+
+        return result.post(params, JSON.stringify(data)).$promise.then((result: any) => {
+            if ('result' in result) {
+                return result.result;
+            }
+
+            return 'ok';
+        });
+    }
+
+    public generateLocalBackup(password: string): angular.IPromise<string> {
+        var result: IStatusAPIResource;
+        var data: any = {
+            p: password
+        };
+
+        result = <IStatusAPIResource>this.MineMeldAPIService.getAPIResource('/status/backup', {}, {
+            post: {
+                method: 'POST'
+            }
+        }, false);
+
+        return result.post({}, JSON.stringify(data)).$promise.then((result: any) => {
+            if ('result' in result) {
+                return result.result;
+            }
+
+            return undefined;
+        });
+    }
+
     private onEventsMessage(subtype: string, event: string, e: any): void {
         var status: IMinemeldStatusNode;
 
@@ -207,6 +258,11 @@ export class MinemeldStatusService implements IMinemeldStatusService {
             return;
         }
         if (typeof e.timestamp === 'undefined') {
+            return;
+        }
+
+        if (e.source === '<minemeld-engine>') {
+            this.$rootScope.$broadcast('mm-inner-engine-status-changed', e.status);
             return;
         }
 

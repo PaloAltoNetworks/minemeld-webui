@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { IMineMeldAPIService } from './minemeldapi';
+import { IMineMeldAPIService, IMineMeldAPIResource } from './minemeldapi';
 import { IMinemeldEventsService } from './events';
 
 export interface IMinemeldTracedQueryOptions {
@@ -21,6 +21,7 @@ export interface IMinemeldTracedService {
     query(qid: string, options?: IMinemeldTracedQueryOptions);
     generateQueryID(): string;
     closeAll(): void;
+    purgeAll(): angular.IPromise<string>;
 }
 
 interface IMinemeldTracedQueryParams {
@@ -79,6 +80,28 @@ export class MinemeldTracedService implements IMinemeldTracedService {
         }
 
         return result;
+    }
+
+    purgeAll(): angular.IPromise<string> {
+        var api: IMineMeldAPIResource;
+
+        api = <IMineMeldAPIResource>this.MineMeldAPIService.getAPIResource(
+            '/traced/purge-all', {},
+            {
+                get: {
+                    method: 'GET'
+                }
+            },
+            false
+        );
+
+        return api.get({}).$promise.then((result: any) => {
+            if ('result' in result) {
+                return result.result;
+            }
+
+            return undefined;
+        });
     }
 
     private sendQuery(qid: string, options?: IMinemeldTracedQueryOptions): any {

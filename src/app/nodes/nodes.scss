@@ -84,3 +84,22 @@
 .nodes-label-processor {
     background-color: $minemeld-processor;
 }
+
+.nodes-label-loading {
+    display: block !important;
+    width: 16px;
+    height: 40px;
+    padding: 0;
+    color: rgba(255, 255, 255, 0);
+    background: url('../assets/images/loader-bw-mini.gif') no-repeat;
+    background-size: 100%;
+}
+
+.nodes-table-row:hover .nodes-label-loading {
+    background: url('../assets/images/mm-white-mini.png') no-repeat;
+    background-size: 100%;
+}
+
+.nodes-label-default {
+    background-color: $gray-light;
+}

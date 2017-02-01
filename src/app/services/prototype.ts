@@ -13,6 +13,7 @@ export interface IMinemeldPrototypeLibrary {
 export interface IMinemeldPrototypeMetadata {
     description?: string;
     nodeType?: string;
+    node_type?: string;  // XXX this should disappear
     indicatorTypes?: string[];
     tags?: string[];
     developmentStatus?: string;
@@ -29,12 +30,13 @@ export interface IMinemeldPrototypeLibraryDictionary {
 }
 
 export interface IMinemeldPrototypeService {
-    getPrototypeLibraries(): angular.IPromise<any>;
+    getPrototypeLibraries(cancellable?: boolean): angular.IPromise<any>;
     getPrototypeLibrary(library: string): angular.IPromise<any>;
     getPrototype(protofqdn: string): angular.IPromise<any>;
     getPrototypeYaml(prototypename: string): angular.IPromise<any>;
     setPrototypeYaml(prototypename: string, pclass: string, config: string,
                      optionalParams?: IMinemeldPrototypeMetadata): angular.IPromise<any>;
+    deletePrototype(prototypename: string): angular.IPromise<any>;
     invalidateCache(): void;
 }
 
@@ -60,8 +62,12 @@ export class MinemeldPrototypeService implements IMinemeldPrototypeService {
         this.MineMeldAPIService.onLogout(this.emptyCache.bind(this));
     }
 
-    public getPrototypeLibraries(): angular.IPromise<any> {
+    public getPrototypeLibraries(cancellable?: boolean): angular.IPromise<any> {
         var defer: any;
+
+        if (typeof cancellable === 'undefined') {
+            cancellable = true;
+        }
 
         if (this.prototypesDict) {
             defer = this.$q.defer();
@@ -69,7 +75,7 @@ export class MinemeldPrototypeService implements IMinemeldPrototypeService {
             return defer.promise;
         }
 
-        return this.getPrototypes().then((result: any) => {
+        return this.getPrototypes(cancellable).then((result: any) => {
             return this.prototypesDict;
         });
     }
@@ -171,6 +177,26 @@ export class MinemeldPrototypeService implements IMinemeldPrototypeService {
         prototype.config = config;
 
         return prototypeYaml.post({}, JSON.stringify(prototype)).$promise.then((result: any) => {
+            if ('result' in result) {
+                return result.result;
+            }
+
+            return {};
+        });
+    }
+
+    public deletePrototype(prototypename: string): angular.IPromise<any> {
+        var apiResource: any;
+
+        apiResource = this.MineMeldAPIService.getAPIResource('/prototype/:prototypename', {
+            prototypename: prototypename
+        }, {
+            delete: {
+                method: 'DELETE'
+            }
+        }, false);
+
+        return apiResource.delete({}).$promise.then((result: any) => {
             if ('result' in result) {
                 return result.result;
             }
