@@ -30,6 +30,10 @@
                     </td>
                 </tr>
                 <tr>
+                    <td>DISCOVERY SERVICE</td>
+                    <td>{{ vm.nodeState.discoveryServiceURL }}</td>
+                </tr>
+                <tr>
                     <td ng-class="{ 'config-table-disabled': !vm.auth_enabled }">TAGS</td>
                     <td tooltip="{{ vm.tags_tooltip }}" ng-click="vm.configureTags()"
                         ng-class="['cursor-pointer', { 'nodedetail-info-clickable': vm.auth_enabled, 'config-table-disabled': !vm.auth_enabled }]">

@@ -1,0 +1,21 @@
+<div class="modal-header">
+    <h1 class="modal-title">UPLOAD SERVER CA CERTIFICATE</h1>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <form class="config-add-form form-horizontal m-t-xs">
+            <div class="form-group">
+                <label class="col-xs-4 control-label">CERTIFICATE</label>
+                <div class="col-xs-6" style="padding-top: 7px">
+                    <input ng-disabled="vm.uploading" type="file" nv-file-select="" uploader="vm.certUploader">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal-footer">
+    <button ng-disabled="vm.certUploader.queue.length == 0 || vm.uploading"
+            class="btn btn-primary btn-sm" type="button"
+            ng-click="vm.uploadAll()">{{vm.uploading ? 'UPLOADING' : 'UPLOAD'}}</button>
+    <button ng-disabled="vm.uploading" class="btn btn-primary btn-sm" type="button" ng-click="vm.cancel()">CANCEL</button>
+</div>
