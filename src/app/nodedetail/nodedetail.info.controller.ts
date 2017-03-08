@@ -87,7 +87,7 @@ export class NodeDetailInfoController {
         });
     }
 
-    private updateMinemeldConfig() {
+    updateMinemeldConfig() {
         var vm: any = this;
 
         vm.mmstatus.getConfig()

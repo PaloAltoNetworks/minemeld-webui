@@ -42,8 +42,8 @@ export interface IMinemeldConfigService {
     deleteNode(noden: number): angular.IPromise<any>;
     commit(): angular.IPromise<any>;
     addNode(name: string, properties: any): angular.IPromise<any>;
-    getDataFile(datafilename: string): angular.IPromise<any>;
-    saveDataFile(datafilename: string, data: any, hup?: string): angular.IPromise<any>;
+    getDataFile(datafilename: string, dtype?: string): angular.IPromise<any>;
+    saveDataFile(datafilename: string, data: any, hup?: string, dtype?: string): angular.IPromise<any>;
     appendDataFile(datafilename: string, data: any, hup?: string): angular.IPromise<any>;
 }
 
@@ -239,8 +239,9 @@ export class MinemeldConfigService implements IMinemeldConfigService {
         });
     }
 
-    getDataFile(datafilename: string): angular.IPromise<any> {
+    getDataFile(datafilename: string, dtype?: string): angular.IPromise<any> {
         var r: IMinemeldConfigResource;
+        var params: any = {};
 
         r = <IMinemeldConfigResource>(this.MineMeldAPIService.getAPIResource('/config/data/:datafilename', {
             datafilename: datafilename
@@ -250,7 +251,11 @@ export class MinemeldConfigService implements IMinemeldConfigService {
             }
         }));
 
-        return r.get().$promise
+        if (dtype) {
+            params.t = dtype;
+        }
+
+        return r.get(params).$promise
         .then((result: any) => {
             return result.result;
         }, (error: any) => {

@@ -1,6 +1,5 @@
 /// <reference path="../../../typings/main.d.ts" />
 
-import { INodeDetailResolverService } from '../../app/services/nodedetailresolver';
 import { IMinemeldStatusService } from '../../app/services/status';
 import { NodeDetailInfoController } from './nodedetail.info.controller';
 import { IThrottleService } from '../../app/services/throttle';
@@ -121,44 +120,7 @@ export class NodeDetailFeedInfoController extends NodeDetailInfoController {
     }
 }
 
-/** @ngInject */
-function feedRouterConfig($stateProvider: ng.ui.IStateProvider) {
-    $stateProvider
-        .state('nodedetail.feedinfo', {
-            templateUrl: 'app/nodedetail/feed.info.html',
-            controller: 'NodeDetailFeedInfoController',
-            controllerAs: 'vm'
-        })
-        ;
-}
-
-/** @ngInject */
-function feedRegisterClass(NodeDetailResolver: INodeDetailResolverService) {
-    NodeDetailResolver.registerClass('minemeld.ft.taxii.DataFeed', {
-        tabs: [{
-            icon: 'fa fa-circle-o',
-            tooltip: 'INFO',
-            state: 'nodedetail.feedinfo',
-            active: false
-        },
-        {
-            icon: 'fa fa-area-chart',
-            tooltip: 'STATS',
-            state: 'nodedetail.stats',
-            active: false
-        },
-        {
-            icon: 'fa fa-asterisk',
-            tooltip: 'GRAPH',
-            state: 'nodedetail.graph',
-                active: false
-        }]
-    });
-}
-
 console.log('Loading Feed');
 angular.module('minemeldWebui')
-    .config(feedRouterConfig)
-    .run(feedRegisterClass)
     .controller('NodeDetailFeedInfoController', NodeDetailFeedInfoController)
     ;
