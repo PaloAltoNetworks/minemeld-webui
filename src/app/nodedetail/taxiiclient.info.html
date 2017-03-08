@@ -15,11 +15,11 @@
                     <td>CLASS</td>
                     <td>{{ nodedetailinfo.nodeState.class }}</td>
                 </tr>
-                <tr ng-if="nodedetailinfo.nodeConfig.prototype">
+                <tr ng-if="nodedetailinfo.nodeConfig.node.prototype">
                     <td>PROTOTYPE</td>
-                    <td><a tooltip-template="'tooltip.prototype.html'" ui-sref="prototypedetail({ prototypeName: nodedetailinfo.nodeConfig.prototype.split('.')[1], libraryName: nodedetailinfo.nodeConfig.prototype.split('.')[0] })">{{ nodedetailinfo.nodeConfig.prototype }}</a></td>
+                    <td><a tooltip-template="'tooltip.prototype.html'" ui-sref="prototypedetail({ prototypeName: nodedetailinfo.nodeConfig.node.prototype.split('.')[1], libraryName: nodedetailinfo.nodeConfig.node.prototype.split('.')[0] })">{{ nodedetailinfo.nodeConfig.node.prototype }}</a></td>
                     <script type="text/ng-template" id="tooltip.prototype.html">
-                        <prototype-tooltip name="nodedetailinfo.nodeConfig.prototype"></prototype-tooltip>
+                        <prototype-tooltip name="nodedetailinfo.nodeConfig.node.prototype"></prototype-tooltip>
                     </script>
                 </tr>
                 <tr>
@@ -36,11 +36,32 @@
                         <span ng-if="nodedetailinfo.username">{{ nodedetailinfo.username }}</span>
                     </td>
                 </tr>
-                <tr>
+                <tr ng-if="nodedetailinfo.usernameEnabled">
                     <td>{{ nodedetailinfo.secretName }}</td>
                     <td tooltip="set {{ nodedetailinfo.secretName|lowercase }}" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setPassword()">
                         <span ng-if="!nodedetailinfo.secret"><em>Not set</span></span>
                         <span ng-if="nodedetailinfo.secret" class="label label-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></span>
+                    </td>
+                </tr>
+                <tr ng-if="nodedetailinfo.clientCertEnabled">
+                    <td>CLIENT CERTIFICATE</td>
+                    <td tooltip="set client certificate" class="nodedetail-info-clickable" ng-click="nodedetailinfo.uploadClientCertificate()">
+                        <span ng-if="!nodedetailinfo.clientCertSet"><em>Not set</em></span>
+                        <span ng-if="nodedetailinfo.clientCertSet" class="label label-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></span>
+                    </td>
+                </tr>
+                <tr ng-if="nodedetailinfo.subscriptionIdEnabled">
+                    <td>SUBSCRIPTION ID</td>
+                    <td tooltip="set subscription ID" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setSubscriptionId()">
+                        <span ng-if="!nodedetailinfo.subscriptionId"><em>Not set</em></span>
+                        <span ng-if="nodedetailinfo.subscriptionId">{{ nodedetailinfo.subscriptionId }}</span>
+                    </td>
+                </tr>
+                <tr ng-if="nodedetailinfo.serverCAEnabled">
+                    <td>SERVER CA</td>
+                    <td tooltip="set server CA certificate" class="nodedetail-info-clickable" ng-click="nodedetailinfo.uploadServerCA()">
+                        <span ng-if="!nodedetailinfo.serverCASet"><em>Not set</em></span>
+                        <span ng-if="nodedetailinfo.serverCASet" class="label label-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></span>
                     </td>
                 </tr>
                 <tr ng-if="nodedetailinfo.nodeState.last_run">
