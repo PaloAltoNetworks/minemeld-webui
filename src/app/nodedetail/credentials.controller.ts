@@ -98,6 +98,27 @@ function credentialsRegisterClasses(NodeDetailResolver: INodeDetailResolverServi
         }]
     });
 
+    NodeDetailResolver.registerClass('minemeld.ft.mm.JSONSEQMiner', {
+        tabs: [{
+            icon: 'fa fa-circle-o',
+            tooltip: 'INFO',
+            state: 'nodedetail.credentialsinfo',
+            active: false
+        },
+        {
+            icon: 'fa fa-area-chart',
+            tooltip: 'STATS',
+            state: 'nodedetail.stats',
+            active: false
+        },
+        {
+            icon: 'fa fa-asterisk',
+            tooltip: 'GRAPH',
+            state: 'nodedetail.graph',
+            active: false
+        }]
+    });
+
     NodeDetailResolver.registerClass('minemeld.ft.anomali.Intelligence', {
         tabs: [{
             icon: 'fa fa-circle-o',
