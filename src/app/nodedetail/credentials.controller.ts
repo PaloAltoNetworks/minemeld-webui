@@ -98,7 +98,7 @@ function credentialsRegisterClasses(NodeDetailResolver: INodeDetailResolverServi
         }]
     });
 
-    NodeDetailResolver.registerClass('minemeld.ft.taxii.TaxiiClient', {
+    NodeDetailResolver.registerClass('minemeld.ft.mm.JSONSEQMiner', {
         tabs: [{
             icon: 'fa fa-circle-o',
             tooltip: 'INFO',
@@ -255,13 +255,18 @@ export class NodeDetailCredentialsInfoController extends NodeDetailInfoControlle
 
     saveSideConfig(): angular.IPromise<any> {
         var side_config: any;
+        var hup_node: string = undefined;
 
         side_config = this.prepareSideConfig();
+
+        if (this.usernameEnabled && typeof(this.username) !== 'undefined' && typeof(this.secret) !== 'undefined') {
+            hup_node = this.nodename;
+        }
 
         return this.MinemeldConfigService.saveDataFile(
             this.nodename + '_side_config',
             side_config,
-            this.nodename
+            hup_node
         );
     }
 

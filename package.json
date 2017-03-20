@@ -1,6 +1,6 @@
 {
   "name": "minemeldWebui",
-  "version": "0.9.34",
+  "version": "0.9.36",
   "dependencies": {},
   "scripts": {
     "test": "gulp test",
