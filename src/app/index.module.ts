@@ -44,6 +44,7 @@ import { MineMeldEngineStatusService } from './services/enginestatus';
 import { MineMeldRunningConfigStatusService } from './services/runningconfigstatus';
 import { MineMeldJobsService } from './services/jobs';
 import { MineMeldCurrentUserService } from './services/currentuser';
+import { MineMeldWebUIExtensionsLoaderService } from './services/webuiextensionsloader';
 import { megaNumber } from './filters/megaNumber';
 import { appNavbar } from '../app/components/navbar/navbar.directive';
 import { minemeldOptions } from '../app/components/options/options.directive';
@@ -73,7 +74,8 @@ module minemeldWebui {
     'nvd3',
     'mmSankey',
     'ui.select',
-    'angularFileUpload'
+    'angularFileUpload',
+    'oc.lazyLoad'
   ])
   .constant('moment', moment)
   .config(config)
@@ -123,6 +125,7 @@ module minemeldWebui {
   .service('MineMeldExtensionsService', MineMeldExtensionsService)
   .service('MineMeldJobsService', MineMeldJobsService)
   .service('MineMeldCurrentUserService', MineMeldCurrentUserService)
+  .service('MineMeldWebUIExtensionsLoaderService', MineMeldWebUIExtensionsLoaderService)
   .filter('megaNumber', megaNumber)
   .run(minemeldInit)
   ;

@@ -1,12 +1,14 @@
 import { IMineMeldAPIService } from './services/minemeldapi';
 import { IMinemeldStatusService } from './services/status';
+import { IMineMeldWebUIExtensionsLoaderService } from './services/webuiextensionsloader';
 
 /** @ngInject */
 export function minemeldInit($state: angular.ui.IStateService,
                              $rootScope: any,
                              $cookies: angular.cookies.ICookiesService,
                              MineMeldAPIService: IMineMeldAPIService,
-                             MinemeldStatusService: IMinemeldStatusService) {
+                             MinemeldStatusService: IMinemeldStatusService,
+                             MineMeldWebUIExtensionsLoaderService: IMineMeldWebUIExtensionsLoaderService) {
     document.getElementById('loader').style.display = 'none';
 
     $rootScope.mmBack = (state?: string) => {
