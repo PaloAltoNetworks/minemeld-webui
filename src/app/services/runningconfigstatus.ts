@@ -87,9 +87,7 @@ export class MineMeldRunningConfigStatusService implements IMineMeldRunningConfi
 
     private changeListener(event: any, status: string): void {
         this.MineMeldEngineStatusService.getStatus().then((status: IMineMeldEngineStatus) => {
-            console.log('getstatus');
             if (status.statename === 'RUNNING' || status.statename === 'STARTING') {
-                console.log(status.statename);
                 this.updateRunningConfigStatus();
             }
         });

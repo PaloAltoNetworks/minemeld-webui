@@ -16,7 +16,7 @@ export interface IMineMeldExtension {
 }
 
 export interface IMineMeldExtensionsService {
-    list(): angular.IPromise<IMineMeldExtension[]>;
+    list(cancellable?: boolean): angular.IPromise<IMineMeldExtension[]>;
     activate(name: string, version: string, path: string): angular.IPromise<any>;
     deactivate(name: string, version: string, path: string): angular.IPromise<any>;
     uninstall(name: string, version: string, path: string): angular.IPromise<any>;
@@ -39,14 +39,22 @@ export class MineMeldExtensionsService implements IMineMeldExtensionsService {
         this.MineMeldAPIService = MineMeldAPIService;
     }
 
-    list(): angular.IPromise<IMineMeldExtension[]> {
+    list(cancellable?: boolean): angular.IPromise<IMineMeldExtension[]> {
         var api: angular.resource.IResourceClass<angular.resource.IResource<any>>;
 
-        api = this.MineMeldAPIService.getAPIResource('/extensions', {}, {
-            get: {
-                method: 'GET'
-            }
-        });
+        if (typeof cancellable === 'undefined') {
+            cancellable = true;
+        }
+
+        api = this.MineMeldAPIService.getAPIResource(
+            '/extensions', {},
+            {
+                get: {
+                    method: 'GET'
+                }
+            },
+            cancellable
+        );
 
         return api.get().$promise.then((result: any) => {
             if ('result' in result) {

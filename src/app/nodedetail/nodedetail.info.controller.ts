@@ -88,7 +88,7 @@ export class NodeDetailInfoController {
     }
 
     updateMinemeldConfig() {
-        var vm: any = this;
+        var vm: NodeDetailInfoController = this;
 
         vm.mmstatus.getConfig()
         .then(function(result: any) {

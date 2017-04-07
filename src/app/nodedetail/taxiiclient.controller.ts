@@ -104,7 +104,6 @@ class TAXIIClientInfoController extends NodeDetailCredentialsInfoController {
             if (vm.nodeConfig.config && (Object.keys(vm.nodeConfig.config).length === 0)) {
                 vm.nodeConfig.config = null;
             }
-            console.log(vm.nodeConfig.config);
 
             if (tnodeConfig.resolvedPrototype) {
                 var pconfig: any = tnodeConfig.resolvedPrototype.config;
