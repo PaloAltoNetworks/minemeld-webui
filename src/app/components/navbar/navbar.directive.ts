@@ -134,7 +134,6 @@ export class NavbarController {
   private initReadWrite() {
     this.MineMeldCurrentUserService.getReadWrite().then((result: boolean) => {
       this.read_write = result;
-      console.log('read write', result);
     });
   }
 

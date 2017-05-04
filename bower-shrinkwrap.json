@@ -72,11 +72,14 @@
     "0.5.0": "0.5.0"
   },
   "https://github.com/mbostock-bower/d3-bower.git": {
-    "3.5.5": "3.5.5",
-    "3.5.17": "abe0262a205c9f3755c3a757de4dfd1d49f34b24"
+    "3.5.17": "abe0262a205c9f3755c3a757de4dfd1d49f34b24",
+    "3.5.5": "3.5.5"
   },
   "https://github.com/moment/moment.git": {
     "2.10.6": "2.10.6"
+  },
+  "https://github.com/nervgh/angular-file-upload.git": {
+    "2.4.1": "2.4.1"
   },
   "https://github.com/nodeca/js-yaml.git": {
     "3.6.1": "3.6.1"
@@ -84,10 +87,10 @@
   "https://github.com/novus/nvd3.git": {
     "1.8.2": "1.8.2"
   },
+  "https://github.com/ocombe/ocLazyLoad.git": {
+    "1.1.0": "c282f8f47736c195a4079024f62f3c9e16420619"
+  },
   "https://github.com/twbs/bootstrap-sass.git": {
     "3.3.6": "3.3.6"
-  },
-  "https://github.com/nervgh/angular-file-upload.git": {
-    "2.4.1": "2.4.1"
   }
 }
