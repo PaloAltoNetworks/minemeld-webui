@@ -52,7 +52,9 @@ export class MineMeldWebUIExtensionsLoaderService implements IMineMeldWebUIExten
                 });
             });
         }, (error: any) => {
-            this.toastr.error('ERROR RETRIEVING MINEMELD EXTENSIONS: ' + error.statusText);
+            if (this.MineMeldAPIService.isLoggedIn()) {
+                this.toastr.error('ERROR RETRIEVING MINEMELD EXTENSIONS: ' + error.statusText);
+            }
         });
     }
 }
