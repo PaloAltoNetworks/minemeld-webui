@@ -198,13 +198,12 @@ class NodeDetailProofpointInfoController extends NodeDetailInfoController {
             sconfig.auth_code = this.authCode;
 
             if (this.monitoredCategories) {
-                sconfig.montiored_categories = this.monitoredCategories;
+                sconfig.monitored_categories = this.monitoredCategories;
             }
 
             return this.MinemeldConfigService.saveDataFile(
                 this.nodename + '_side_config',
-                sconfig,
-                this.nodename
+                sconfig
             );
         })
         .then((result: any) => {
@@ -246,8 +245,7 @@ class NodeDetailProofpointInfoController extends NodeDetailInfoController {
 
             return this.MinemeldConfigService.saveDataFile(
                 this.nodename + '_side_config',
-                sconfig,
-                this.nodename
+                sconfig
             );
         })
         .then((result: any) => {
