@@ -56,11 +56,7 @@ export class AdminUsersController {
     removeUser(unum: number): void {
         var p: angular.IPromise<any>;
         var u: string;
-
-        if (this.users.length === 1) {
-            this.toastr.error('YOU CAN\'T DELETE THE LAST ADMIN FROM THE WEBUI');
-            return;
-        }
+        var lastUser: string = '';
 
         u = this.users[unum].username;
 
@@ -68,6 +64,15 @@ export class AdminUsersController {
             'DELETE USER',
             'Are you sure you want to delete user ' + u + ' ?'
         );
+
+        if (this.users.length == 1) {
+            p = p.then((result: any) => {
+                return this.ConfirmService.show(
+                    'DELETE LAST ADMIN USER',
+                    'Are you sure you want to delete the last admin user ?'
+                );
+            });
+        }
 
         p.then((result: any) => {
             this.MinemeldAAAService.deleteUser('api', u).then((result: any) => {
