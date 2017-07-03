@@ -27,6 +27,22 @@ function credentialsListConfig($stateProvider: ng.ui.IStateProvider) {
                 }
             }
         })
+        .state('nodedetail.auscertinfo', {
+            templateUrl: 'app/nodedetail/credentials.info.html',
+            controller: NodeDetailCredentialsInfoController,
+            controllerAs: 'nodedetailinfo',
+            params: {
+                usernameEnabled: {
+                    value: false
+                },
+                secretName: {
+                    value: 'API KEY'
+                },
+                secretField: {
+                    value: 'api_key'
+                }
+            }
+        })
         .state('nodedetail.anomaliinfo', {
             templateUrl: 'app/nodedetail/credentials.info.html',
             controller: NodeDetailCredentialsInfoController,
@@ -81,7 +97,7 @@ function credentialsRegisterClasses(NodeDetailResolver: INodeDetailResolverServi
         tabs: [{
             icon: 'fa fa-circle-o',
             tooltip: 'INFO',
-            state: 'nodedetail.credentialsinfo',
+            state: 'nodedetail.auscertinfo',
             active: false
         },
         {
