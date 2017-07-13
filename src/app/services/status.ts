@@ -16,6 +16,7 @@ export interface IMinemeldStatusService {
     initStatusMonitor(): void;
     destroyStatusMonitor(): void;
     generateLocalBackup(password: string): angular.IPromise<string>;
+    restoreLocalBackup(backup_id: string, password: string, configuration: boolean, feedsAAA: boolean, localPrototypes: boolean): angular.IPromise<string>;
 }
 
 export interface IMinemeldStatusNode {
@@ -249,6 +250,30 @@ export class MinemeldStatusService implements IMinemeldStatusService {
 
             return undefined;
         });
+    }
+
+    public restoreLocalBackup(backup_id: string, password: string, configuration: boolean, feedsAAA: boolean, localPrototypes: boolean) {
+        var result: IStatusAPIResource;
+        var data: any = {
+            p: password,
+            configuration: configuration,
+            feedsAAA: feedsAAA,
+            localPrototypes: localPrototypes
+        };
+
+        result = <IStatusAPIResource>this.MineMeldAPIService.getAPIResource('/status/backup/import/:backup_id/restore', {}, {
+            post: {
+                method: 'POST'
+            }
+        }, false);
+
+        return result.post({ backup_id: backup_id }, JSON.stringify(data)).$promise.then((result: any) => {
+            if ('result' in result) {
+                return result.result;
+            }
+
+            return undefined;
+        });           
     }
 
     private onEventsMessage(subtype: string, event: string, e: any): void {
