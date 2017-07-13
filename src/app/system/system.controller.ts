@@ -43,7 +43,7 @@ export class SystemDashboardController {
     supervisorUpdatePromise: angular.IPromise<any>;
 
     purgingTraces: boolean = false;
-    generatingBackup: boolean = false;
+    workingBackup: boolean = false;
 
     /* @ngInject */
     constructor(toastr: any, $interval: angular.IIntervalService,
@@ -156,7 +156,7 @@ export class SystemDashboardController {
         });
 
         mi.result.then((result: { password: string }) => {
-            this.generatingBackup = true;
+            this.workingBackup = true;
             this.mmstatus.generateLocalBackup(result.password).then((jobid: string) => {
                 this.toastr.success('BACKUP SCHEDULED');
                 this.MineMeldJobsService.monitor('status-backup', jobid).then((result: IMineMeldJob) => {
@@ -176,18 +176,45 @@ export class SystemDashboardController {
                         }
                     });
                 }).finally(() => {
-                    this.generatingBackup = false;
+                    this.workingBackup = false;
                 });
             }, (error: any) => {
                 var detail: string;
 
-                this.generatingBackup = false;
+                this.workingBackup = false;
                 detail = error.statusText;
                 if (error.status == 400) {
                     detail = error.data.error.message;
                 }
 
                 this.toastr.error('ERROR SCHEDULING BACKUP: ' + detail);
+            });
+        });
+    }
+
+    restoreLocalBackup(): void {
+        var mi: angular.ui.bootstrap.IModalServiceInstance;
+
+        mi = this.$modal.open({
+            templateUrl: 'app/system/restorebackup.modal.html',
+            controller: DashboardRestoreBackupController,
+            controllerAs: 'vm',
+            bindToController: true,
+            backdrop: 'static',
+            animation: false
+        });
+
+        mi.result.then((jobid: string) => {
+            this.workingBackup = true;
+            this.toastr.success('RESTORE SCHEDULED');
+            this.MineMeldJobsService.monitor('restore-backup', jobid).then((result: IMineMeldJob) => {
+                if (result.status === 'ERROR') {
+                    return;
+                }
+
+                this.toastr.success('PRESS REVERT ON THE <a href="/#/config">CONFIG</a> PAGE TO VIEW THE NEW RUNNING CONFIG');
+            }).finally(() => {
+                this.workingBackup = false;
             });
         });
     }
@@ -320,5 +347,120 @@ class DashboardDownloadBackupController {
 
     ok() {
         this.$modalInstance.close('ok');
+    }
+};
+
+class DashboardRestoreBackupController {
+    $modalInstance: angular.ui.bootstrap.IModalServiceInstance;
+    MinemeldStatusService: IMinemeldStatusService;
+    toastr: any;
+
+    backup_id: string;
+
+    feedsAAAAvailable: boolean = false;
+    feedsAAA: boolean = false;
+    localPrototypesAvailable: boolean = false;
+    localPrototypes: boolean = false;
+    configurationAvailable: boolean = false;
+    configuration: boolean = true;
+    localCertificatesAvailable: boolean = false;
+    localCertificates: boolean = false;
+
+    uploader: any;
+
+    password: string;
+
+    state: string = 'INIT';
+    contentSelected: boolean = true;
+
+    /** @ngInject */
+    constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance,
+                MinemeldStatusService: IMinemeldStatusService,
+                FileUploader: any,
+                toastr: any) {
+        this.$modalInstance = $modalInstance;
+        this.MinemeldStatusService = MinemeldStatusService;
+        this.toastr = toastr;
+
+        this.uploader = new FileUploader({
+            url: '/status/backup/import',
+            queueLimit: 1,
+            removeAfterUpload: true
+        });
+        this.uploader.onErrorItem = (item: any, response: any, status: any) => {
+            if (status === 400) {
+                toastr.error('ERROR UPLOADING: ' + response.error.message);
+            } else {
+                toastr.error('ERROR UPLOADING: ' + status);
+            }
+
+            this.state = 'ERROR';
+
+            this.cancel();
+            return;
+        };
+        this.uploader.onSuccessItem = (item: any, response: any) => {
+            this.state = 'UPLOADED';
+
+            this.backup_id = response.result.id;
+            this.feedsAAAAvailable = response.result.feedsAAA;
+            this.configurationAvailable = response.result.configuration;
+            this.localPrototypesAvailable = response.result.localPrototypes;
+            this.localCertificatesAvailable = response.result.localCertificates;
+
+            this.updateContentSelected();
+        };
+    }
+
+    restore1st() {
+        this.state = 'RESTORE';
+    }
+
+    restore2nd() {
+        this.MinemeldStatusService.restoreLocalBackup(
+            this.backup_id, this.password,
+            this.configuration,
+            this.feedsAAA,
+            this.localPrototypes
+        ).then((result: string) => {
+            this.$modalInstance.close(result);
+        }, (error: any) => {
+            if (!error.cancelled) {
+                this.toastr.error('ERROR SCHEDULING RESTORE: ' + error.statusText);
+            }
+            this.cancel();
+        });
+    }
+
+    cancel() {
+        this.$modalInstance.dismiss('cancel');
+    }
+
+    toggleConfiguration() {
+        this.configuration = !this.configuration;
+        this.updateContentSelected();
+    }
+
+    toggleFeedsAAA() {
+        this.feedsAAA = !this.feedsAAA;
+        this.updateContentSelected();
+    }
+
+    toggleLocalPrototypes() {
+        this.localPrototypes = !this.localPrototypes;
+        this.updateContentSelected();
+    }
+
+    toggleLocalCertificates() {
+        this.localCertificates = !this.localCertificates;
+        this.updateContentSelected();
+    }
+
+    private updateContentSelected() {
+        this.contentSelected = false;
+        this.contentSelected = this.contentSelected || (this.configurationAvailable && this.configuration);
+        this.contentSelected = this.contentSelected || (this.feedsAAAAvailable && this.feedsAAA);
+        this.contentSelected = this.contentSelected || (this.localPrototypesAvailable && this.localPrototypes);
+        this.contentSelected = this.contentSelected || (this.localCertificatesAvailable && this.localCertificates);
     }
 };
