@@ -1,0 +1,108 @@
+<div class="modal-header">
+    <h1 class="modal-title">RESTORE LOCAL BACKUP</h1>
+</div>
+<div class="modal-body">
+    <div class="row" ng-if="vm.state == 'INIT'">
+        <form class="config-add-form form-horizontal m-t-xs">
+            <div class="form-group">
+                <label class="col-xs-4 control-label">BACKUP FILE</label>
+                <div class="col-xs-6" style="padding-top: 7px">
+                    <input ng-disabled="vm.uploader.isUploading" type="file" nv-file-select="" uploader="vm.uploader">
+                </div>
+            </div>
+            <div class="form-group" id="fgPassword1">
+                <label class="col-xs-4 control-label">PASSWORD</label>
+                <div class="col-xs-6">
+                    <input type="password" ng-model="vm.password" class="form-control" placeholder="Password for backup file">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row" ng-if="vm.state == 'UPLOADED'">
+        <div class="col-xs-12">
+            Select backup content to restore
+        </div>
+    </div>
+    <div class="row" ng-if="vm.state == 'UPLOADED'">
+        <form class="config-add-form form-horizontal m-t-xs">
+            <div class="form-group">
+                <label class="col-xs-4 control-label">CONFIGURATION</label>
+                <div class="col-xs-6" style="padding-top: 7px">
+                    <span ng-if="vm.configurationAvailable && vm.configuration"
+                          class="label label-success">
+                          <span ng-click="vm.toggleConfiguration()" tooltip="enabled" class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                    </span>
+                    <span ng-if="vm.configurationAvailable && !vm.configuration"
+                          class="label label-default">
+                        <span ng-click="vm.toggleConfiguration()" tooltip="disabled" class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </span>
+                    <span ng-if="!vm.configurationAvailable"><i>Not available</i><span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-4 control-label">FEEDS AAA</label>
+                <div class="col-xs-6" style="padding-top: 7px">
+                    <span ng-if="vm.feedsAAAAvailable && vm.feedsAAA"
+                          class="label label-success">
+                          <span ng-click="vm.toggleFeedsAAA()" tooltip="enabled" class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                    </span>
+                    <span ng-if="vm.feedsAAAAvailable && !vm.feedsAAA"
+                          class="label label-default">
+                          <span ng-click="vm.toggleFeedsAAA()" tooltip="disabled" class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </span>
+                    <span ng-if="!vm.feedsAAAAvailable"><i>Not available</i><span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-4 control-label">LOCAL PROTOTYPES</label>
+                <div class="col-xs-6" style="padding-top: 7px">
+                    <span ng-if="vm.localPrototypesAvailable && vm.localPrototypes"
+                          class="label label-success">
+                        <span ng-click="vm.toggleLocalPrototypes()" tooltip="enabled" class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                    </span>
+                    <span ng-if="vm.localPrototypesAvailable && !vm.localPrototypes"
+                          class="label label-default">
+                        <span ng-click="vm.toggleLocalPrototypes()" tooltip="disabled" class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </span>
+                    <span ng-if="!vm.localPrototypesAvailable"><i>Not available</i><span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-4 control-label">LOCAL CERTIFICATES</label>
+                <div class="col-xs-6" style="padding-top: 7px">
+                    <span ng-if="vm.localCertificatesAvailable && vm.localCertificates"
+                          class="label label-success">
+                        <span ng-click="vm.toggleLocalCertificates()" tooltip="enabled" ng-click="vm.toggleConfiguration" tooltip="enabled" class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                    </span>
+                    <span ng-if="vm.localCertificatesAvailable && !vm.localCertificates"
+                          class="label label-default">
+                        <span ng-click="vm.toggleLocalCertificates()" tooltip="disabled" class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </span>
+                    <span ng-if="!vm.localCertificatesAvailable"><i>Not available</i><span>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row" ng-if="vm.state == 'RESTORE'">
+        <div class="col-xs-12">
+            RESTORING BACKUP. TO PROCEED PRESS CONTINUE.
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button ng-if="vm.state == 'INIT'"
+            ng-disabled="vm.uploader.queue.length == 0 || vm.uploader.isUploading"
+            class="btn btn-primary btn-sm" type="button"
+            ng-click="vm.uploader.uploadAll()">{{vm.uploader.isUploading ? 'UPLOADING' : 'UPLOAD'}}</button>
+    <button ng-if="vm.state == 'UPLOADED'"
+            ng-disabled="!vm.contentSelected"
+            class="btn btn-primary btn-sm" type="button"
+            ng-click="vm.restore1st()">RESTORE</button>
+    <button ng-if="vm.state == 'RESTORE'"
+            class="btn btn-primary btn-sm" type="button"
+            ng-click="vm.restore2nd()">CONTINUE</button>
+    <button ng-disabled="vm.uploader.isUploading"
+            class="btn btn-primary btn-sm"
+            type="button"
+            ng-click="vm.cancel()">CANCEL</button>
+</div>
