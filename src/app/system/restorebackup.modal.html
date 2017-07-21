@@ -25,7 +25,7 @@
     </div>
     <div class="row" ng-if="vm.state == 'UPLOADED'">
         <form class="config-add-form form-horizontal m-t-xs">
-            <div class="form-group">
+            <div ng-if="vm.configurationAvailable" class="form-group">
                 <label class="col-xs-4 control-label">CONFIGURATION</label>
                 <div class="col-xs-6" style="padding-top: 7px">
                     <span ng-if="vm.configurationAvailable && vm.configuration"
@@ -39,7 +39,7 @@
                     <span ng-if="!vm.configurationAvailable"><i>Not available</i><span>
                 </div>
             </div>
-            <div class="form-group">
+            <div ng-if="vm.feedsAAAAvailable" class="form-group">
                 <label class="col-xs-4 control-label">FEEDS AAA</label>
                 <div class="col-xs-6" style="padding-top: 7px">
                     <span ng-if="vm.feedsAAAAvailable && vm.feedsAAA"
@@ -53,7 +53,7 @@
                     <span ng-if="!vm.feedsAAAAvailable"><i>Not available</i><span>
                 </div>
             </div>
-            <div class="form-group">
+            <div ng-if="vm.localPrototypesAvailable" class="form-group">
                 <label class="col-xs-4 control-label">LOCAL PROTOTYPES</label>
                 <div class="col-xs-6" style="padding-top: 7px">
                     <span ng-if="vm.localPrototypesAvailable && vm.localPrototypes"
@@ -67,7 +67,7 @@
                     <span ng-if="!vm.localPrototypesAvailable"><i>Not available</i><span>
                 </div>
             </div>
-            <div class="form-group">
+            <div ng-if="vm.localCertificatesAvailable" class="form-group">
                 <label class="col-xs-4 control-label">LOCAL CERTIFICATES</label>
                 <div class="col-xs-6" style="padding-top: 7px">
                     <span ng-if="vm.localCertificatesAvailable && vm.localCertificates"
