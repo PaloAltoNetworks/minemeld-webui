@@ -39,6 +39,26 @@ function recordedFutureRegisterClass(NodeDetailResolver: INodeDetailResolverServ
                 active: false
         }]
     });
+    NodeDetailResolver.registerClass('minemeld.ft.recordedfuture.DomainRiskList', {
+        tabs: [{
+            icon: 'fa fa-circle-o',
+            tooltip: 'INFO',
+            state: 'nodedetail.recordedfutureinfo',
+            active: false
+        },
+        {
+            icon: 'fa fa-area-chart',
+            tooltip: 'STATS',
+            state: 'nodedetail.stats',
+            active: false
+        },
+        {
+            icon: 'fa fa-asterisk',
+            tooltip: 'GRAPH',
+            state: 'nodedetail.graph',
+                active: false
+        }]
+    });
 }
 
 class NodeDetailRecordedFutureInfoController extends NodeDetailInfoController {
