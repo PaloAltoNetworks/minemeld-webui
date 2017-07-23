@@ -5,6 +5,7 @@ import { IMinemeldSupervisorService } from '../../app/services/supervisor';
 import { IMinemeldTracedService } from '../services/traced';
 import { IMineMeldJobsService, IMineMeldJob } from '../services/jobs';
 import { IMinemeldPrototypeService } from '../services/prototype';
+import { IMinemeldConfigService } from '../services/config';
 import { IConfirmService } from '../../app/services/confirm';
 
 export class SystemController {
@@ -23,6 +24,7 @@ export class SystemDashboardController {
     MinemeldTracedService: IMinemeldTracedService;
     MineMeldJobsService: IMineMeldJobsService;
     MinemeldPrototypeService: IMinemeldPrototypeService;
+    MinemeldConfigService: IMinemeldConfigService;
     ConfirmService: IConfirmService;
     toastr: any;
     $interval: angular.IIntervalService;
@@ -30,6 +32,7 @@ export class SystemDashboardController {
     moment: moment.MomentStatic;
     $modal: angular.ui.bootstrap.IModalService;
     $state: angular.ui.IStateService;
+    $window: angular.IWindowService;
 
     epOptions: any = {
         barColor: '#977390'
@@ -54,6 +57,8 @@ export class SystemDashboardController {
                 MinemeldTracedService: IMinemeldTracedService,
                 MineMeldJobsService: IMineMeldJobsService,
                 MinemeldPrototypeService: IMinemeldPrototypeService,
+                MinemeldConfigService: IMinemeldConfigService,
+                $window: angular.IWindowService,
                 $modal: angular.ui.bootstrap.IModalService,
                 ConfirmService: IConfirmService,
                 $rootScope: angular.IRootScopeService,
@@ -65,12 +70,14 @@ export class SystemDashboardController {
         this.MinemeldTracedService = MinemeldTracedService;
         this.MineMeldJobsService = MineMeldJobsService;
         this.MinemeldPrototypeService = MinemeldPrototypeService;
+        this.MinemeldConfigService = MinemeldConfigService;
         this.ConfirmService = ConfirmService;
         this.$interval = $interval;
         this.$scope = $scope;
         this.moment = moment;
         this.$modal = $modal;
         this.$state = $state;
+        this.$window = $window;
 
         (<any>this.$scope.$parent).vm.tabs = [true, false];
 
@@ -218,9 +225,11 @@ export class SystemDashboardController {
                     return;
                 }
 
-                this.toastr.success('REFRESHING THE BROWSER TO UPDATE THE PROTOTYPE LIBRARY');
+                this.toastr.success('LOADING COMMITTED CONFIG INTO CANDIDATE AND REFRESHING THE BROWSER TO UPDATE THE PROTOTYPE LIBRARY');
                 this.MinemeldPrototypeService.invalidateCache();
-                this.$state.go(this.$state.$current, { reload: true });
+                this.MinemeldConfigService.reload('committed').then(() => {
+                    this.$window.location.reload();
+                });
             }).finally(() => {
                 this.workingBackup = false;
             });
