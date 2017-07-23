@@ -4,6 +4,8 @@ import { IMinemeldStatusService } from  '../../app/services/status';
 import { IMinemeldSupervisorService } from '../../app/services/supervisor';
 import { IMinemeldTracedService } from '../services/traced';
 import { IMineMeldJobsService, IMineMeldJob } from '../services/jobs';
+import { IMinemeldPrototypeService } from '../services/prototype';
+import { IMinemeldConfigService } from '../services/config';
 import { IConfirmService } from '../../app/services/confirm';
 
 export class SystemController {
@@ -21,12 +23,16 @@ export class SystemDashboardController {
     MinemeldSupervisorService: IMinemeldSupervisorService;
     MinemeldTracedService: IMinemeldTracedService;
     MineMeldJobsService: IMineMeldJobsService;
+    MinemeldPrototypeService: IMinemeldPrototypeService;
+    MinemeldConfigService: IMinemeldConfigService;
     ConfirmService: IConfirmService;
     toastr: any;
     $interval: angular.IIntervalService;
     $scope: angular.IScope;
     moment: moment.MomentStatic;
     $modal: angular.ui.bootstrap.IModalService;
+    $state: angular.ui.IStateService;
+    $window: angular.IWindowService;
 
     epOptions: any = {
         barColor: '#977390'
@@ -50,6 +56,9 @@ export class SystemDashboardController {
                 MinemeldStatusService: IMinemeldStatusService, $scope: angular.IScope,
                 MinemeldTracedService: IMinemeldTracedService,
                 MineMeldJobsService: IMineMeldJobsService,
+                MinemeldPrototypeService: IMinemeldPrototypeService,
+                MinemeldConfigService: IMinemeldConfigService,
+                $window: angular.IWindowService,
                 $modal: angular.ui.bootstrap.IModalService,
                 ConfirmService: IConfirmService,
                 $rootScope: angular.IRootScopeService,
@@ -60,11 +69,15 @@ export class SystemDashboardController {
         this.MinemeldSupervisorService = MinemeldSupervisorService;
         this.MinemeldTracedService = MinemeldTracedService;
         this.MineMeldJobsService = MineMeldJobsService;
+        this.MinemeldPrototypeService = MinemeldPrototypeService;
+        this.MinemeldConfigService = MinemeldConfigService;
         this.ConfirmService = ConfirmService;
         this.$interval = $interval;
         this.$scope = $scope;
         this.moment = moment;
         this.$modal = $modal;
+        this.$state = $state;
+        this.$window = $window;
 
         (<any>this.$scope.$parent).vm.tabs = [true, false];
 
@@ -212,7 +225,11 @@ export class SystemDashboardController {
                     return;
                 }
 
-                this.toastr.success('PRESS REVERT ON THE <a href="/#/config">CONFIG</a> PAGE TO VIEW THE NEW RUNNING CONFIG');
+                this.toastr.success('LOADING COMMITTED CONFIG INTO CANDIDATE AND REFRESHING THE BROWSER TO UPDATE THE PROTOTYPE LIBRARY');
+                this.MinemeldPrototypeService.invalidateCache();
+                this.MinemeldConfigService.reload('committed').then(() => {
+                    this.$window.location.reload();
+                });
             }).finally(() => {
                 this.workingBackup = false;
             });
@@ -358,9 +375,9 @@ class DashboardRestoreBackupController {
     backup_id: string;
 
     feedsAAAAvailable: boolean = false;
-    feedsAAA: boolean = false;
+    feedsAAA: boolean = true;
     localPrototypesAvailable: boolean = false;
-    localPrototypes: boolean = false;
+    localPrototypes: boolean = true;
     configurationAvailable: boolean = false;
     configuration: boolean = true;
     localCertificatesAvailable: boolean = false;
@@ -419,9 +436,10 @@ class DashboardRestoreBackupController {
     restore2nd() {
         this.MinemeldStatusService.restoreLocalBackup(
             this.backup_id, this.password,
-            this.configuration,
-            this.feedsAAA,
-            this.localPrototypes
+            (this.configurationAvailable && this.configuration),
+            (this.feedsAAAAvailable && this.feedsAAA),
+            (this.localPrototypesAvailable &&  this.localPrototypes),
+            (this.localCertificatesAvailable && this.localCertificates)
         ).then((result: string) => {
             this.$modalInstance.close(result);
         }, (error: any) => {

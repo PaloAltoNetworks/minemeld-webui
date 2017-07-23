@@ -16,7 +16,7 @@ export interface IMinemeldStatusService {
     initStatusMonitor(): void;
     destroyStatusMonitor(): void;
     generateLocalBackup(password: string): angular.IPromise<string>;
-    restoreLocalBackup(backup_id: string, password: string, configuration: boolean, feedsAAA: boolean, localPrototypes: boolean): angular.IPromise<string>;
+    restoreLocalBackup(backup_id: string, password: string, configuration: boolean, feedsAAA: boolean, localPrototypes: boolean, localCertificates: boolean): angular.IPromise<string>;
 }
 
 export interface IMinemeldStatusNode {
@@ -252,13 +252,14 @@ export class MinemeldStatusService implements IMinemeldStatusService {
         });
     }
 
-    public restoreLocalBackup(backup_id: string, password: string, configuration: boolean, feedsAAA: boolean, localPrototypes: boolean) {
+    public restoreLocalBackup(backup_id: string, password: string, configuration: boolean, feedsAAA: boolean, localPrototypes: boolean, localCertificates: boolean) {
         var result: IStatusAPIResource;
         var data: any = {
             p: password,
             configuration: configuration,
             feedsAAA: feedsAAA,
-            localPrototypes: localPrototypes
+            localPrototypes: localPrototypes,
+            localCertificates: localCertificates
         };
 
         result = <IStatusAPIResource>this.MineMeldAPIService.getAPIResource('/status/backup/import/:backup_id/restore', {}, {

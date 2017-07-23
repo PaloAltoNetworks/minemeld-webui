@@ -23,6 +23,13 @@
         </div>
     </div>
 </div>
+<div ng-if="vm.supervisor.processes['minemeld-engine']['statename'] == 'FATAL'" class="row m-t-xs">
+    <div class="col-sm-12 col-md-12">
+        <div class="alert alert-danger m-b-xs" role="alert">
+          <strong>Warning!</strong> MineMeld engine failed to start. Download engine <a href="/logs/minemeld-engine.log">logs</a> to check the error.
+        </div>
+    </div>
+</div>
 <div class="row dashboard-row m-t-xs">
   <div class="col-sm-3 col-md-3">
     <div class="row dashboard-row-system">
