@@ -44,7 +44,7 @@ export interface IMinemeldConfigService {
     addNode(name: string, properties: any): angular.IPromise<any>;
     getDataFile(datafilename: string, dtype?: string): angular.IPromise<any>;
     saveDataFile(datafilename: string, data: any, hup?: string, dtype?: string): angular.IPromise<any>;
-    appendDataFile(datafilename: string, data: any, hup?: string): angular.IPromise<any>;
+    appendDataFile(datafilename: string, data: any, hup?: string, dtype?: string): angular.IPromise<any>;
 }
 
 interface IMinemeldConfigResource extends angular.resource.IResourceClass<angular.resource.IResource<any>> {
@@ -289,7 +289,7 @@ export class MinemeldConfigService implements IMinemeldConfigService {
         });
     }
 
-    appendDataFile(datafilename: string, data: any, hup?: string): angular.IPromise<any> {
+    appendDataFile(datafilename: string, data: any, hup?: string, dtype?: string): angular.IPromise<any> {
         var r: IMinemeldConfigResource;
         var params: any = {};
 
@@ -303,6 +303,9 @@ export class MinemeldConfigService implements IMinemeldConfigService {
 
         if (hup) {
             params.h = hup;
+        }
+        if (dtype) {
+            params.t = dtype;
         }
 
         return r.post(params, JSON.stringify(data)).$promise
