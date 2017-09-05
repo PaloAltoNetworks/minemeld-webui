@@ -1,0 +1,87 @@
+<div class="modal-header">
+    <h1 class="modal-title">INDICATOR</h1>
+</div>
+<div class="modal-body" ng-form="indicatorForm">
+    <div class="row m-t-xs">
+        <div class="col-xs-2 text-right">INDICATOR</div>
+        <div ng-if="!vm.editableIndicatorAndType" class="col-xs-8 force-wrap">{{ vm.indicator }}</div>
+        <div ng-if="vm.editableIndicatorAndType" class="col-xs-8">
+            <input type="text" class="form-control" ng-model="vm.indicator" placeholder="Indicator (required)" required="">
+        </div>
+    </div>
+    <div class="row m-t-xs">
+        <div class="col-xs-2 text-right">TYPE</div>
+        <div ng-if="!vm.editableIndicatorAndType" class="col-xs-8 force-wrap">{{ vm.type }}</div>
+        <div ng-if="vm.editableIndicatorAndType" class="col-xs-8">
+            <ui-select ng-model="vm.type"
+                        theme="bootstrap"
+                        reset-search-input="false">
+                <ui-select-match placeholder="Select type (required)...">{{$select.selected}}</ui-select-match>
+                <ui-select-choices repeat="item in (vm.availableTypes | filter: $select.search)">
+                    <span ng-bind-html="item | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+    </div>
+    <div ng-if="vm.update_ts" class="row m-t-xs">
+        <div class="col-xs-2 text-right">LAST UPDATE</div>
+        <div class="col-xs-8 force-wrap">{{ vm.update_ts | date:'d/M/yyyy HH:mm:ss Z' }}</div>
+    </div>
+    <div ng-if="vm.editableAttributes" ng-class="['row', 'm-t-xs', {'has-error': indicatorForm.ttl.$invalid }]">
+        <div class="col-xs-2 text-right">TIME TO LIVE</div>
+        <div class="col-xs-8 form-inline">
+            <input ng-disabled="vm.expirationDisabled" type="number" min="1" class="form-control" name="ttl" ng-model="vm.ttl" placeholder="Default">
+            <div class="checkbox">
+                <label>
+                    <input name="expDisabled" ng-model="vm.expirationDisabled" type="checkbox"> Disable expiration
+                </label>
+            </div>
+        </div>
+    </div>
+    <div ng-if="!vm.editableAttributes" class="row m-t-xs">
+        <div class="col-xs-2 text-right">EXPIRATION</div>
+        <div ng-if="vm.expiration_ts == 'disabled'" class="col-xs-8 force-wrap"><i>Disabled</i></div>
+        <div ng-if="vm.expiration_ts != 'disabled'" class="col-xs-8 force-wrap">{{ vm.expiration_ts | date:'d/M/yyyy HH:mm:ss Z' }}</div>
+        <div ng-if="!vm.expiration_ts" class="col-xs-8 force-wrap"><i>Default</i></div>
+    </div>
+    <div ng-class="['row', 'm-t-xs', {'has-error': indicatorForm.comment.$invalid }]">
+        <div class="col-xs-2 text-right">COMMENT</div>
+        <div ng-if="!vm.editableAttributes" class="col-xs-8 force-wrap">{{ vm.comment }}</div>
+        <div ng-if="vm.editableAttributes" class="col-xs-8">
+            <input type="text" class="form-control" name="comment" ng-model="vm.comment" placeholder="Comment (optional)">
+        </div>
+    </div>
+    <div ng-class="['row', 'm-t-xs', {'has-error': !vm.attributesValid }]">
+        <div class="col-xs-2 text-right">ATTRIBUTES</div>
+        <div class="col-xs-8">
+            <div class="prototypeadd-ace-editor form-control" 
+                ng-readonly="!vm.editableAttributes"
+                ng-model="vm.attributesJSON"
+                ui-ace="{
+                    useWrapMode : false,
+                    showGutter: true,
+                    theme:'github',
+                    mode: 'json',
+                    firstLineNumber: 1,
+                    onLoad: vm.editorLoaded,
+                    onChange: vm.aceChanged
+                }">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button ng-if="vm.numAnnotations !== 0" class="btn btn-modal-action btn-sm"
+            style="float: left;" ng-click="vm.errorClick()">
+        <span class="glyphicon glyphicon glyphicon-remove-sign text-danger"></span> <span ng-bind="vm.numAnnotations"></span>
+    </button>
+    <button ng-if="vm.editableAttributes || vm.editableIndicatorAndType"
+            ng-disabled="!vm.validate() || indicatorForm.$invalid"
+            class="btn btn-primary btn-sm" type="button" ng-click="vm.save()">OK</button>
+    <button ng-if="vm.editableAttributes || vm.editableIndicatorAndType"
+            class="btn btn-primary btn-sm"type="button" ng-click="vm.cancel()">CANCEL</button>
+    <button ng-if="!vm.editableAttributes"
+            class="btn btn-primary btn-sm" type="button" ng-click="vm.editableAttributes = true">EDIT</button>
+    <button ng-if="!vm.editableAttributes && !vm.editableIndicatorAndType"
+            class="btn btn-primary btn-sm" type="button" ng-click="vm.cancel()">DISMISS</button>
+</div>
