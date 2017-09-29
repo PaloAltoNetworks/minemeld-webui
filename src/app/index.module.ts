@@ -50,6 +50,7 @@ import { appNavbar } from '../app/components/navbar/navbar.directive';
 import { minemeldOptions } from '../app/components/options/options.directive';
 import { nodeConfig } from '../app/components/nodeconfig/nodeconfig.directive';
 import { prototypeTooltip } from'../app/components/prototypetooltip/prototypetooltip.directive';
+import { suggestion } from '../app/components/suggestion/suggestion.directive';
 
 declare var moment: moment.MomentStatic;
 
@@ -107,6 +108,7 @@ module minemeldWebui {
   .directive('nodeConfig', nodeConfig)
   .directive('appNavbar', appNavbar)
   .directive('prototypeTooltip', prototypeTooltip)
+  .directive('suggestion', suggestion)
   .service('MineMeldAPIService', MineMeldAPIService)
   .service('MinemeldStatusService', MinemeldStatusService)
   .service('MinemeldMetricsService', MinemeldMetricsService)

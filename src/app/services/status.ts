@@ -188,6 +188,49 @@ export class MinemeldStatusService implements IMinemeldStatusService {
         });
     }
 
+    public getInfo(): angular.IPromise<any> {
+        var config: angular.resource.IResourceClass<angular.resource.IResource<any>>;
+
+        config = this.MineMeldAPIService.getAPIResource('/status/info', {}, {
+            get: {
+                method: 'GET'
+            }
+        }, false);
+
+        return config.get().$promise.then((result: any) => {
+            if ('result' in result) {
+                return result.result;
+            }
+
+            return {
+                version: null,
+                sns: false
+            };
+        });
+    }
+
+    public mkwish(email: string, suggestion: string): angular.IPromise<string> {
+        var result: IStatusAPIResource;
+        var data: any = {
+            email: email,
+            suggestion: suggestion
+        };
+
+        result = <IStatusAPIResource>this.MineMeldAPIService.getAPIResource('/status/mkwish', {}, {
+            post: {
+                method: 'POST'
+            }
+        }, false);
+
+        return result.post({}, JSON.stringify(data)).$promise.then((result: any) => {
+            if ('result' in result) {
+                return result.result;
+            }
+
+            return 'ok';
+        });
+    }
+
     public hup(nodename: string) {
         var hupresult: angular.resource.IResourceClass<angular.resource.IResource<any>>;
         var params: any = {

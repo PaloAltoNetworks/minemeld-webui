@@ -7,3 +7,6 @@ coverage/
 dist/
 
 typings/
+
+.DS_Store
+.vscode
