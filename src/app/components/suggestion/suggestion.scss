@@ -1,0 +1,33 @@
+.suggestion-container {
+    position: fixed;
+    left: 10px;
+    bottom: 10px;
+
+    .suggestion-minimized {
+        display: flex;
+        flex-direction: row;
+        text-transform: uppercase;
+
+        cursor: pointer;
+        color: #fff;
+        background-color: $panw-blue;
+        border: 1px solid #fff;
+        border-radius: .1rem;
+
+        opacity: .7;
+
+        div {
+            padding: .25rem .4rem;
+            line-height: 14px;
+            opacity: .7;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
