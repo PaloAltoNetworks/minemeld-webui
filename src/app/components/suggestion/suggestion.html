@@ -1,0 +1,8 @@
+<div ng-if="vm.snsAvailable && !vm.disabled" class="suggestion-container">
+    <div ng-if="vm.minimized" class="suggestion-minimized">
+        <div title="close" ng-click="vm.disabled = true">
+            <i class="fa fa-times"></i>
+        </div>
+        <div ng-click="vm.showModal()"><small>Send a suggestion</small></div>
+    </div>
+</div>
