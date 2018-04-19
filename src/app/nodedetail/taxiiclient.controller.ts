@@ -109,9 +109,11 @@ class TAXIIClientInfoController extends NodeDetailCredentialsInfoController {
                 var pconfig: any = tnodeConfig.resolvedPrototype.config;
 
                 if (typeof(pconfig.client_credentials_required) == 'boolean' && !pconfig.client_credentials_required) {
-                    vm.usernameEnabled = false;
+                    vm.usernameField = null;
                 } else {
-                    vm.usernameEnabled = (typeof(pconfig.username) === 'undefined' && typeof(pconfig.password) === 'undefined');
+                    if (typeof(pconfig.username) === 'undefined' && typeof(pconfig.password) === 'undefined') {
+                        this.usernameField = 'username';
+                    }
                 }
 
                 if (pconfig.client_cert_required) {
