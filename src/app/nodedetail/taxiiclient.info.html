@@ -29,14 +29,14 @@
                         <span ng-switch-default class="label label-warning">{{ nodedetailinfo.nodeState.stateAsString }}</span>
                     </td>
                 </tr>
-                <tr ng-if="nodedetailinfo.usernameEnabled">
+                <tr ng-if="nodedetailinfo.usernameField">
                     <td>USERNAME</td>
                     <td tooltip="set username" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setUsername()">
                         <span ng-if="!nodedetailinfo.username"><em>Not set</em></span>
                         <span ng-if="nodedetailinfo.username">{{ nodedetailinfo.username }}</span>
                     </td>
                 </tr>
-                <tr ng-if="nodedetailinfo.usernameEnabled">
+                <tr ng-if="nodedetailinfo.usernameField">
                     <td>{{ nodedetailinfo.secretName }}</td>
                     <td tooltip="set {{ nodedetailinfo.secretName|lowercase }}" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setPassword()">
                         <span ng-if="!nodedetailinfo.secret"><em>Not set</span></span>
