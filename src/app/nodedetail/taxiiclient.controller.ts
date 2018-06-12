@@ -112,7 +112,7 @@ class TAXIIClientInfoController extends NodeDetailCredentialsInfoController {
                     vm.usernameField = null;
                 } else {
                     if (typeof(pconfig.username) === 'undefined' && typeof(pconfig.password) === 'undefined') {
-                        this.usernameField = 'username';
+                        vm.usernameField = 'username';
                     }
                 }
 
