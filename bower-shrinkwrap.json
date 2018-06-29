@@ -55,7 +55,8 @@
   },
   "https://github.com/angular/bower-angular.git": {
     "1.5.11": "0f57428c3ffe2f486264ab7fbee3968dccc7b720",
-    "1.5.8": "1.5.8"
+    "1.5.8": "1.5.8",
+    "1.6.4": "097304875bf47c499c7a45711e28f16937dfacfd"
   },
   "https://github.com/chieffancypants/angular-loading-bar.git": {
     "0.8.0": "0.8.0"
@@ -79,7 +80,7 @@
     "0.5.0": "0.5.0"
   },
   "https://github.com/mbostock-bower/d3-bower.git": {
-    "3.5.17": "abe0262a205c9f3755c3a757de4dfd1d49f34b24",
+    "3.5.17": "3.5.17",
     "3.5.5": "3.5.5"
   },
   "https://github.com/moment/moment.git": {
