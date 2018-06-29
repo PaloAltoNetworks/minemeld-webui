@@ -8,7 +8,7 @@
   },
   "devDependencies": {
     "awesome-typescript-loader": "0.14.2",
-    "bower": "1.7.9",
+    "bower": "1.7.10",
     "bower-shrinkwrap-resolver": "0.4.1",
     "browser-sync": "2.9.12",
     "browser-sync-spa": "1.0.3",
