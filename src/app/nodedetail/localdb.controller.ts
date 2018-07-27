@@ -335,7 +335,8 @@ class LocalDbIndicatorController {
         'md5',
         'sha256',
         'sha1',
-        'ssdeep'
+        'ssdeep',
+        'email-addr'
     ];
 
     comment: string;
