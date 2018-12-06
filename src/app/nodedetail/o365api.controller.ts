@@ -106,7 +106,7 @@ class NodeDetailO365APIInfoController extends NodeDetailInfoController {
         var p: angular.IPromise<any>;
         var new_value: boolean;
 
-        if (typeof this.disable_integrations === 'undefined' || this.disable_integrations) {
+        if (this.disable_integrations) {
             new_value = false;
             p = this.ConfirmService.show(
                 'O365 API INTEGRATIONS',
