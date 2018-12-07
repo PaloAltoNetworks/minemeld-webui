@@ -4,8 +4,6 @@ var path = require('path');
 var gulp = require('gulp');
 var conf = require('./conf');
 
-var karma = require('karma');
-
 var pathSrcHtml = [
   path.join(conf.paths.src, '/**/*.html')
 ];
@@ -44,7 +42,6 @@ function runTests (singleRun, done) {
 }
 
 gulp.task('test', ['scripts:test'], function(done) {
-  runTests(true, done);
 });
 
 gulp.task('test:auto', ['scripts:test-watch'], function(done) {
