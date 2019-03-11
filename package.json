@@ -1,6 +1,6 @@
 {
   "name": "minemeldWebui",
-  "version": "0.9.52",
+  "version": "0.9.60",
   "dependencies": {},
   "scripts": {
     "test": "gulp test",
@@ -8,7 +8,7 @@
   },
   "devDependencies": {
     "awesome-typescript-loader": "0.15.10",
-    "bower": "1.8.4",
+    "bower": "1.8.8",
     "bower-shrinkwrap-resolver": "0.4.1",
     "browser-sync": "2.9.12",
     "browser-sync-spa": "1.0.3",
@@ -38,7 +38,7 @@
     "gulp-util": "3.0.7",
     "http-proxy-middleware": "0.9.1",
     "lockdown": "mozilla/npm-lockdown#v0.0.8",
-    "lodash": "3.10.1",
+    "lodash": "4.17.11",
     "main-bower-files": "2.9.0",
     "ng-annotate-loader": "0.0.10",
     "nsp": "2.4.0",
