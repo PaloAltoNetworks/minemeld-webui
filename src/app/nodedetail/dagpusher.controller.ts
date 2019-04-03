@@ -50,6 +50,33 @@ function dagPusherRegisterClass(NodeDetailResolver: INodeDetailResolverService) 
                 active: false
         }]
     });
+
+    NodeDetailResolver.registerClass('minemeld.ft.dag_ng.DagPusher', {
+        tabs: [{
+            icon: 'fa fa-circle-o',
+            tooltip: 'INFO',
+            state: 'nodedetail.dagpusherinfo',
+            active: false
+        },
+        {
+            icon: 'fa fa-hdd-o',
+            tooltip: 'DEVICES',
+            state: 'nodedetail.dagpusherdevices',
+            active: false
+        },
+        {
+            icon: 'fa fa-area-chart',
+            tooltip: 'STATS',
+            state: 'nodedetail.stats',
+            active: false
+        },
+        {
+            icon: 'fa fa-asterisk',
+            tooltip: 'GRAPH',
+            state: 'nodedetail.graph',
+                active: false
+        }]
+    });
 }
 
 class NodeDetailDagPusherDevicesController {
