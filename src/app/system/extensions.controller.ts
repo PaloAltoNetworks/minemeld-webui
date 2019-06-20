@@ -191,7 +191,10 @@ export class SystemExtensionsController {
 
     private additionalActions(extension: IMineMeldExtensionTagged): void {
         if (extension.tags.indexOf('api') !== -1) {
-            this.toastr.success('<a href="/#/system/dashboard">RELOAD</a> API SUBSYSTEM TO APPLY API CHANGES');
+            this.toastr.success(
+                '<a href="/#/system/dashboard">RELOAD</a> API SUBSYSTEM TO APPLY API CHANGES',
+                { allowHtml: true }
+            );
         }
         if (extension.tags.indexOf('prototypes') !== -1) {
             this.toastr.success('REFRESHING THE BROWSER TO UPDATE THE PROTOTYPE LIBRARY');
