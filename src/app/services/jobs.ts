@@ -110,10 +110,16 @@ export class MineMeldJobsService implements IMineMeldJobsService {
 
             joburl = '/jobs/' + job_group + '/' + jobid + '/log';
             if (result.status === 'DONE') {
-                this.toastr.success('JOB ' + result.description + ' COMPLETED SUCCESSFULLY. LOG <a target="_blank" href="' + joburl + '">HERE</a>');
+                this.toastr.success(
+                    'JOB ' + result.description + ' COMPLETED SUCCESSFULLY. LOG <a target="_blank" href="' + joburl + '">HERE</a>',
+                    { allowHtml: true }
+                );
             }
             if (result.status === 'ERROR') {
-                this.toastr.error('JOB ' + result.description + ' FAILED. LOG <a target="_blank" href="' + joburl + '">HERE</a>');
+                this.toastr.error(
+                    'JOB ' + result.description + ' FAILED. LOG <a target="_blank" href="' + joburl + '">HERE</a>',
+                    { allowHtml: true }
+                );
             }
             deferred.resolve(result);
         }, (error: any) => {

@@ -12,7 +12,7 @@ export function config($logProvider: ng.ILogProvider, $compileProvider: angular.
   });
 
   // set options third-party lib
-  toastrConfig.allowHtml = true;
+  toastrConfig.allowHtml = false;
   toastrConfig.timeOut = 3000;
   toastrConfig.positionClass = 'toast-top-right';
   toastrConfig.preventDuplicates = false;
