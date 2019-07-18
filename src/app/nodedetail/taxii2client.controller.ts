@@ -68,6 +68,9 @@ class TAXII2ClientInfoController extends NodeDetailCredentialsInfoController {
   taxii2CollectionEnabled: boolean;
   taxii2Collection: string;
 
+  taxii2EnabledEnabled: boolean;
+  taxii2Enabled: string;
+
   /* @ngInject */
   constructor(toastr: any, $interval: angular.IIntervalService,
               MinemeldStatusService: IMinemeldStatusService,
@@ -84,7 +87,7 @@ class TAXII2ClientInfoController extends NodeDetailCredentialsInfoController {
     this.apiKeyEnabled = false;
     this.taxii2DiscoveryServiceEnabled = false;
     this.taxii2CollectionEnabled = false;
-    this.taxii2CollectionEnabled = false;
+    this.taxii2EnabledEnabled = false;
 
     super(
       toastr, $interval, MinemeldStatusService, moment, $scope,
@@ -134,6 +137,10 @@ class TAXII2ClientInfoController extends NodeDetailCredentialsInfoController {
 
           if (pconfig.collection === "") {
             vm.taxii2CollectionEnabled = true;
+          }
+
+          if (pconfig.enabled === "" || pconfig.enabled === false) {
+            vm.taxii2EnabledEnabled = true;
           }
 
         }
@@ -280,6 +287,38 @@ class TAXII2ClientInfoController extends NodeDetailCredentialsInfoController {
     });
   }
 
+  setTaxii2Enabled(): void {
+    var mi: angular.ui.bootstrap.IModalServiceInstance;
+
+    if (!this.taxii2EnabledEnabled) {
+      return;
+    }
+
+    mi = this.$modal.open({
+      templateUrl: 'app/nodedetail/taxii2client.enabled.modal.html',
+      controller: SetTaxii2EnabledController,
+      controllerAs: 'vm',
+      bindToController: true,
+      backdrop: 'static',
+      animation: false,
+      resolve: {
+        taxii2Enabled: () => {
+          return this.taxii2Enabled;
+        }
+      }
+    });
+
+    mi.result.then((result: any) => {
+      this.taxii2Enabled = result.taxii2Enabled;
+
+      return this.saveSideConfig().then((result: any) => {
+        this.toastr.success('NODE ENABLED');
+      }, (error: any) => {
+        this.toastr.error('ERROR SETTING TAXII 2 ENABLE NODE: ' + error.statusText);
+      });
+    });
+  }
+
   protected restoreSideConfig(result: any) {
     super.restoreSideConfig(result);
 
@@ -287,6 +326,7 @@ class TAXII2ClientInfoController extends NodeDetailCredentialsInfoController {
       this.apiKey = undefined;
       this.taxii2DiscoveryService = undefined;
       this.taxii2Collection = undefined;
+      this.taxii2Enabled = undefined;
     } else {
       if (result.api_key) {
         this.apiKey = result.api_key;
@@ -302,6 +342,10 @@ class TAXII2ClientInfoController extends NodeDetailCredentialsInfoController {
 
       if (result.collection) {
         this.taxii2Collection = result.collection;
+      }
+
+      if (result.enabled) {
+        this.taxii2Enabled = result.enabled;
       }
     }
   }
@@ -323,6 +367,10 @@ class TAXII2ClientInfoController extends NodeDetailCredentialsInfoController {
 
     if (this.taxii2Collection) {
       side_config.collection = this.taxii2Collection;
+    }
+
+    if (this.taxii2Enabled) {
+      side_config.enabled = this.taxii2Enabled;
     }
 
     return side_config;
@@ -448,6 +496,38 @@ class SetTaxii2CollectionController {
     var result: any = {};
 
     result.taxii2Collection = this.taxii2Collection;
+
+    this.$modalInstance.close(result);
+  }
+
+  cancel() {
+    this.$modalInstance.dismiss();
+  }
+};
+
+class SetTaxii2EnabledController {
+  $modalInstance: angular.ui.bootstrap.IModalServiceInstance;
+
+  taxii2Enabled: string;
+
+  /** @ngInject */
+  constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance, taxii2Enabled: string) {
+    this.$modalInstance = $modalInstance;
+    this.taxii2Enabled = taxii2Enabled;
+  }
+
+  valid(): boolean {
+    if (!this.taxii2Enabled) {
+      return false;
+    }
+
+    return true;
+  }
+
+  save() {
+    var result: any = {};
+
+    result.taxii2Enabled = this.taxii2Enabled;
 
     this.$modalInstance.close(result);
   }

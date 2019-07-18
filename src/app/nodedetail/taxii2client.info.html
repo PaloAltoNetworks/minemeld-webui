@@ -81,6 +81,14 @@
         </td>
       </tr>
 
+      <tr ng-if="nodedetailinfo.taxii2EnabledEnabled">
+        <td>Enable Node</td>
+        <td tooltip="set collection" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setTaxii2Enabled()">
+          <span ng-if="!nodedetailinfo.taxii2Enabled"><em>Not set</em></span>
+          <span ng-if="nodedetailinfo.taxii2Enabled">{{ nodedetailinfo.taxii2Enabled }}</span>
+        </td>
+      </tr>
+
       <tr ng-if="nodedetailinfo.nodeState.last_run">
         <td>LAST RUN</td>
         <td>
