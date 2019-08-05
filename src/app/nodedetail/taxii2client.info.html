@@ -33,57 +33,73 @@
         </td>
       </tr>
 
-      <tr ng-if="nodedetailinfo.usernameField">
+      <tr ng-if="nodedetailinfo.authTypeEnabled">
+        <td>AUTH TYPE</td>
+        <td tooltip="Set Authentication Type" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setAuthType()">
+          <span ng-if="!nodedetailinfo.authType"><em>Not set</em></span>
+          <span ng-if="nodedetailinfo.authType">{{ nodedetailinfo.authType }}</span>
+        </td>
+      </tr>
+
+      <tr ng-if="nodedetailinfo.authType == 'basic'">
         <td>USERNAME</td>
-        <td tooltip="set username" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setUsername()">
+        <td tooltip="Set Username" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setUsername()">
           <span ng-if="!nodedetailinfo.username"><em>Not set</em></span>
           <span ng-if="nodedetailinfo.username">{{ nodedetailinfo.username }}</span>
         </td>
       </tr>
 
-      <tr ng-if="nodedetailinfo.usernameField">
+      <tr ng-if="nodedetailinfo.authType == 'basic'">
         <td>{{ nodedetailinfo.secretName }}</td>
-        <td tooltip="set {{ nodedetailinfo.secretName|lowercase }}" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setPassword()">
+        <td tooltip="Set {{ nodedetailinfo.secretName|lowercase }}" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setPassword()">
           <span ng-if="!nodedetailinfo.secret"><em>Not set</em></span></span>
           <span ng-if="nodedetailinfo.secret" class="label label-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></span>
         </td>
       </tr>
 
-      <tr ng-if="nodedetailinfo.apiKeyEnabled">
-        <td>API Key</td>
-        <td tooltip="set api key" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setApiKey()">
+      <tr ng-if="nodedetailinfo.apiKeyEnabled && nodedetailinfo.authType == 'apikey'">
+        <td>API KEY</td>
+        <td tooltip="Set API Key" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setApiKey()">
           <span ng-if="!nodedetailinfo.apiKey"><em>Not set</em></span>
           <span ng-if="nodedetailinfo.apiKey">{{ nodedetailinfo.apiKey }}</span>
         </td>
       </tr>
 
       <tr ng-if="nodedetailinfo.taxii2DiscoveryServiceEnabled">
-        <td>TAXII 2 Discovery Service URL</td>
-        <td tooltip="set discovery service" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setTaxii2DiscoveryService()">
+        <td>DISCOVERY SERVICE URL</td>
+        <td tooltip="Set Discovery Service" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setTaxii2DiscoveryService()">
           <span ng-if="!nodedetailinfo.taxii2DiscoveryService"><em>Not set</em></span>
           <span ng-if="nodedetailinfo.taxii2DiscoveryService">{{ nodedetailinfo.taxii2DiscoveryService }}</span>
         </td>
       </tr>
 
       <tr ng-if="nodedetailinfo.taxii2ApiRootEnabled">
-        <td>TAXII 2 API Root</td>
-        <td tooltip="set api root" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setTaxii2ApiRoot()">
+        <td>API ROOT</td>
+        <td tooltip="Set API Root" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setTaxii2ApiRoot()">
           <span ng-if="!nodedetailinfo.taxii2ApiRoot"><em>Not set</em></span>
           <span ng-if="nodedetailinfo.taxii2ApiRoot">{{ nodedetailinfo.taxii2ApiRoot }}</span>
         </td>
       </tr>
 
       <tr ng-if="nodedetailinfo.taxii2CollectionEnabled">
-        <td>TAXII 2 Collection</td>
-        <td tooltip="set collection" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setTaxii2Collection()">
+        <td>COLLECTION ID</td>
+        <td tooltip="Set collection" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setTaxii2Collection()">
           <span ng-if="!nodedetailinfo.taxii2Collection"><em>Not set</em></span>
           <span ng-if="nodedetailinfo.taxii2Collection">{{ nodedetailinfo.taxii2Collection }}</span>
         </td>
       </tr>
 
+      <tr ng-if="nodedetailinfo.taxii2VerifyCertEnabled">
+        <td>VERIFY SERVER CERT</td>
+        <td tooltip="Verify the Taxii 2 Server Cert" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setTaxii2VerifyCert()">
+          <span ng-if="!nodedetailinfo.taxii2VerifyCert"><em>Not set</em></span>
+          <span ng-if="nodedetailinfo.taxii2VerifyCert">{{ nodedetailinfo.taxii2VerifyCert }}</span>
+        </td>
+      </tr>
+
       <tr ng-if="nodedetailinfo.taxii2EnabledEnabled">
-        <td>Enable Node</td>
-        <td tooltip="set collection" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setTaxii2Enabled()">
+        <td>ENABLED</td>
+        <td tooltip="Enable this miner (yes/no)" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setTaxii2Enabled()">
           <span ng-if="!nodedetailinfo.taxii2Enabled"><em>Not set</em></span>
           <span ng-if="nodedetailinfo.taxii2Enabled">{{ nodedetailinfo.taxii2Enabled }}</span>
         </td>

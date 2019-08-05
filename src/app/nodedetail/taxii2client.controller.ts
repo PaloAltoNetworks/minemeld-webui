@@ -56,6 +56,9 @@ class TAXII2ClientInfoController extends NodeDetailCredentialsInfoController {
   ConfirmService: IConfirmService;
   MineMeldRunningConfigStatusService: IMineMeldRunningConfigStatusService;
 
+  authTypeEnabled: boolean;
+  authType: string;
+
   apiKeyEnabled: boolean;
   apiKey: string;
 
@@ -71,6 +74,9 @@ class TAXII2ClientInfoController extends NodeDetailCredentialsInfoController {
   taxii2EnabledEnabled: boolean;
   taxii2Enabled: string;
 
+  taxii2VerifyCertEnabled: boolean;
+  taxii2VerifyCert: string;
+
   /* @ngInject */
   constructor(toastr: any, $interval: angular.IIntervalService,
               MinemeldStatusService: IMinemeldStatusService,
@@ -84,10 +90,12 @@ class TAXII2ClientInfoController extends NodeDetailCredentialsInfoController {
               ConfirmService: IConfirmService) {
     this.MineMeldRunningConfigStatusService = MineMeldRunningConfigStatusService;
 
+    this.authTypeEnabled = false;
     this.apiKeyEnabled = false;
     this.taxii2DiscoveryServiceEnabled = false;
     this.taxii2CollectionEnabled = false;
     this.taxii2EnabledEnabled = false;
+    this.taxii2VerifyCertEnabled = false;
 
     super(
       toastr, $interval, MinemeldStatusService, moment, $scope,
@@ -115,13 +123,16 @@ class TAXII2ClientInfoController extends NodeDetailCredentialsInfoController {
         if (tnodeConfig.resolvedPrototype) {
           var pconfig: any = tnodeConfig.resolvedPrototype.config;
 
-          if (typeof (pconfig.client_credentials_required) == 'boolean' && !pconfig.client_credentials_required) {
-            vm.usernameField = null;
-          } else {
-            if (typeof (pconfig.username) === 'undefined' && typeof (pconfig.password) === 'undefined') {
-              vm.usernameField = 'username';
-            }
-          }
+          // if (typeof (pconfig.client_credentials_required) == 'boolean' && !pconfig.client_credentials_required) {
+          //   vm.usernameField = null;
+          // } else {
+          //   if (typeof (pconfig.username) === 'undefined' && typeof (pconfig.password) === 'undefined') {
+          //     vm.usernameField = 'username';
+          //   }
+          // }
+
+          vm.authTypeEnabled = true;
+          // vm.authType = pconfig.authType || "none";
 
           if (pconfig.api_key === "") {
             vm.apiKeyEnabled = true;
@@ -143,6 +154,8 @@ class TAXII2ClientInfoController extends NodeDetailCredentialsInfoController {
             vm.taxii2EnabledEnabled = true;
           }
 
+          vm.taxii2VerifyCertEnabled = true;
+
         }
       }, function (error: any) {
         if (!error.cancelled) {
@@ -157,6 +170,38 @@ class TAXII2ClientInfoController extends NodeDetailCredentialsInfoController {
         );
       })
     ;
+  }
+
+  setAuthType(): void {
+    var mi: angular.ui.bootstrap.IModalServiceInstance;
+
+    if (!this.authTypeEnabled) {
+      return;
+    }
+
+    mi = this.$modal.open({
+      templateUrl: 'app/nodedetail/taxii2client.authtype.modal.html',
+      controller: SetAuthTypeController,
+      controllerAs: 'vm',
+      bindToController: true,
+      backdrop: 'static',
+      animation: false,
+      resolve: {
+        authType: () => {
+          return this.authType;
+        }
+      }
+    });
+
+    mi.result.then((result: any) => {
+      this.authType = result.authType;
+
+      return this.saveSideConfig().then((result: any) => {
+        this.toastr.success('AUTH TYPE SET');
+      }, (error: any) => {
+        this.toastr.error('ERROR SETTING AUTH TYPE: ' + error.statusText);
+      });
+    });
   }
 
   setApiKey(): void {
@@ -312,9 +357,41 @@ class TAXII2ClientInfoController extends NodeDetailCredentialsInfoController {
       this.taxii2Enabled = result.taxii2Enabled;
 
       return this.saveSideConfig().then((result: any) => {
-        this.toastr.success('NODE ENABLED');
+        this.toastr.success('NODE STATE SET');
       }, (error: any) => {
         this.toastr.error('ERROR SETTING TAXII 2 ENABLE NODE: ' + error.statusText);
+      });
+    });
+  }
+
+  setTaxii2VerifyCert(): void {
+    var mi: angular.ui.bootstrap.IModalServiceInstance;
+
+    if (!this.taxii2VerifyCertEnabled) {
+      return;
+    }
+
+    mi = this.$modal.open({
+      templateUrl: 'app/nodedetail/taxii2client.verifycert.modal.html',
+      controller: SetTaxii2VerifyCertController,
+      controllerAs: 'vm',
+      bindToController: true,
+      backdrop: 'static',
+      animation: false,
+      resolve: {
+        taxii2VerifyCert: () => {
+          return this.taxii2VerifyCert;
+        }
+      }
+    });
+
+    mi.result.then((result: any) => {
+      this.taxii2VerifyCert = result.taxii2VerifyCert;
+
+      return this.saveSideConfig().then((result: any) => {
+        this.toastr.success('TAXII 2 VERIFY CERT SET');
+      }, (error: any) => {
+        this.toastr.error('ERROR SETTING TAXII 2 VERIFY CERT: ' + error.statusText);
       });
     });
   }
@@ -323,11 +400,17 @@ class TAXII2ClientInfoController extends NodeDetailCredentialsInfoController {
     super.restoreSideConfig(result);
 
     if (!result) {
+      this.authType = 'none';
       this.apiKey = undefined;
       this.taxii2DiscoveryService = undefined;
       this.taxii2Collection = undefined;
-      this.taxii2Enabled = undefined;
+      this.taxii2Enabled = 'no';
+      this.taxii2VerifyCert = 'yes';
     } else {
+      if (result.auth_type) {
+        this.authType = result.auth_type;
+      }
+
       if (result.api_key) {
         this.apiKey = result.api_key;
       }
@@ -347,11 +430,19 @@ class TAXII2ClientInfoController extends NodeDetailCredentialsInfoController {
       if (result.enabled) {
         this.taxii2Enabled = result.enabled;
       }
+
+      if (result.verify_cert) {
+        this.taxii2VerifyCert = result.verify_cert;
+      }
     }
   }
 
   protected prepareSideConfig(): any {
     var side_config: any = super.prepareSideConfig();
+
+    if (this.authType) {
+      side_config.auth_type = this.authType;
+    }
 
     if (this.apiKey) {
       side_config.api_key = this.apiKey;
@@ -373,7 +464,43 @@ class TAXII2ClientInfoController extends NodeDetailCredentialsInfoController {
       side_config.enabled = this.taxii2Enabled;
     }
 
+    if (this.taxii2VerifyCert) {
+      side_config.verify_cert = this.taxii2VerifyCert;
+    }
+
     return side_config;
+  }
+}
+
+class SetAuthTypeController {
+  $modalInstance: angular.ui.bootstrap.IModalServiceInstance;
+
+  authType: string;
+
+  /** @ngInject */
+  constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance, authType: string) {
+    this.$modalInstance = $modalInstance;
+    this.authType = authType || 'none';
+  }
+
+  valid(): boolean {
+    if (!this.authType) {
+      return false;
+    }
+
+    return true;
+  }
+
+  save() {
+    var result: any = {};
+
+    result.authType = this.authType;
+
+    this.$modalInstance.close(result);
+  }
+
+  cancel() {
+    this.$modalInstance.dismiss();
   }
 }
 
@@ -407,7 +534,7 @@ class SetApiKeyController {
   cancel() {
     this.$modalInstance.dismiss();
   }
-};
+}
 
 class SetTaxii2DiscoveryServiceController {
   $modalInstance: angular.ui.bootstrap.IModalServiceInstance;
@@ -503,7 +630,7 @@ class SetTaxii2CollectionController {
   cancel() {
     this.$modalInstance.dismiss();
   }
-};
+}
 
 class SetTaxii2EnabledController {
   $modalInstance: angular.ui.bootstrap.IModalServiceInstance;
@@ -513,7 +640,7 @@ class SetTaxii2EnabledController {
   /** @ngInject */
   constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance, taxii2Enabled: string) {
     this.$modalInstance = $modalInstance;
-    this.taxii2Enabled = taxii2Enabled;
+    this.taxii2Enabled = taxii2Enabled || 'no';
   }
 
   valid(): boolean {
@@ -535,7 +662,39 @@ class SetTaxii2EnabledController {
   cancel() {
     this.$modalInstance.dismiss();
   }
-};
+}
+
+class SetTaxii2VerifyCertController {
+  $modalInstance: angular.ui.bootstrap.IModalServiceInstance;
+
+  taxii2VerifyCert: string;
+
+  /** @ngInject */
+  constructor($modalInstance: angular.ui.bootstrap.IModalServiceInstance, taxii2VerifyCert: string) {
+    this.$modalInstance = $modalInstance;
+    this.taxii2VerifyCert = taxii2VerifyCert || 'yes';
+  }
+
+  valid(): boolean {
+    if (!this.taxii2VerifyCert) {
+      return false;
+    }
+
+    return true;
+  }
+
+  save() {
+    var result: any = {};
+
+    result.taxii2VerifyCert = this.taxii2VerifyCert;
+
+    this.$modalInstance.close(result);
+  }
+
+  cancel() {
+    this.$modalInstance.dismiss();
+  }
+}
 
 console.log('Loading TAXII 2 Client');
 angular.module('minemeldWebui')
