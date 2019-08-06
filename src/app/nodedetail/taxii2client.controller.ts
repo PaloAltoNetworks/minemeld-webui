@@ -52,6 +52,28 @@ interface ITAXII2ClientSideConfig {
   password?: string;
 }
 
+function identity(val) {
+  return val;
+}
+
+function from_bool(val) {
+  return val ? "yes" : "no";
+}
+
+function to_bool(val) {
+  return val === "yes";
+}
+
+const propNameMap = {
+  'authType': {key: 'auth_type', from_side_config: identity, to_side_config: identity},
+  'apiKey': {key: 'api_key', from_side_config: identity, to_side_config: identity},
+  'taxii2DiscoveryService': {key: 'discovery_service', from_side_config: identity, to_side_config: identity},
+  'taxii2ApiRoot': {key: 'api_root', from_side_config: identity, to_side_config: identity},
+  'taxii2Collection': {key: 'collection', from_side_config: identity, to_side_config: identity},
+  'taxii2VerifyCert': {key: 'verify_cert', from_side_config: from_bool, to_side_config: to_bool},
+  'taxii2Enabled': {key: 'enabled', from_side_config: from_bool, to_side_config: to_bool}
+};
+
 class TAXII2ClientInfoController extends NodeDetailCredentialsInfoController {
   ConfirmService: IConfirmService;
   MineMeldRunningConfigStatusService: IMineMeldRunningConfigStatusService;
@@ -77,6 +99,8 @@ class TAXII2ClientInfoController extends NodeDetailCredentialsInfoController {
   taxii2VerifyCertEnabled: boolean;
   taxii2VerifyCert: string;
 
+  side_config: any;
+
   /* @ngInject */
   constructor(toastr: any, $interval: angular.IIntervalService,
               MinemeldStatusService: IMinemeldStatusService,
@@ -90,12 +114,15 @@ class TAXII2ClientInfoController extends NodeDetailCredentialsInfoController {
               ConfirmService: IConfirmService) {
     this.MineMeldRunningConfigStatusService = MineMeldRunningConfigStatusService;
 
-    this.authTypeEnabled = false;
-    this.apiKeyEnabled = false;
-    this.taxii2DiscoveryServiceEnabled = false;
-    this.taxii2CollectionEnabled = false;
-    this.taxii2EnabledEnabled = false;
-    this.taxii2VerifyCertEnabled = false;
+    this.authTypeEnabled = true;
+    this.apiKeyEnabled = true;
+    this.taxii2DiscoveryServiceEnabled = true;
+    this.taxii2ApiRootEnabled = true;
+    this.taxii2CollectionEnabled = true;
+    this.taxii2VerifyCertEnabled = true;
+    this.taxii2EnabledEnabled = true;
+
+    this.side_config = {};
 
     super(
       toastr, $interval, MinemeldStatusService, moment, $scope,
@@ -106,57 +133,31 @@ class TAXII2ClientInfoController extends NodeDetailCredentialsInfoController {
     this.ConfirmService = ConfirmService;
   }
 
+  mergeMinemeldConfigs(pconfig) {
+
+    var vm: TAXII2ClientInfoController = this;
+
+    try {
+      Object.keys(propNameMap).forEach(k => {
+        const field = propNameMap[k];
+        const val = vm.side_config[field.key] || pconfig[field.key];
+        vm[k] = field.from_side_config(val);
+      })
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   updateMinemeldConfig() {
     var vm: TAXII2ClientInfoController = this;
 
     vm.MineMeldRunningConfigStatusService.getStatus()
       .then(function (result: IMineMeldRunningConfigStatus) {
         var tnodeConfig: IMinemeldResolvedConfigNode;
-
         tnodeConfig = result.nodes[vm.nodename];
-        vm.nodeConfig = tnodeConfig;
+        const pconfig = tnodeConfig.resolvedPrototype ? tnodeConfig.resolvedPrototype.config : {};
 
-        if (vm.nodeConfig.config && (Object.keys(vm.nodeConfig.config).length === 0)) {
-          vm.nodeConfig.config = null;
-        }
-
-        if (tnodeConfig.resolvedPrototype) {
-          var pconfig: any = tnodeConfig.resolvedPrototype.config;
-
-          // if (typeof (pconfig.client_credentials_required) == 'boolean' && !pconfig.client_credentials_required) {
-          //   vm.usernameField = null;
-          // } else {
-          //   if (typeof (pconfig.username) === 'undefined' && typeof (pconfig.password) === 'undefined') {
-          //     vm.usernameField = 'username';
-          //   }
-          // }
-
-          vm.authTypeEnabled = true;
-          // vm.authType = pconfig.authType || "none";
-
-          if (pconfig.api_key === "") {
-            vm.apiKeyEnabled = true;
-          }
-
-           if (pconfig.discovery_service === "") {
-             vm.taxii2DiscoveryServiceEnabled = true;
-           }
-
-           if (pconfig.api_root === "") {
-             vm.taxii2ApiRootEnabled = true;
-           }
-
-          if (pconfig.collection === "") {
-            vm.taxii2CollectionEnabled = true;
-          }
-
-          if (pconfig.enabled === "" || pconfig.enabled === false) {
-            vm.taxii2EnabledEnabled = true;
-          }
-
-          vm.taxii2VerifyCertEnabled = true;
-
-        }
+        vm.mergeMinemeldConfigs(pconfig)
       }, function (error: any) {
         if (!error.cancelled) {
           vm.toastr.error('ERROR RETRIEVING MINEMELD CONFIG: ' + error.status);
@@ -399,73 +400,25 @@ class TAXII2ClientInfoController extends NodeDetailCredentialsInfoController {
   protected restoreSideConfig(result: any) {
     super.restoreSideConfig(result);
 
-    if (!result) {
-      this.authType = 'none';
-      this.apiKey = undefined;
-      this.taxii2DiscoveryService = undefined;
-      this.taxii2Collection = undefined;
-      this.taxii2Enabled = 'no';
-      this.taxii2VerifyCert = 'yes';
-    } else {
-      if (result.auth_type) {
-        this.authType = result.auth_type;
-      }
-
-      if (result.api_key) {
-        this.apiKey = result.api_key;
-      }
-
-      if (result.discovery_service) {
-        this.taxii2DiscoveryService = result.discovery_service;
-      }
-
-      if (result.api_root) {
-        this.taxii2ApiRoot = result.api_root;
-      }
-
-      if (result.collection) {
-        this.taxii2Collection = result.collection;
-      }
-
-      if (result.enabled) {
-        this.taxii2Enabled = result.enabled;
-      }
-
-      if (result.verify_cert) {
-        this.taxii2VerifyCert = result.verify_cert;
-      }
+    if (result) {
+      this.side_config = result;
     }
+
+    this.mergeMinemeldConfigs({})
   }
 
   protected prepareSideConfig(): any {
     var side_config: any = super.prepareSideConfig();
 
-    if (this.authType) {
-      side_config.auth_type = this.authType;
-    }
-
-    if (this.apiKey) {
-      side_config.api_key = this.apiKey;
-    }
-
-    if (this.taxii2DiscoveryService) {
-      side_config.discovery_service = this.taxii2DiscoveryService;
-    }
-
-    if (this.taxii2ApiRoot) {
-      side_config.api_root = this.taxii2ApiRoot;
-    }
-
-    if (this.taxii2Collection) {
-      side_config.collection = this.taxii2Collection;
-    }
-
-    if (this.taxii2Enabled) {
-      side_config.enabled = this.taxii2Enabled;
-    }
-
-    if (this.taxii2VerifyCert) {
-      side_config.verify_cert = this.taxii2VerifyCert;
+    try {
+      Object.keys(propNameMap).forEach(k => {
+        if (this[k]) {
+          const field = propNameMap[k];
+          side_config[field.key] = field.to_side_config(this[k]);
+        }
+      })
+    } catch (e) {
+      console.log(e);
     }
 
     return side_config;
