@@ -236,7 +236,12 @@ export class ConfigController {
             this.toastr.success('COMMIT SUCCESSFUL');
             this.dtNodes.reloadData();
             this.MinemeldSupervisorService.restartEngine().then(
-                (result: any) => { this.toastr.success('Restarting engine, could take some minutes. Check <a href="/#/system/dashboard">SYSTEM</a>'); },
+                (result: any) => {
+                    this.toastr.success(
+                        'Restarting engine, could take some minutes. Check <a href="/#/system/dashboard">SYSTEM</a>',
+                        { allowHtml: true }
+                    );
+                },
                 (error: any) => { this.toastr.error('ERROR RESTARTING ENGINE: ' + error.statusText); }
             );
         }, (error: any) => {
