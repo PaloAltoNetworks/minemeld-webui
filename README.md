@@ -46,7 +46,7 @@ bower install
 
 Install typings type files
 
-````
+```
 typings install
 ```
 
