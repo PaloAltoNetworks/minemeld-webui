@@ -1,0 +1,19 @@
+<div class="modal-header">
+  <h1 class="modal-title">API KEY</h1>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <form class="config-add-form form-horizontal m-t-xs">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">API KEY</label>
+        <div class="col-xs-6">
+          <input type="text" ng-model="vm.apiKey" class="form-control" placeholder="API KEY">
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="modal-footer">
+  <button ng-disabled="!vm.apiKey" class="btn btn-primary btn-sm" type="button" ng-click="vm.save()">OK</button>
+  <button class="btn btn-warning btn-sm" type="button" ng-click="vm.cancel()">CANCEL</button>
+</div>

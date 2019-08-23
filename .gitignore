@@ -10,3 +10,4 @@ typings/
 
 .DS_Store
 .vscode
+.python-version

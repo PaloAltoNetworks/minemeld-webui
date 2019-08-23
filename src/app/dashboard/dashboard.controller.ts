@@ -323,8 +323,9 @@ export class DashboardController {
                 var tim: IMetric;
                 var cmetric: string;
 
-                metrics['length'] = new Array(<IMetric>{});
-                metrics['ar'] = [<IMetric>{}, <IMetric>{}];
+                // Values is a required d3 field
+                metrics['length'] = new Array(<IMetric>{values: []});
+                metrics['ar'] = [<IMetric>{values: []}, <IMetric>{values: []}];
 
                 for (p = 0; p < result.length; p++) {
                     cmetric = result[p].metric;

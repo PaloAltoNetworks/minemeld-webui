@@ -1,0 +1,167 @@
+<div class="row">
+  <div class="col-sm-12 col-md-12">
+    <h5 class="m-b-xs">STATUS</h5>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-6 col-md-6">
+    <table class="table table-condensed nodedetail-info-table">
+      <colgroup>
+        <col style="width: 30%">
+        <col>
+      </colgroup>
+      <tbody>
+
+      <tr>
+        <td>CLASS</td>
+        <td>{{ nodedetailinfo.nodeState.class }}</td>
+      </tr>
+
+      <tr ng-if="nodedetailinfo.nodeConfig.node.prototype">
+        <td>PROTOTYPE</td>
+        <td><a tooltip-template="'tooltip.prototype.html'" ui-sref="prototypedetail({ prototypeName: nodedetailinfo.nodeConfig.node.prototype.split('.')[1], libraryName: nodedetailinfo.nodeConfig.node.prototype.split('.')[0] })">{{ nodedetailinfo.nodeConfig.node.prototype }}</a></td>
+        <script type="text/ng-template" id="tooltip.prototype.html">
+          <prototype-tooltip name="nodedetailinfo.nodeConfig.node.prototype"></prototype-tooltip>
+        </script>
+      </tr>
+
+      <tr>
+        <td>STATE</td>
+        <td ng-switch on="nodedetailinfo.nodeState.state">
+          <span ng-switch-when="5" class="label label-success">{{ nodedetailinfo.nodeState.stateAsString }}</span>
+          <span ng-switch-default class="label label-warning">{{ nodedetailinfo.nodeState.stateAsString }}</span>
+        </td>
+      </tr>
+
+      <tr ng-if="nodedetailinfo.authTypeEnabled">
+        <td>AUTH TYPE</td>
+        <td tooltip="Set Authentication Type" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setAuthType()">
+          <span ng-if="!nodedetailinfo.authType"><em>Not set</em></span>
+          <span ng-if="nodedetailinfo.authType">{{ nodedetailinfo.authType }}</span>
+        </td>
+      </tr>
+
+      <tr ng-if="nodedetailinfo.authType == 'basic'">
+        <td>USERNAME</td>
+        <td tooltip="Set Username" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setUsername()">
+          <span ng-if="!nodedetailinfo.username"><em>Not set</em></span>
+          <span ng-if="nodedetailinfo.username">{{ nodedetailinfo.username }}</span>
+        </td>
+      </tr>
+
+      <tr ng-if="nodedetailinfo.authType == 'basic'">
+        <td>{{ nodedetailinfo.secretName }}</td>
+        <td tooltip="Set {{ nodedetailinfo.secretName|lowercase }}" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setPassword()">
+          <span ng-if="!nodedetailinfo.secret"><em>Not set</em></span></span>
+          <span ng-if="nodedetailinfo.secret" class="label label-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></span>
+        </td>
+      </tr>
+
+      <tr ng-if="nodedetailinfo.apiKeyEnabled && nodedetailinfo.authType == 'apikey'">
+        <td>API KEY</td>
+        <td tooltip="Set API Key" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setApiKey()">
+          <span ng-if="!nodedetailinfo.apiKey"><em>Not set</em></span>
+          <span ng-if="nodedetailinfo.apiKey">{{ nodedetailinfo.apiKey }}</span>
+        </td>
+      </tr>
+
+      <tr ng-if="nodedetailinfo.taxii2DiscoveryServiceEnabled">
+        <td>DISCOVERY SERVICE URL</td>
+        <td tooltip="Set Discovery Service" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setTaxii2DiscoveryService()">
+          <span ng-if="!nodedetailinfo.taxii2DiscoveryService"><em>Not set</em></span>
+          <span ng-if="nodedetailinfo.taxii2DiscoveryService">{{ nodedetailinfo.taxii2DiscoveryService }}</span>
+        </td>
+      </tr>
+
+      <tr ng-if="nodedetailinfo.taxii2ApiRootEnabled">
+        <td>API ROOT</td>
+        <td tooltip="Set API Root" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setTaxii2ApiRoot()">
+          <span ng-if="!nodedetailinfo.taxii2ApiRoot"><em>Not set</em></span>
+          <span ng-if="nodedetailinfo.taxii2ApiRoot">{{ nodedetailinfo.taxii2ApiRoot }}</span>
+        </td>
+      </tr>
+
+      <tr ng-if="nodedetailinfo.taxii2CollectionEnabled">
+        <td>COLLECTION ID</td>
+        <td tooltip="Set Collection" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setTaxii2Collection()">
+          <span ng-if="!nodedetailinfo.taxii2Collection"><em>Not set</em></span>
+          <span ng-if="nodedetailinfo.taxii2Collection">{{ nodedetailinfo.taxii2Collection }}</span>
+        </td>
+      </tr>
+
+      <tr ng-if="nodedetailinfo.taxii2VerifyCertEnabled">
+        <td>VERIFY SERVER CERT</td>
+        <td tooltip="Verify the Taxii 2 Server Cert" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setTaxii2VerifyCert()">
+          <span ng-if="!nodedetailinfo.taxii2VerifyCert"><em>Not set</em></span>
+          <span ng-if="nodedetailinfo.taxii2VerifyCert">{{ nodedetailinfo.taxii2VerifyCert }}</span>
+        </td>
+      </tr>
+
+      <tr ng-if="nodedetailinfo.taxii2EnabledEnabled">
+        <td>ENABLED</td>
+        <td tooltip="Enable this miner (yes/no)" class="nodedetail-info-clickable" ng-click="nodedetailinfo.setTaxii2Enabled()">
+          <span ng-if="!nodedetailinfo.taxii2Enabled"><em>Not set</em></span>
+          <span ng-if="nodedetailinfo.taxii2Enabled">{{ nodedetailinfo.taxii2Enabled }}</span>
+        </td>
+      </tr>
+
+      <tr ng-if="nodedetailinfo.nodeState.last_run">
+        <td>LAST RUN</td>
+        <td>
+          <span ng-bind="nodedetailinfo.nodeState.last_run | date:'yyyy-MM-dd HH:mm:ss Z'"></span>
+          <span ng-if="nodedetailinfo.nodeState.sub_state && nodedetailinfo.nodeState.sub_state !== 'ERROR'"
+                ng-class="['label', {WAITING: 'label-default', POLLING:'label-primary', SUCCESS:'label-success', REBUILDING:'label-warning'}[nodedetailinfo.nodeState.sub_state]]"
+                ng-bind="nodedetailinfo.nodeState.sub_state"></span>
+          <span ng-if="nodedetailinfo.nodeState.sub_state && nodedetailinfo.nodeState.sub_state === 'ERROR'"
+                ng-class="['label', 'label-danger']"
+                tooltip="{{ nodedetailinfo.nodeState.sub_state_message }}"
+                ng-bind="nodedetailinfo.nodeState.sub_state"></span>
+          <span tooltip="run now"
+                tooltip-popup-delay="200"
+                ng-if="nodedetailinfo.nodeState.sub_state != 'REBUILDING' && nodedetailinfo.nodeState.sub_state != 'POLLING'"
+                ng-click="nodedetailinfo.run()"
+                class="nodedetail-info-icon fa fa-refresh"></span>
+        </td>
+      </tr>
+
+      <tr>
+        <td># INDICATORS</td>
+        <td>{{ nodedetailinfo.nodeState.indicators }}</td>
+      </tr>
+
+      </tbody>
+    </table>
+  </div>
+  <div class="col-sm-6 col-md-6">
+    <table class="table table-condensed nodedetail-info-table">
+      <colgroup>
+        <col style="width: 15%">
+        <col style="width: 85%">
+      </colgroup>
+      <tbody>
+      <tr>
+        <td>OUTPUT</td>
+        <td>
+          <span class="label label-success" ng-if="nodedetailinfo.nodeState.output">ENABLED</span>
+          <span class="label label-default" ng-if="!nodedetailinfo.nodeState.output">DISABLED</span>
+        </td>
+      </tr>
+      <tr>
+        <td>INPUTS</td>
+        <td>
+          <ul class="nodetails-info-inputs" ng-if="nodedetailinfo.nodeState.inputs.length > 0">
+            <li ng-repeat="input in nodedetailinfo.nodeState.inputs"><a ui-sref="nodedetail({ nodename: input })">{{ input }}</a></li>
+          </ul>
+          <em ng-if="nodedetailinfo.nodeState.inputs.length == 0">none</em>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="row" ng-if="nodedetailinfo.nodeConfig.config">
+  <div class="col-sm-12 col-md-12">
+    <h5 class="m-b-xs">CONFIG</h5>
+    <node-config class="nodedetail-info-config" config="nodedetailinfo.nodeConfig.config"></node-config>
+  </div>
+</div>
