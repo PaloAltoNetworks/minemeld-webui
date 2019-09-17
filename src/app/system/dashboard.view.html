@@ -61,7 +61,7 @@
         <small ng-if="vm.supervisor.processes['minemeld-engine']['statename'] == 'RUNNING'">STARTED {{ vm.supervisor.processes['minemeld-engine']['start'] }}</small>
       </div>
       <div class="col-xs-5 text-center dashboard-main-statistic">
-        <h2 class="m-b-xs" ng-bind="(vm.supervisor.processes['minemeld-engine']['children'])||N/A"></h2>
+        <h2 class="m-b-xs" ng-bind="(vm.supervisor.processes['minemeld-engine']['children'])||'N/A'"></h2>
         <small># of chassis</small>
       </div>
       <div class="system-button-bar">
@@ -82,7 +82,7 @@
         <div class="dashboard-label-text">API</div>
       </div>
       <div class="col-xs-10 text-center dashboard-main-statistic">
-        <h2 class="m-b-xs" ng-bind="(vm.supervisor.processes['minemeld-web']['children'])||N/A"></h2>
+        <h2 class="m-b-xs" ng-bind="(vm.supervisor.processes['minemeld-web']['children'])||'N/A'"></h2>
         <small># of API processes</small>
       </div>
       <div class="system-button-bar">
