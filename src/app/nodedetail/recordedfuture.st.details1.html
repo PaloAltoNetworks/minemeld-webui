@@ -1,0 +1,58 @@
+<script type="text/javascript">
+function showfield(name){
+  if(name=='connectApi')document.getElementById('text1').disabled= false;
+  else document.getElementById('text1').disabled= true;
+  if(name=='fusion')document.getElementById('text2').disabled= false;
+  else document.getElementById('text2').disabled= true;
+}
+
+</script>
+
+<body>
+<div class="modal-header">
+    <h1 class="modal-title">RECORDEDFUTURE API DETAILS</h1>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <form class="config-add-form form-horizontal m-t-xs">
+            <div class="form-group" id="fgApi">
+                <label class="col-xs-4 control-label">API Type</label>
+                <div class="col-xs-6">
+                  <select name='api'ng-model="vm.api" class="form-control" onchange="showfield(this.options[this.selectedIndex].value)">
+                  <option selected value="">Select an API</option>
+                  <option value="connectApi">Connect API</option>
+                  <option value="fusion">Fusion</option>
+                  </select>
+                </div>
+            </div>
+            <div class="form-group" id="fgEntity">
+                <label class="col-xs-4 control-label">Entity Type</label>
+                <div class="col-xs-6">
+                  <select name="entity" ng-model="vm.entity" class="form-control">
+                  <option selected value="">Select an Entity</option>
+                  <option value="ip">IP</option>
+                  <option value="url">URL</option>
+                  <option value="domain">Domain</option>
+                  <option value="hash">File Hash</option>
+                  </select>
+                </div>
+            </div>
+            <div class="form-group" id="fgPath1">
+                <label class="col-xs-4 control-label">Risklist</label>
+                <div class="col-xs-6">
+                  <input id="text1" type="text" ng-model="vm.path1" class="form-control" placeholder="Leave blank for default risklist" size="65" />
+                </div>
+            </div>
+            <div class="form-group" id="fgPath2">
+                <label class="col-xs-4 control-label">File Path</label>
+                <div class="col-xs-6">
+                    <input id="text2" type="text" ng-model="vm.path2" class="form-control" placeholder="Eg: /public/risklists/<File Name>" size="65" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal-footer">
+    <button ng-disabled="!vm.valid()" class="btn btn-primary btn-sm" type="button" ng-click="vm.save()">OK</button>
+    <button class="btn btn-warning btn-sm" type="button" ng-click="vm.cancel()">CANCEL</button>
+</div>
