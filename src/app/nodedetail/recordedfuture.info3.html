@@ -1,0 +1,103 @@
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+        <h5 class="m-b-xs">STATUS</h5>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6 col-md-6">
+        <table class="table table-condensed nodedetail-info-table">
+            <colgroup>
+                <col style="width: 30%">
+                <col>
+            </colgroup>
+            <tbody>
+                <tr>
+                    <td>CLASS</td>
+                    <td>{{ nodedetailinfo3.nodeState.class }}</td>
+                </tr>
+                <tr ng-if="nodedetailinfo3.nodeConfig.prototype">
+                    <td>PROTOTYPE</td>
+                    <td><a tooltip-template="'tooltip.prototype.html'" ui-sref="prototypedetail({ prototypeName: nodedetailinfo3.nodeConfig.prototype.split('.')[1], libraryName: nodedetailinfo3.nodeConfig.prototype.split('.')[0] })">{{ nodedetailinfo3.nodeConfig.prototype }}</a></td>
+                    <script type="text/ng-template" id="tooltip.prototype.html">
+                        <prototype-tooltip name="nodedetailinfo3.nodeConfig.prototype"></prototype-tooltip>
+                    </script>
+                </tr>
+                <tr>
+                    <td>STATE</td>
+                    <td ng-switch on="nodedetailinfo3.nodeState.state">
+                        <span ng-switch-when="5" class="label label-success">{{ nodedetailinfo3.nodeState.stateAsString }}</span>
+                        <span ng-switch-default class="label label-warning">{{ nodedetailinfo3.nodeState.stateAsString }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>RECORDED FUTURE API</td>
+                    <td tooltip="set entity type" class="nodedetail-info-clickable" ng-click="nodedetailinfo3.setDetails()">
+                        <span ng-if="!nodedetailinfo3.entity"><em><u>Set Details for API to be used</u></em></span></span>
+                        <span ng-if="nodedetailinfo3.entity" class="label label-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>API TOKEN</td>
+                    <td tooltip="set API token" class="nodedetail-info-clickable" ng-click="nodedetailinfo3.setToken()">
+                        <span ng-if="!nodedetailinfo3.token"><em><u>Not set</u></em></span></span>
+                        <span ng-if="nodedetailinfo3.token" class="label label-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></span>
+                    </td>
+                </tr>
+                <tr ng-if="nodedetailinfo3.nodeState.last_run">
+                    <td>LAST RUN</td>
+                    <td>
+                        <span ng-bind="nodedetailinfo3.nodeState.last_run | date:'yyyy-MM-dd HH:mm:ss Z'"></span>
+                        <span ng-if="nodedetailinfo3.nodeState.sub_state && nodedetailinfo3.nodeState.sub_state !== 'ERROR'"
+                              ng-class="['label', {WAITING: 'label-default', POLLING:'label-primary', SUCCESS:'label-success', REBUILDING:'label-warning'}[nodedetailinfo3.nodeState.sub_state]]"
+                              ng-bind="nodedetailinfo3.nodeState.sub_state"></span>
+                        <span ng-if="nodedetailinfo3.nodeState.sub_state && nodedetailinfo3.nodeState.sub_state === 'ERROR'"
+                              ng-class="['label', 'label-danger']"
+                              tooltip="{{ nodedetailinfo3.nodeState.sub_state_message }}"
+                              ng-bind="nodedetailinfo3.nodeState.sub_state"></span>
+                        <span tooltip="run now"
+                              tooltip-popup-delay="200"
+                              ng-if="nodedetailinfo3.nodeState.sub_state != 'REBUILDING' && nodedetailinfo3.nodeState.sub_state != 'POLLING'"
+                              ng-click="nodedetailinfo3.run()"
+                              class="nodedetail-info-icon fa fa-refresh"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td># INDICATORS</td>
+                    <td>{{ nodedetailinfo3.nodeState.indicators }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-sm-6 col-md-6">
+        <table class="table table-condensed nodedetail-info-table">
+              <colgroup>
+                <col style="width: 15%">
+                <col style="width: 85%">
+            </colgroup>
+            <tbody>
+                <tr>
+                    <td>OUTPUT</td>
+                    <td>
+                        <span class="label label-success" ng-if="nodedetailinfo3.nodeState.output">ENABLED</span>
+                        <span class="label label-default" ng-if="!nodedetailinfo3.nodeState.output">DISABLED</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>INPUTS</td>
+                    <td>
+                        <ul class="nodetails-info-inputs" ng-if="nodedetailinfo3.nodeState.inputs.length > 0">
+                            <li ng-repeat="input in nodedetailinfo3.nodeState.inputs"><a ui-sref="nodedetail({ nodename: input })">{{ input }}</a></li>
+                        </ul>
+                        <em ng-if="nodedetailinfo3.nodeState.inputs.length == 0">none</em>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row" ng-if="nodedetailinfo3.nodeConfig.config">
+    <div class="col-sm-12 col-md-12">
+        <h5 class="m-b-xs">CONFIG</h5>
+        <node-config class="nodedetail-info-config" config="nodedetailinfo3.nodeConfig.config"></node-config>
+    </div>
+</div>
