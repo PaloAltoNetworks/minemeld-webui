@@ -38,7 +38,7 @@
     "gulp-util": "3.0.7",
     "http-proxy-middleware": "0.9.1",
     "lockdown": "mozilla/npm-lockdown#v0.0.8",
-    "lodash": "4.17.11",
+    "lodash": "4.17.13",
     "main-bower-files": "2.9.0",
     "ng-annotate-loader": "0.0.10",
     "nsp": "2.4.0",
