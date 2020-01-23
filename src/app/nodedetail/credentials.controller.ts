@@ -279,6 +279,27 @@ function credentialsRegisterClasses(NodeDetailResolver: INodeDetailResolverServi
             active: false
         }]
     });
+
+    NodeDetailResolver.registerClass('minemeld.ft.bambenek.Miner', {
+        tabs: [{
+            icon: 'fa fa-circle-o',
+            tooltip: 'INFO',
+            state: 'nodedetail.credentialsinfo',
+            active: false
+        },
+        {
+            icon: 'fa fa-area-chart',
+            tooltip: 'STATS',
+            state: 'nodedetail.stats',
+            active: false
+        },
+        {
+            icon: 'fa fa-asterisk',
+            tooltip: 'GRAPH',
+            state: 'nodedetail.graph',
+            active: false
+        }]
+    });
 }
 
 export class NodeDetailCredentialsInfoController extends NodeDetailInfoController {
